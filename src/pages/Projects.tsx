@@ -358,38 +358,38 @@ export default function Projects() {
   return (
     <div className="px-4 sm:px-6 md:px-12 pt-4 sm:pt-8 pb-16 max-w-7xl mx-auto w-full relative z-10">
       {/* Header */}
-      <div className="mb-8 animate-blur-fade-up" style={{ animationDelay: '100ms' }}>
+      <div className="mb-6 sm:mb-8 animate-blur-fade-up" style={{ animationDelay: '100ms' }}>
         <div className="flex items-center gap-2 text-xs font-mono text-amber-400 mb-2 uppercase tracking-wider">
           <Terminal size={14} />
           <span>// ISOLATED WEBSITE SHOWCASE DIRECTORY</span>
         </div>
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white mb-3">
+        <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white mb-3 break-words">
           Open Source Projects &amp; Website Showcase
         </h1>
-        <p className="text-gray-400 max-w-3xl text-sm sm:text-base leading-relaxed font-light">
+        <p className="text-gray-400 max-w-3xl text-xs sm:text-sm md:text-base leading-relaxed font-light">
           Explore isolated website project templates built under <code className="text-amber-300 bg-white/5 px-1.5 py-0.5 rounded font-mono">public/showcase/</code>. Preview live static sites, claim open issues, and submit PRs without altering core platform code.
         </p>
       </div>
 
       {/* Filter Bar */}
-      <div className="flex flex-col md:flex-row gap-4 justify-between items-stretch md:items-center mb-8 animate-blur-fade-up" style={{ animationDelay: '200ms' }}>
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-between items-stretch sm:items-center mb-6 sm:mb-8 animate-blur-fade-up" style={{ animationDelay: '200ms' }}>
         {/* Search */}
-        <div className="relative flex-1 max-w-md">
+        <div className="relative flex-1 max-w-full sm:max-w-md">
           <Search size={18} className="absolute left-3.5 top-3 text-gray-400" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by tech stack, title, or keywords..."
-            className="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 pl-10 pr-4 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-white/30 backdrop-blur-md transition-colors"
+            className="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 pl-10 pr-4 text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-white/30 backdrop-blur-md transition-colors min-h-[42px]"
           />
         </div>
 
         {/* Filter Strip */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-none">
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
           <button
             type="button"
-            className="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all bg-white text-black shadow-lg shadow-white/10"
+            className="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all bg-white text-black shadow-lg shadow-white/10 min-h-[36px]"
           >
             All Projects ({projectsData.length})
           </button>
@@ -397,32 +397,32 @@ export default function Projects() {
       </div>
 
       {/* Projects Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-12">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 pb-12">
         {filteredProjects.map((project, index) => (
           <div
             key={project.id}
-            className="liquid-glass rounded-2xl p-6 flex flex-col justify-between border border-white/10 hover:border-white/20 transition-all group animate-blur-fade-up"
+            className="liquid-glass rounded-2xl p-4 sm:p-6 flex flex-col justify-between border border-white/10 hover:border-white/20 transition-all group animate-blur-fade-up"
             style={{ animationDelay: `${300 + index * 100}ms` }}
           >
             <div>
               {/* Header Badges */}
-              <div className="flex items-center justify-between mb-4 gap-2">
+              <div className="flex items-center justify-between mb-3 sm:mb-4 gap-2">
                 <span className="px-2.5 py-1 rounded-md text-[11px] font-mono font-semibold tracking-wider bg-amber-400/10 text-amber-300 border border-amber-400/20">
                   {project.categoryLabel}
                 </span>
               </div>
 
               {/* Title & Desc */}
-              <h3 className="text-xl font-bold text-white mb-2 group-hover:text-amber-300 transition-colors flex items-center gap-2">
-                <Code2 size={20} className="text-amber-400" />
-                {project.title}
+              <h3 className="text-lg sm:text-xl font-bold text-white mb-2 group-hover:text-amber-300 transition-colors flex items-center gap-2 break-words">
+                <Code2 size={20} className="text-amber-400 flex-shrink-0" />
+                <span>{project.title}</span>
               </h3>
-              <p className="text-gray-400 text-sm mb-4 leading-relaxed font-light">
+              <p className="text-gray-400 text-xs sm:text-sm mb-4 leading-relaxed font-light">
                 {project.description}
               </p>
 
               {/* Tags */}
-              <div className="flex flex-wrap gap-1.5 mb-5">
+              <div className="flex flex-wrap gap-1.5 mb-4 sm:mb-5">
                 {project.tags.map((tag) => (
                   <span
                     key={tag}
@@ -435,8 +435,8 @@ export default function Projects() {
               </div>
 
               {/* Open Issues Box */}
-              <div className="bg-black/40 border border-white/10 rounded-xl p-4">
-                <div className="text-[11px] font-mono font-semibold text-amber-400 mb-3 tracking-wider flex items-center justify-between uppercase">
+              <div className="bg-black/40 border border-white/10 rounded-xl p-3 sm:p-4">
+                <div className="text-[11px] font-mono font-semibold text-amber-400 mb-2.5 tracking-wider flex items-center justify-between uppercase">
                   <span className="flex items-center gap-1.5">
                     <Layers size={13} />
                     OPEN ISSUES ({project.activeIssuesCount} ACTIVE)
@@ -446,14 +446,14 @@ export default function Projects() {
                   {project.issues.map((issue) => (
                     <li
                       key={issue.id}
-                      className="flex items-center justify-between gap-3 text-gray-300 bg-white/5 p-2 rounded-lg border border-white/5"
+                      className="flex flex-col xs:flex-row xs:items-center justify-between gap-1.5 xs:gap-3 text-gray-300 bg-white/5 p-2 rounded-lg border border-white/5"
                     >
                       <span className="truncate font-mono">
                         <strong className="text-amber-300 font-semibold mr-1">{issue.id}</strong>
                         {issue.title}
                       </span>
                       <span
-                        className={`px-2 py-0.5 rounded text-[10px] font-mono border whitespace-nowrap ${issue.levelColor}`}
+                        className={`px-2 py-0.5 rounded text-[10px] font-mono border whitespace-nowrap self-start xs:self-center ${issue.levelColor}`}
                       >
                         {issue.level}
                       </span>
@@ -464,12 +464,12 @@ export default function Projects() {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row items-center gap-3 pt-4 mt-5 border-t border-white/10">
+            <div className="flex flex-col sm:flex-row items-center gap-2.5 sm:gap-3 pt-4 mt-5 border-t border-white/10">
               <a
                 href={project.previewUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="w-full sm:w-1/2 bg-amber-400 hover:bg-amber-300 text-black text-center px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all shadow-lg active:scale-95 cursor-pointer"
+                className="w-full sm:w-1/2 bg-amber-400 hover:bg-amber-300 text-black text-center px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all shadow-lg active:scale-95 cursor-pointer min-h-[42px]"
               >
                 <span>View Live Preview</span>
                 <ExternalLink size={14} />
@@ -478,7 +478,7 @@ export default function Projects() {
                 href="https://github.com/Pratyush-Panda-2006/CAREERFORGE/issues"
                 target="_blank"
                 rel="noreferrer"
-                className="w-full sm:w-1/2 liquid-glass text-white hover:bg-white/10 text-center px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all border border-white/10 active:scale-95 cursor-pointer"
+                className="w-full sm:w-1/2 liquid-glass text-white hover:bg-white/10 text-center px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all border border-white/10 active:scale-95 cursor-pointer min-h-[42px]"
               >
                 <span>Contribute / Submit PR</span>
                 <GitBranch size={14} className="text-amber-400" />

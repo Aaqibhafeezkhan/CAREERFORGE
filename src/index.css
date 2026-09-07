@@ -1,51 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
+:root {
+  --font-display: 'Instrument Serif', serif;
+  --font-body: 'Inter', sans-serif;
+
+  --background: 201 100% 13%;
+  --foreground: 0 0% 100%;
+  --muted-foreground: 240 4% 66%;
+  --primary: 0 0% 100%;
+  --primary-foreground: 0 0% 4%;
+  --secondary: 0 0% 10%;
+  --muted: 0 0% 10%;
+  --accent: 0 0% 10%;
+  --border: 0 0% 18%;
+  --input: 0 0% 18%;
+}
+
+@theme {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-muted: hsl(var(--muted));
+  --color-accent: hsl(var(--accent));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+}
+
 @layer base {
-  html, body, #root {
-    font-family: 'Inter', sans-serif;
-    background-color: #000000;
-    color: #ffffff;
-    overflow-x: hidden;
-    min-height: 100vh;
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+  * {
+    box-sizing: border-box;
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
   }
 
-  /* Hide webkit scrollbars across all elements */
-  ::-webkit-scrollbar {
+  *::-webkit-scrollbar {
     display: none !important;
     width: 0 !important;
     height: 0 !important;
   }
+
+  html, body, #root {
+    font-family: var(--font-body);
+    background-color: #000000;
+    color: hsl(var(--foreground));
+    overflow-x: hidden;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+  }
 }
 
-/* Global scrollbar hiding utility */
-* {
-  -ms-overflow-style: none !important;
-  scrollbar-width: none !important;
-}
-
-*::-webkit-scrollbar {
-  display: none !important;
-  width: 0 !important;
-  height: 0 !important;
-}
-
-/* Liquid Glass Reusable Class */
+/* Liquid Glass Effect */
 .liquid-glass {
-  background: rgba(255, 255, 255, 0.01);
+  background: rgba(255, 255, 255, 0.04);
   background-blend-mode: luminosity;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  border: none;
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.15);
   position: relative;
   overflow: hidden;
-  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease, border-color 0.3s ease;
 }
 
 .liquid-glass:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.22);
 }
 
 .liquid-glass:active {
@@ -60,11 +86,11 @@
   padding: 1.4px;
   background: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.45) 0%,
+    rgba(255, 255, 255, 0.45) 0%, 
     rgba(255, 255, 255, 0.15) 20%,
-    rgba(255, 255, 255, 0) 40%,
+    rgba(255, 255, 255, 0) 40%, 
     rgba(255, 255, 255, 0) 60%,
-    rgba(255, 255, 255, 0.15) 80%,
+    rgba(255, 255, 255, 0.15) 80%, 
     rgba(255, 255, 255, 0.45) 100%
   );
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -73,12 +99,35 @@
   pointer-events: none;
 }
 
-/* Staggered Blur Fade Up Keyframes */
+/* Animations */
+@keyframes fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-rise {
+  animation: fade-rise 0.8s ease-out both;
+}
+
+.animate-fade-rise-delay {
+  animation: fade-rise 0.8s ease-out 0.2s both;
+}
+
+.animate-fade-rise-delay-2 {
+  animation: fade-rise 0.8s ease-out 0.4s both;
+}
+
 @keyframes blurFadeUp {
   0% {
     opacity: 0;
-    filter: blur(20px);
-    transform: translateY(40px);
+    filter: blur(16px);
+    transform: translateY(30px);
   }
   100% {
     opacity: 1;
@@ -89,7 +138,7 @@
 
 .animate-blur-fade-up {
   opacity: 0;
-  animation: blurFadeUp 1s ease-out forwards;
+  animation: blurFadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 /* Bottom Masked Blur Overlay */

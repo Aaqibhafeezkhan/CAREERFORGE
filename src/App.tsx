@@ -4,6 +4,8 @@ import Home from './pages/Home';
 import Projects from './pages/Projects';
 import Leaderboard from './pages/Leaderboard';
 import Certificates from './pages/Certificates';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfService from './pages/TermsOfService';
 
 export default function App() {
   return (
@@ -14,6 +16,8 @@ export default function App() {
           <Route path="/projects" element={<Projects />} />
           <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/certificates" element={<Certificates />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<TermsOfService />} />
         </Routes>
       </Layout>
     </BrowserRouter>
