@@ -7,30 +7,112 @@
   <link rel="stylesheet" href="styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header className="hero">
-    <div className="brand">ODYSSEY EXPEDITIONS</div>
+  <header class="hero">
+    <div class="brand">ODYSSEY EXPEDITIONS</div>
     <h1>Uncharted Journeys to the Outer Edges of Earth</h1>
     <p>Hand-crafted luxury eco-tours in Iceland, Patagonia, and Kyoto.</p>
     
-    <div className="search-bar">
+    <div class="search-bar">
       <input type="text" placeholder="Where do you want to explore?" />
-      <button className="search-btn">Explore Voyages ↗</button>
+      <button class="search-btn">Explore Voyages ↗</button>
     </div>
   </header>
 
-  <main className="destinations">
+  <!-- Interactive Expedition Packing Checklist Widget -->
+  <section class="checklist-section" id="packing-checklist">
+    <div class="checklist-container">
+      <div class="checklist-header">
+        <div class="checklist-header-text">
+          <div class="section-tag">🎒 EXPEDITION PREPARATION</div>
+          <h2>Interactive Packing Checklist</h2>
+          <p>Organize, track, and customize your extreme climate gear for mission-ready exploration.</p>
+        </div>
+        
+        <!-- Animated Circular Readiness Progress Tracker -->
+        <div class="readiness-card">
+          <div class="circular-progress-wrap">
+            <svg class="progress-ring" width="104" height="104" viewBox="0 0 104 104">
+              <circle class="progress-ring-bg" cx="52" cy="52" r="42" />
+              <circle class="progress-ring-circle" id="progress-circle" cx="52" cy="52" r="42" />
+            </svg>
+            <div class="progress-value">
+              <span id="readiness-percent">0%</span>
+              <span class="progress-sub">READY</span>
+            </div>
+          </div>
+          <div class="readiness-meta">
+            <div class="readiness-status" id="readiness-status">Preparation Needed</div>
+            <div class="readiness-count" id="readiness-count">0 of 0 items packed</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category Filter Tabs -->
+      <div class="category-tabs" id="category-tabs" role="tablist">
+        <button class="cat-tab active" data-category="all" role="tab" aria-selected="true">
+          All Gear <span class="tab-badge" id="badge-all">0</span>
+        </button>
+        <button class="cat-tab" data-category="Clothing" role="tab" aria-selected="false">
+          🧥 Clothing <span class="tab-badge" id="badge-clothing">0</span>
+        </button>
+        <button class="cat-tab" data-category="Navigation Gear" role="tab" aria-selected="false">
+          🧭 Navigation Gear <span class="tab-badge" id="badge-navigation">0</span>
+        </button>
+        <button class="cat-tab" data-category="First Aid" role="tab" aria-selected="false">
+          🩹 First Aid <span class="tab-badge" id="badge-firstaid">0</span>
+        </button>
+        <button class="cat-tab" data-category="Photography Equipment" role="tab" aria-selected="false">
+          📷 Photography Equipment <span class="tab-badge" id="badge-photo">0</span>
+        </button>
+      </div>
+
+      <!-- Add Custom Gear Form -->
+      <form class="add-gear-form" id="add-gear-form">
+        <input type="text" id="gear-name-input" placeholder="Add custom gear item (e.g. Crampons, Thermal Flask)..." required autocomplete="off" />
+        <select id="gear-category-select" required aria-label="Gear category">
+          <option value="Clothing">🧥 Clothing</option>
+          <option value="Navigation Gear">🧭 Navigation Gear</option>
+          <option value="First Aid">🩹 First Aid</option>
+          <option value="Photography Equipment">📷 Photography Equipment</option>
+        </select>
+        <button type="submit" class="add-gear-btn">+ Add Gear</button>
+      </form>
+
+      <!-- Checklist Items Container -->
+      <div class="checklist-items-wrap">
+        <div class="checklist-actions">
+          <span class="list-heading" id="current-filter-heading">All Gear Items</span>
+          <div class="action-buttons">
+            <button type="button" class="action-btn" id="check-all-btn">Check All</button>
+            <span class="action-sep">•</span>
+            <button type="button" class="action-btn" id="uncheck-all-btn">Uncheck All</button>
+            <span class="action-sep">•</span>
+            <button type="button" class="action-btn" id="reset-default-btn">Reset Defaults</button>
+          </div>
+        </div>
+        <ul class="checklist-items" id="checklist-items">
+          <!-- Dynamically populated via script.js -->
+        </ul>
+        <div class="empty-state" id="empty-state" style="display: none;">
+          <p>No gear items found in this category. Add one above to get started!</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main class="destinations">
     <h2>FEATURED VOYAGES</h2>
-    <div className="grid">
-      <div className="card">
-        <div className="card-img">🏔️</div>
+    <div class="grid">
+      <div class="card">
+        <div class="card-img">🏔️</div>
         <h3>Reykjavik Aurora Glaciers</h3>
         <p>7 Days • Iceland Heli-Hiking</p>
       </div>
-      <div className="card">
-        <div className="card-img">🏯</div>
+      <div class="card">
+        <div class="card-img">🏯</div>
         <h3>Kyoto Bamboo Sanctuary</h3>
         <p>10 Days • Private Tea Masters</p>
       </div>
