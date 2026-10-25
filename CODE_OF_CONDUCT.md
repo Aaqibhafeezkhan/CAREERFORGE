@@ -44,7 +44,7 @@ This Code of Conduct applies within all project spaces, and it also applies when
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the CAREERFORGE community enforcement team at:
 
-📧 **Email**: `conduct@prismalabs.io`
+📧 **Email**: `pandapratyush221@gmail.com`
 
 All complaints will be reviewed and investigated promptly and fairly. All project leaders are obligated to respect the privacy and security of the reporter of any incident.
 
