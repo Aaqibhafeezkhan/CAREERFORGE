@@ -3,41 +3,350 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ApexVault — Decentralized Wealth & Banking</title>
+  <title>ApexVault — Institutional Compound Interest &amp; Wealth Projection Engine</title>
+  <meta name="description" content="Simulate long-term compound interest, retirement wealth accumulation, and asset growth with institutional precision and dynamic interactive SVG charts." />
   <link rel="stylesheet" href="styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header className="navbar">
-    <div className="brand">💎 APEXVAULT</div>
-    <div className="nav-actions">
-      <span className="balance-badge">Portfolio: $128,450.00</span>
-      <button className="btn-primary" onclick="triggerDeposit()">Deposit Funds</button>
+  <header class="navbar">
+    <div class="brand">
+      <span class="brand-icon">💎</span>
+      <span>APEXVAULT</span>
+    </div>
+    <div class="nav-actions">
+      <a href="#compound-engine" class="nav-link">Growth Engine</a>
+      <span class="balance-badge">Portfolio: $128,450.00</span>
+      <button class="btn-primary" onclick="triggerDeposit()">Deposit Funds</button>
     </div>
   </header>
 
-  <main className="hero">
-    <div className="tag">// NEXT-GEN FINTECH INFRASTRUCTURE</div>
+  <main class="hero">
+    <div class="tag">// NEXT-GEN FINTECH INFRASTRUCTURE</div>
     <h1>Institutional-Grade Yield &amp; Asset Protection</h1>
     <p>Automated multi-chain liquidity vaults with zero-knowledge cryptographic security.</p>
     
-    <div className="stats-grid">
-      <div className="stat-card">
-        <span className="label">TOTAL VALUE LOCKED</span>
-        <span className="value">$4.2B+</span>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="label">TOTAL VALUE LOCKED</span>
+        <span class="value">$4.2B+</span>
       </div>
-      <div className="stat-card">
-        <span className="label">ANNUAL YIELD (APY)</span>
-        <span className="value text-emerald">8.45%</span>
+      <div class="stat-card">
+        <span class="label">ANNUAL YIELD (APY)</span>
+        <span class="value text-emerald">8.45%</span>
       </div>
-      <div className="stat-card">
-        <span className="label">ACTIVE VAULTS</span>
-        <span className="value">142</span>
+      <div class="stat-card">
+        <span class="label">ACTIVE VAULTS</span>
+        <span class="value">142</span>
       </div>
     </div>
   </main>
+
+  <!-- Interactive Compound Interest Wealth Projection Engine -->
+  <section class="engine-section" id="compound-engine">
+    <div class="engine-container">
+      <div class="section-header">
+        <div class="tag">// RETIREMENT &amp; WEALTH ACCELERATOR</div>
+        <h2>Compound Interest Growth Simulator</h2>
+        <p>Model the exponential power of compounding returns. Tune your deposit cadence, expected rate of return, and timeline to visualize future financial freedom.</p>
+      </div>
+
+      <!-- Quick Strategy Preset Chips -->
+      <div class="presets-wrapper">
+        <span class="presets-title">Strategy Presets:</span>
+        <div class="presets-grid" id="presetChipsContainer">
+          <button type="button" class="preset-chip active" data-initial="10000" data-monthly="500" data-rate="8.5" data-years="25">
+            <span class="chip-name">Balanced S&amp;P Index</span>
+            <span class="chip-desc">$500/mo • 8.5% • 25 Yrs</span>
+          </button>
+          <button type="button" class="preset-chip" data-initial="25000" data-monthly="1200" data-rate="11.5" data-years="30">
+            <span class="chip-name">Aggressive Tech &amp; Crypto</span>
+            <span class="chip-desc">$1.2k/mo • 11.5% • 30 Yrs</span>
+          </button>
+          <button type="button" class="preset-chip" data-initial="50000" data-monthly="2500" data-rate="9.0" data-years="15">
+            <span class="chip-name">FIRE Early Retirement</span>
+            <span class="chip-desc">$2.5k/mo • 9.0% • 15 Yrs</span>
+          </button>
+          <button type="button" class="preset-chip" data-initial="5000" data-monthly="250" data-rate="5.2" data-years="10">
+            <span class="chip-name">Conservative Treasury</span>
+            <span class="chip-desc">$250/mo • 5.2% • 10 Yrs</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Simulator Dual-Column Grid -->
+      <div class="simulator-grid">
+        <!-- Controls Column -->
+        <div class="controls-card">
+          <div class="card-title">
+            <span>⚙️ Growth Parameters</span>
+            <button type="button" id="resetDefaultsBtn" class="reset-btn" title="Reset to standard defaults">↺ Reset</button>
+          </div>
+
+          <!-- Parameter 1: Initial Deposit -->
+          <div class="input-group">
+            <div class="input-header">
+              <label for="initialDepositInput">Initial Investment ($)</label>
+              <div class="value-display" id="initialDepositDisplay">$10,000</div>
+            </div>
+            <div class="input-field-wrap">
+              <span class="currency-symbol">$</span>
+              <input type="number" id="initialDepositInput" min="0" max="1000000" step="500" value="10000" class="num-input" />
+            </div>
+            <input type="range" id="initialDepositSlider" min="0" max="250000" step="500" value="10000" class="range-slider" />
+            <div class="slider-marks">
+              <span>$0</span>
+              <span>$50k</span>
+              <span>$150k</span>
+              <span>$250k+</span>
+            </div>
+          </div>
+
+          <!-- Parameter 2: Monthly Contribution -->
+          <div class="input-group">
+            <div class="input-header">
+              <label for="monthlyContributionInput">Monthly Contribution ($)</label>
+              <div class="value-display" id="monthlyContributionDisplay">$500 / mo</div>
+            </div>
+            <div class="input-field-wrap">
+              <span class="currency-symbol">$</span>
+              <input type="number" id="monthlyContributionInput" min="0" max="50000" step="50" value="500" class="num-input" />
+            </div>
+            <input type="range" id="monthlyContributionSlider" min="0" max="10000" step="50" value="500" class="range-slider" />
+            <div class="slider-marks">
+              <span>$0</span>
+              <span>$2,500</span>
+              <span>$5,000</span>
+              <span>$10,000+</span>
+            </div>
+          </div>
+
+          <!-- Parameter 3: Annual Return % -->
+          <div class="input-group">
+            <div class="input-header">
+              <label for="annualRateInput">Annual Interest Rate (%)</label>
+              <div class="value-display text-emerald" id="annualRateDisplay">8.5% APY</div>
+            </div>
+            <div class="input-field-wrap">
+              <span class="currency-symbol">%</span>
+              <input type="number" id="annualRateInput" min="0.5" max="25" step="0.1" value="8.5" class="num-input" />
+            </div>
+            <input type="range" id="annualRateSlider" min="1" max="18" step="0.1" value="8.5" class="range-slider" />
+            <div class="slider-marks">
+              <span>1%</span>
+              <span>6%</span>
+              <span>12%</span>
+              <span>18%</span>
+            </div>
+          </div>
+
+          <!-- Parameter 4: Investment Horizon (Years) -->
+          <div class="input-group">
+            <div class="input-header">
+              <label for="horizonYearsInput">Investment Horizon (Years)</label>
+              <div class="value-display" id="horizonYearsDisplay">25 Years</div>
+            </div>
+            <div class="input-field-wrap">
+              <span class="currency-symbol">⏳</span>
+              <input type="number" id="horizonYearsInput" min="1" max="50" step="1" value="25" class="num-input" />
+            </div>
+            <input type="range" id="horizonYearsSlider" min="1" max="40" step="1" value="25" class="range-slider" />
+            <div class="slider-marks">
+              <span>1 Yr</span>
+              <span>10 Yrs</span>
+              <span>25 Yrs</span>
+              <span>40 Yrs</span>
+            </div>
+          </div>
+
+          <!-- Compounding Frequency Radio Group -->
+          <div class="freq-group">
+            <label class="freq-label">Compounding Frequency</label>
+            <div class="freq-buttons">
+              <button type="button" class="freq-btn active" data-freq="12">Monthly (12x/yr)</button>
+              <button type="button" class="freq-btn" data-freq="1">Annually (1x/yr)</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chart & Results Column -->
+        <div class="results-column">
+          <!-- Milestone Summary Cards Grid -->
+          <div class="summary-cards-grid">
+            <div class="summary-card wealth-card">
+              <span class="card-label">PROJECTED FINAL WEALTH</span>
+              <div class="card-value" id="finalWealthValue">$593,742</div>
+              <span class="card-sub" id="finalWealthSub">At Year 25</span>
+            </div>
+            <div class="summary-card">
+              <span class="card-label">TOTAL CONTRIBUTED</span>
+              <div class="card-value" id="totalPrincipalValue">$160,000</div>
+              <span class="card-sub" id="principalShareSub">26.9% of portfolio</span>
+            </div>
+            <div class="summary-card interest-card">
+              <span class="card-label">COMPOUND INTEREST EARNED</span>
+              <div class="card-value text-emerald" id="totalInterestValue">$433,742</div>
+              <span class="card-sub" id="interestShareSub">73.1% pure growth</span>
+            </div>
+            <div class="summary-card">
+              <span class="card-label">WEALTH MULTIPLIER</span>
+              <div class="card-value" id="wealthMultiplierValue">3.71x</div>
+              <span class="card-sub">Growth on principal</span>
+            </div>
+          </div>
+
+          <!-- Interactive SVG Chart Card -->
+          <div class="chart-card">
+            <div class="chart-header">
+              <div class="chart-title">
+                <h3>Asset Accumulation Trajectory</h3>
+                <span class="chart-subtitle">Real-time exponential compounding curve</span>
+              </div>
+              <div class="chart-legend">
+                <div class="legend-item">
+                  <span class="legend-color wealth-color"></span>
+                  <span>Total Wealth</span>
+                </div>
+                <div class="legend-item">
+                  <span class="legend-color principal-color"></span>
+                  <span>Principal Deposited</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- SVG Chart Viewport -->
+            <div class="svg-wrapper" id="svgChartWrapper">
+              <svg id="growthSvgChart" viewBox="0 0 800 380" preserveAspectRatio="none">
+                <defs>
+                  <!-- Gradient for Total Wealth Area -->
+                  <linearGradient id="wealthAreaGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#10b981" stop-opacity="0.45" />
+                    <stop offset="40%" stop-color="#06b6d4" stop-opacity="0.20" />
+                    <stop offset="100%" stop-color="#0b1324" stop-opacity="0.0" />
+                  </linearGradient>
+
+                  <!-- Gradient for Principal Area -->
+                  <linearGradient id="principalAreaGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.25" />
+                    <stop offset="100%" stop-color="#1e1b4b" stop-opacity="0.0" />
+                  </linearGradient>
+
+                  <!-- Glow Filter for Top Stroke Line -->
+                  <filter id="emeraldGlow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#10b981" flood-opacity="0.7" />
+                  </filter>
+                </defs>
+
+                <!-- Dynamic Grid & Axes Layer -->
+                <g id="chartGridGroup"></g>
+
+                <!-- Principal Area and Line -->
+                <path id="principalAreaPath" fill="url(#principalAreaGradient)" d=""></path>
+                <path id="principalLinePath" fill="none" stroke="#60a5fa" stroke-width="2" stroke-dasharray="4 3" d=""></path>
+
+                <!-- Total Wealth Area and Glowing Line -->
+                <path id="wealthAreaPath" fill="url(#wealthAreaGradient)" d=""></path>
+                <path id="wealthLinePath" fill="none" stroke="#10b981" stroke-width="3.5" filter="url(#emeraldGlow)" d=""></path>
+
+                <!-- Crosshair Guide Line (Interactive) -->
+                <line id="crosshairLine" x1="0" y1="30" x2="0" y2="330" stroke="rgba(255, 255, 255, 0.4)" stroke-width="1.5" stroke-dasharray="3 3" style="display: none;"></line>
+
+                <!-- Crosshair Focus Dots -->
+                <circle id="wealthDot" r="6" fill="#10b981" stroke="#ffffff" stroke-width="2.5" style="display: none;"></circle>
+                <circle id="principalDot" r="5" fill="#3b82f6" stroke="#ffffff" stroke-width="2" style="display: none;"></circle>
+              </svg>
+
+              <!-- Hover Tooltip Overlay -->
+              <div id="chartTooltip" class="chart-tooltip" style="display: none;">
+                <div class="tooltip-header" id="tooltipYear">Year 15</div>
+                <div class="tooltip-row">
+                  <span class="tooltip-dot wealth-bg"></span>
+                  <span class="tooltip-name">Total Wealth:</span>
+                  <strong class="tooltip-val" id="tooltipWealth">$234,180</strong>
+                </div>
+                <div class="tooltip-row">
+                  <span class="tooltip-dot principal-bg"></span>
+                  <span class="tooltip-name">Contributions:</span>
+                  <strong class="tooltip-val" id="tooltipPrincipal">$100,000</strong>
+                </div>
+                <div class="tooltip-row highlight">
+                  <span class="tooltip-dot interest-bg"></span>
+                  <span class="tooltip-name">Interest Earned:</span>
+                  <strong class="tooltip-val text-emerald" id="tooltipInterest">$134,180</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Milestone Breakdown Toggle Button -->
+            <div class="table-toggle-wrap">
+              <button type="button" id="toggleBreakdownBtn" class="btn-toggle-table">
+                <span>View 5-Year Milestone Breakdown Table</span>
+                <span class="toggle-arrow" id="toggleArrow">▼</span>
+              </button>
+            </div>
+
+            <!-- Expandable Milestone Table -->
+            <div id="milestoneTableContainer" class="milestone-table-container" style="display: none;">
+              <table class="milestone-table">
+                <thead>
+                  <tr>
+                    <th>Milestone</th>
+                    <th>Total Contributed</th>
+                    <th>Interest Earned</th>
+                    <th>Portfolio Balance</th>
+                    <th>Return on Deposit</th>
+                  </tr>
+                </thead>
+                <tbody id="milestoneTableBody">
+                  <!-- Populated by JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Deposit Modal -->
+  <div class="modal-backdrop" id="depositModal" style="display: none;">
+    <div class="modal-card">
+      <button class="modal-close" onclick="closeDepositModal()">×</button>
+      <div class="modal-tag">🔒 ZERO-KNOWLEDGE DEPOSIT</div>
+      <h3>ApexVault Liquidity Portal</h3>
+      <p>Initiate direct smart-contract liquidity allocation to prime institutional yield vaults.</p>
+      
+      <div class="modal-vault-options">
+        <div class="vault-opt selected">
+          <span class="vault-name">Apex Prime USDC Vault</span>
+          <span class="vault-apy">8.45% APY</span>
+        </div>
+        <div class="vault-opt">
+          <span class="vault-name">BTC Capital Protection Vault</span>
+          <span class="vault-apy">5.80% APY</span>
+        </div>
+      </div>
+
+      <div class="deposit-form">
+        <label for="depositAmount">Allocation Amount (USDC)</label>
+        <input type="number" id="depositAmount" value="5000" min="100" />
+        <button class="btn-primary btn-block" onclick="confirmDeposit()">Authorize Smart Contract Allocation</button>
+      </div>
+      <div id="depositSuccessNotice" class="deposit-success" style="display: none;">
+        ✅ Smart contract allocation broadcasted to network!
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="brand">💎 APEXVAULT</div>
+      <p>© 2026 ApexVault Capital &amp; Infrastructure Inc. Calculations are for projection purposes based on standard compound interest modeling.</p>
+    </div>
+  </footer>
+
   <script src="script.js"></script>
 </body>
 </html>

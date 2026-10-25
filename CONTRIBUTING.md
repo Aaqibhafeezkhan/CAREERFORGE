@@ -77,6 +77,23 @@ Every task and contribution is graded under the official NSoC scoring system:
 - Individual asset files must not exceed **5 MB**.
 - Total aggregate asset changes across the PR must not exceed **15 MB**. Compress high-resolution media before submitting.
 
+### 📌 Rule 7: Sync with Upstream & Resolving Merge Conflicts
+When multiple contributors work on features within the same showcase project, merge conflicts can occur if another PR merges into `main` before yours.
+- **Always keep your branch updated with upstream `main`:**
+  ```bash
+  # 1. Add upstream if not already added
+  git remote add upstream https://github.com/Pratyush-Panda-2006/CAREERFORGE.git
+
+  # 2. Fetch the latest upstream changes
+  git fetch upstream
+
+  # 3. Rebase your feature branch on upstream main
+  git rebase upstream/main
+  ```
+- **If GitHub flags "This branch has conflicts that must be resolved":**
+  - **Option A (GitHub Web):** Click the **"Resolve conflicts"** button on your PR, edit the conflicting lines, and click **"Mark as resolved"** -> **"Commit merge"**.
+  - **Option B (Local Terminal):** Run `git rebase upstream/main`, manually edit the files to resolve conflicts, stage them with `git add <file>`, run `git rebase --continue`, and update your PR with `git push --force-with-lease origin <branch-name>`.
+
 ---
 
 ## 🚀 How to Submit a Contribution

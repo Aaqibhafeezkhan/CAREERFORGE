@@ -11,31 +11,25 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="layout">
-    <!-- Sidebar Navigation -->
-    <aside class="sidebar">
-      <div class="logo">
-        <span class="logo-icon">📖</span>
-        <span class="logo-text">PRISMA DOCS</span>
-      </div>
+  <!-- Fixed Top Reading Progress Bar -->
+  <div class="scroll-progress-track">
+    <div class="scroll-progress" id="scrollProgress" role="progressbar" aria-label="Reading progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+  </div>
 
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo">📖 PRISMA DOCS</div>
       <nav class="doc-nav">
         <div class="section-title">GETTING STARTED</div>
-        <a href="#overview" class="nav-item">Overview</a>
-        <a href="#authentication" class="nav-item">Authentication</a>
-
-        <div class="section-title">INTERACTIVE TOOLS</div>
-        <a href="#playground" class="nav-item active">
-          <span>API Playground</span>
-          <span class="nav-badge">LIVE</span>
-        </a>
-
+        <a href="#overview" class="nav-link active">Overview</a>
+        <a href="#authentication" class="nav-link">Authentication</a>
         <div class="section-title">CORE APIS</div>
-        <a href="#agents" class="nav-item">Agent Dispatcher API</a>
-        <a href="#models" class="nav-item">Models &amp; Capabilities</a>
-        <a href="#embeddings" class="nav-item">Vector Embeddings</a>
-        <a href="#streaming" class="nav-item">SSE Event Stream</a>
-        <a href="#rate-limits" class="nav-item">Rate Limits</a>
+        <a href="#agents" class="nav-link">Agent Dispatcher API</a>
+        <a href="#streaming" class="nav-link">SSE Event Stream</a>
+        <a href="#rate-limits" class="nav-link">Rate Limits</a>
+        <div class="section-title">ADVANCED & SDks</div>
+        <a href="#sdk-quickstart" class="nav-link">Client SDKs</a>
+        <a href="#error-codes" class="nav-link">Error Handling</a>
       </nav>
 
       <div class="sidebar-footer">
@@ -46,310 +40,61 @@
       </div>
     </aside>
 
-    <!-- Main Documentation & Console Content -->
-    <main class="content">
-      <!-- Overview Section -->
+    <main class="content" id="docArticle">
+      <!-- Article Header & Metadata -->
       <section id="overview" class="doc-section">
-        <div class="section-badge-wrap">
+        <div class="meta-row">
           <span class="badge">v2.4.0 STABLE</span>
-          <span class="spec-tag">OpenAPI 3.1 Compliant</span>
+          <span class="badge read-time-badge" id="readTimeBadge">⏱️ 4 min read</span>
+          <span class="badge category-badge">REST & SSE API</span>
         </div>
+
         <h1>Prisma Agent Orchestrator API</h1>
-        <p class="lead">Programmatically interact with distributed RAG pipelines, stream generative tokens, and supervise multi-agent worker nodes with low latency.</p>
+        <p class="lead">Interact with high-throughput vector RAG pipelines, stream response tokens in real-time, and coordinate multi-agent worker nodes with enterprise zero-trust telemetry.</p>
+
+        <p>The Prisma Agent Orchestrator is designed for engineering teams deploying generative AI pipelines and autonomous agents in production environments. Built on an ultra-low-latency distributed edge architecture, the platform enables sub-10ms agent dispatch, automatic vector context routing, and granular observability over prompt token spend.</p>
+
+        <div class="callout tip">
+          <div class="callout-icon">💡</div>
+          <div class="callout-body">
+            <strong>Architecture Note:</strong> All API requests are processed through our global edge mesh. Regional routing is automatically inferred from client proximity unless an explicit <code>region</code> parameter is supplied.
+          </div>
+        </div>
       </section>
 
       <!-- Authentication Section -->
       <section id="authentication" class="doc-section">
-        <h2>Authentication</h2>
-        <p>All HTTP API requests require your secret API key passed as an HTTP Bearer token in the <code>Authorization</code> header:</p>
-        <div class="code-block-wrap">
-          <div class="code-header">
-            <span>HTTP HEADER</span>
-            <button class="btn-copy-sm" onclick="copySnippet('Authorization: Bearer prisma_live_99a84b12c')">Copy</button>
-          </div>
-          <pre class="code-block"><code>Authorization: Bearer prisma_live_99a84b12c</code></pre>
-        </div>
-      </section>
-
-      <!-- ==========================================================
-           Interactive Live API Request Playground
-           ========================================================== -->
-      <section id="playground" class="playground-section">
-        <div class="playground-header">
-          <div class="header-tag">// LIVE CONSOLE</div>
-          <h2>Interactive API Request Playground</h2>
-          <p>Test real Prisma API endpoints directly in your browser. Send simulated requests, inspect JSON payloads, headers, latency, and response status codes in real-time.</p>
-        </div>
-
-        <!-- Pre-configured Endpoint Recipes / Quick Pickers -->
-        <div class="recipes-bar">
-          <span class="recipes-label">Quick Endpoints:</span>
-          <div class="recipes-list" id="endpointRecipes">
-            <button type="button" class="recipe-btn active" data-method="POST" data-endpoint="/v1/agents/dispatch" data-recipe="dispatch">
-              <span class="method-tag post">POST</span>
-              <span>/v1/agents/dispatch</span>
-            </button>
-            <button type="button" class="recipe-btn" data-method="GET" data-endpoint="/v1/models" data-recipe="models">
-              <span class="method-tag get">GET</span>
-              <span>/v1/models</span>
-            </button>
-            <button type="button" class="recipe-btn" data-method="POST" data-endpoint="/v1/embeddings" data-recipe="embeddings">
-              <span class="method-tag post">POST</span>
-              <span>/v1/embeddings</span>
-            </button>
-            <button type="button" class="recipe-btn" data-method="GET" data-endpoint="/v1/agents/agent-7749/status" data-recipe="status">
-              <span class="method-tag get">GET</span>
-              <span>/v1/agents/{id}/status</span>
-            </button>
-            <button type="button" class="recipe-btn" data-method="DELETE" data-endpoint="/v1/agents/agent-7749" data-recipe="delete">
-              <span class="method-tag delete">DELETE</span>
-              <span>/v1/agents/{id}</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Playground Studio Container -->
-        <div class="playground-studio">
-          <!-- Request Composer Panel -->
-          <div class="request-composer">
-            <!-- URL / Method Bar -->
-            <div class="url-bar">
-              <div class="method-dropdown-wrap">
-                <select id="httpMethodSelect" class="method-select post" aria-label="HTTP Method">
-                  <option value="GET">GET</option>
-                  <option value="POST" selected>POST</option>
-                  <option value="PUT">PUT</option>
-                  <option value="DELETE">DELETE</option>
-                </select>
-              </div>
-
-              <div class="endpoint-input-wrap">
-                <span class="base-url">https://api.prisma.io</span>
-                <input type="text" id="endpointInput" class="endpoint-input" value="/v1/agents/dispatch" spellcheck="false" placeholder="/v1/..." />
-              </div>
-
-              <button type="button" id="sendRequestBtn" class="btn-send">
-                <span class="btn-send-icon">⚡</span>
-                <span class="btn-send-text">Send</span>
-                <span class="btn-send-kbd">↵</span>
-              </button>
-            </div>
-
-            <!-- Request Configuration Tabs (Params, Headers, Body, Auth) -->
-            <div class="req-tabs-bar" role="tablist">
-              <button type="button" class="req-tab" data-tab="tab-params" role="tab" aria-selected="false">Params <span class="tab-badge" id="paramsCount">0</span></button>
-              <button type="button" class="req-tab" data-tab="tab-headers" role="tab" aria-selected="false">Headers <span class="tab-badge" id="headersCount">2</span></button>
-              <button type="button" class="req-tab active" data-tab="tab-body" role="tab" aria-selected="true">Body <span class="tab-dot" id="bodyDot"></span></button>
-              <button type="button" class="req-tab" data-tab="tab-auth" role="tab" aria-selected="false">Auth</button>
-            </div>
-
-            <!-- Tab Panes Content -->
-            <div class="req-panes">
-              <!-- Params Tab Pane -->
-              <div id="tab-params" class="tab-pane" style="display: none;">
-                <div class="kv-table-wrap">
-                  <table class="kv-table">
-                    <thead>
-                      <tr>
-                        <th width="30"></th>
-                        <th>Parameter Key</th>
-                        <th>Value</th>
-                        <th>Description</th>
-                        <th width="40"></th>
-                      </tr>
-                    </thead>
-                    <tbody id="paramsTableBody">
-                      <tr>
-                        <td><input type="checkbox" checked class="kv-enable" /></td>
-                        <td><input type="text" class="kv-input kv-key" value="limit" placeholder="key" /></td>
-                        <td><input type="text" class="kv-input kv-val" value="20" placeholder="value" /></td>
-                        <td><span class="kv-desc">Results per page</span></td>
-                        <td><button type="button" class="btn-del-row" title="Remove parameter">×</button></td>
-                      </tr>
-                      <tr>
-                        <td><input type="checkbox" checked class="kv-enable" /></td>
-                        <td><input type="text" class="kv-input kv-key" value="status" placeholder="key" /></td>
-                        <td><input type="text" class="kv-input kv-val" value="active" placeholder="value" /></td>
-                        <td><span class="kv-desc">Filter by state</span></td>
-                        <td><button type="button" class="btn-del-row" title="Remove parameter">×</button></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <button type="button" id="addParamRowBtn" class="btn-add-row">+ Add Query Parameter</button>
-                </div>
-              </div>
-
-              <!-- Headers Tab Pane -->
-              <div id="tab-headers" class="tab-pane" style="display: none;">
-                <div class="kv-table-wrap">
-                  <table class="kv-table">
-                    <thead>
-                      <tr>
-                        <th width="30"></th>
-                        <th>Header Key</th>
-                        <th>Value</th>
-                        <th width="40"></th>
-                      </tr>
-                    </thead>
-                    <tbody id="headersTableBody">
-                      <tr>
-                        <td><input type="checkbox" checked class="kv-enable" /></td>
-                        <td><input type="text" class="kv-input kv-key" value="Content-Type" /></td>
-                        <td><input type="text" class="kv-input kv-val" value="application/json" /></td>
-                        <td><button type="button" class="btn-del-row">×</button></td>
-                      </tr>
-                      <tr>
-                        <td><input type="checkbox" checked class="kv-enable" /></td>
-                        <td><input type="text" class="kv-input kv-key" value="Authorization" /></td>
-                        <td><input type="text" class="kv-input kv-val" id="authHeaderValue" value="Bearer prisma_live_99a84b12c" /></td>
-                        <td><button type="button" class="btn-del-row">×</button></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <button type="button" id="addHeaderRowBtn" class="btn-add-row">+ Add Header</button>
-                </div>
-              </div>
-
-              <!-- Body Tab Pane -->
-              <div id="tab-body" class="tab-pane active" style="display: block;">
-                <div class="body-editor-toolbar">
-                  <div class="body-format-type">
-                    <span class="format-pill active">JSON (application/json)</span>
-                  </div>
-                  <div class="body-actions">
-                    <span id="jsonValidBadge" class="valid-badge valid">✓ Valid JSON</span>
-                    <button type="button" id="formatJsonBtn" class="btn-editor-action">Format JSON</button>
-                    <button type="button" id="clearBodyBtn" class="btn-editor-action">Clear</button>
-                  </div>
-                </div>
-                <div class="editor-wrap">
-                  <textarea id="requestBodyTextarea" class="code-textarea" spellcheck="false" placeholder="Enter JSON payload...">{
-  "agent_id": "rag-worker-01",
-  "task": "summarize-documents",
-  "parameters": {
-    "collection": "sec-filings-2026",
-    "chunk_overlap": 64,
-    "temperature": 0.2
-  },
-  "max_tokens": 1024,
-  "stream": false
-}</textarea>
-                </div>
-              </div>
-
-              <!-- Auth Tab Pane -->
-              <div id="tab-auth" class="tab-pane" style="display: none;">
-                <div class="auth-config-box">
-                  <div class="auth-type-row">
-                    <label>Auth Type:</label>
-                    <select id="authTypeSelect" class="auth-select">
-                      <option value="bearer">Bearer Token</option>
-                      <option value="none">No Auth</option>
-                    </select>
-                  </div>
-                  <div class="auth-token-row" id="authTokenRow">
-                    <label for="bearerTokenInput">Token:</label>
-                    <div class="token-input-wrap">
-                      <input type="password" id="bearerTokenInput" class="token-input" value="prisma_live_99a84b12c" />
-                      <button type="button" id="toggleTokenVisibility" class="btn-toggle-token" title="Show/Hide Token">👁️</button>
-                    </div>
-                  </div>
-                  <p class="auth-hint">Your API token will be sent securely in the <code>Authorization: Bearer &lt;token&gt;</code> request header.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Live Response Console Panel -->
-          <div class="response-console">
-            <!-- Response Meta Bar -->
-            <div class="response-meta-bar">
-              <div class="response-status-wrap">
-                <span class="response-tag">RESPONSE:</span>
-                <span id="responseStatusBadge" class="status-badge status-200">200 OK</span>
-                <span id="responseLatencyBadge" class="meta-pill"><span class="pulse-dot"></span> <span id="latencyValue">248 ms</span></span>
-                <span id="responseSizeBadge" class="meta-pill"><span id="sizeValue">1.84 KB</span></span>
-              </div>
-
-              <div class="response-actions">
-                <button type="button" id="copyResponseBtn" class="btn-resp-action" title="Copy response JSON">
-                  <span>📋 Copy</span>
-                </button>
-                <button type="button" id="clearResponseBtn" class="btn-resp-action" title="Clear console">
-                  <span>🗑️ Clear</span>
-                </button>
-              </div>
-            </div>
-
-            <!-- Response Tabs (Body, Headers, Raw) -->
-            <div class="resp-tabs-bar">
-              <button type="button" class="resp-tab active" data-resptab="resptab-body">Body</button>
-              <button type="button" class="resp-tab" data-resptab="resptab-headers">Headers <span class="tab-badge" id="respHeadersCount">5</span></button>
-              <button type="button" class="resp-tab" data-resptab="resptab-raw">Raw</button>
-            </div>
-
-            <!-- Response Content Panes -->
-            <div class="response-body-wrap">
-              <!-- Loading Overlay State -->
-              <div id="responseLoadingOverlay" class="response-loading" style="display: none;">
-                <div class="loading-spinner"></div>
-                <span>Sending request to https://api.prisma.io...</span>
-              </div>
-
-              <!-- Body Pane with Syntax Highlighting -->
-              <div id="resptab-body" class="resp-pane active">
-                <pre id="responseJsonOutput" class="response-code-output"><code><span class="json-punct">{</span>
-  <span class="json-key">"status"</span><span class="json-punct">:</span> <span class="json-str">"success"</span><span class="json-punct">,</span>
-  <span class="json-key">"job_id"</span><span class="json-punct">:</span> <span class="json-str">"job_disp_9921b7c"</span><span class="json-punct">,</span>
-  <span class="json-key">"agent"</span><span class="json-punct">:</span> <span class="json-punct">{</span>
-    <span class="json-key">"id"</span><span class="json-punct">:</span> <span class="json-str">"rag-worker-01"</span><span class="json-punct">,</span>
-    <span class="json-key">"node"</span><span class="json-punct">:</span> <span class="json-str">"node-us-east-4a"</span><span class="json-punct">,</span>
-    <span class="json-key">"state"</span><span class="json-punct">:</span> <span class="json-str">"allocated"</span>
-  <span class="json-punct">}</span><span class="json-punct">,</span>
-  <span class="json-key">"metrics"</span><span class="json-punct">:</span> <span class="json-punct">{</span>
-    <span class="json-key">"estimated_tokens"</span><span class="json-punct">:</span> <span class="json-num">1024</span><span class="json-punct">,</span>
-    <span class="json-key">"concurrency_limit"</span><span class="json-punct">:</span> <span class="json-num">50</span><span class="json-punct">,</span>
-    <span class="json-key">"latency_target_ms"</span><span class="json-punct">:</span> <span class="json-num">180</span>
-  <span class="json-punct">}</span><span class="json-punct">,</span>
-  <span class="json-key">"created_at"</span><span class="json-punct">:</span> <span class="json-str">"2026-10-25T08:24:12.441Z"</span>
-<span class="json-punct">}</span></code></pre>
-              </div>
-
-              <!-- Headers Pane -->
-              <div id="resptab-headers" class="resp-pane" style="display: none;">
-                <pre id="responseHeadersOutput" class="response-headers-output">content-type: application/json; charset=utf-8
-content-length: 342
-server: prisma-gateway/v2.4
-x-request-id: req_9a87d612e4f
-x-ratelimit-limit: 1000
-x-ratelimit-remaining: 994
-x-ratelimit-reset: 1730000000
-access-control-allow-origin: *</pre>
-              </div>
-
-              <!-- Raw Text Pane -->
-              <div id="resptab-raw" class="resp-pane" style="display: none;">
-                <pre id="responseRawOutput" class="response-raw-output">{"status":"success","job_id":"job_disp_9921b7c","agent":{"id":"rag-worker-01","node":"node-us-east-4a","state":"allocated"},"metrics":{"estimated_tokens":1024,"concurrency_limit":50,"latency_target_ms":180},"created_at":"2026-10-25T08:24:12.441Z"}</pre>
-              </div>
-            </div>
-          </div>
-        </div>
+        <h2>Authentication Header</h2>
+        <p>All HTTP API requests require an API Bearer token passed in the standard HTTP <code>Authorization</code> header. API keys can be provisioned and rotated through your organization console or via the Prisma CLI.</p>
+        <pre class="code-block"><code>Authorization: Bearer prisma_live_99a84b12c58e4d1f887201a09e</code></pre>
+        <p>Every token is bound to a specific environment workspace (e.g., Development, Staging, or Production) and carries granular role-based permissions. If an expired or invalid token is supplied, the gateway returns an <code>HTTP 401 Unauthorized</code> response with a structured JSON error body.</p>
       </section>
 
       <!-- Agent Dispatcher Section -->
       <section id="agents" class="doc-section">
         <h2>Dispatch Agent Task</h2>
-        <p>Submit asynchronous or real-time agent workloads to the Prisma Orchestrator cluster.</p>
+        <p>The Agent Dispatcher endpoint submits asynchronous inference tasks to specialized multi-modal agent workers. Requests support payload validation, contextual memory attachments, and dynamic temperature overrides.</p>
         <div class="endpoint-pill post"><span class="method">POST</span> /v1/agents/dispatch</div>
-        <div class="code-block-wrap">
-          <div class="code-header">
-            <span>REQUEST EXAMPLE</span>
-            <button class="btn-copy-sm" onclick="copySnippet('POST /v1/agents/dispatch')">Copy</button>
-          </div>
-          <pre class="code-block"><code>{
+        <pre class="code-block"><code>{
   "agent_id": "rag-worker-01",
   "prompt": "Analyze vector embeddings for chunk #92",
-  "max_tokens": 1024
+  "max_tokens": 1024,
+  "temperature": 0.2,
+  "stream": false,
+  "metadata": {
+    "tenant_id": "org_48921",
+    "cost_center": "mlops-platform"
+  }
+}</code></pre>
+
+        <h3>Response Payload</h3>
+        <p>Successful dispatches return an instant <code>HTTP 202 Accepted</code> confirmation along with task execution metadata and a unique stream trace ID:</p>
+        <pre class="code-block"><code>{
+  "task_id": "tsk_8f93e2b10ca4",
+  "status": "queued",
+  "estimated_latency_ms": 8.4,
+  "worker_node": "edge-us-east-4a",
+  "created_at": "2026-10-25T13:30:00Z"
 }</code></pre>
         </div>
       </section>
@@ -380,11 +125,126 @@ access-control-allow-origin: *</pre>
         <h2>Rate Limits &amp; Quotas</h2>
         <p>Standard tiers are provisioned with 1,000 requests per minute and burst allocations up to 2,500 RPM.</p>
       </section>
+
+      <!-- SSE Streaming Section -->
+      <section id="streaming" class="doc-section">
+        <h2>SSE Event Stream</h2>
+        <p>For conversational interfaces and real-time generative output, subscribe to Server-Sent Events (SSE) using the streaming gateway. Each event packet delivers UTF-8 encoded token chunks and real-time cost telemetry.</p>
+        <div class="endpoint-pill get"><span class="method">GET</span> /v1/agents/tasks/:task_id/stream</div>
+        <pre class="code-block"><code>event: token
+data: {"chunk": "Synthesizing", "index": 0}
+
+event: token
+data: {"chunk": " semantic", "index": 1}
+
+event: token
+data: {"chunk": " vectors...", "index": 2}
+
+event: done
+data: {"total_tokens": 42, "latency_ms": 114, "finish_reason": "stop"}</code></pre>
+
+        <p>Clients should handle network reconnects gracefully. The stream includes an automatic exponential backoff header specifying retry recommendations should the HTTP connection terminate unexpectedly.</p>
+      </section>
+
+      <!-- Rate Limits Section -->
+      <section id="rate-limits" class="doc-section">
+        <h2>Rate Limits & Quotas</h2>
+        <p>To preserve high availability and protect global cluster health, standard tier rate limits are enforced across sliding 60-second windows. Every response header includes your real-time usage metrics:</p>
+        <div class="table-container">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th>Subscription Tier</th>
+                <th>Requests / Min</th>
+                <th>Concurrent Streams</th>
+                <th>Token Cap / Sec</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Developer Starter</strong></td>
+                <td>600 RPM</td>
+                <td>25 Streams</td>
+                <td>10,000 TPS</td>
+              </tr>
+              <tr>
+                <td><strong>Enterprise Pro</strong></td>
+                <td>12,000 RPM</td>
+                <td>500 Streams</td>
+                <td>250,000 TPS</td>
+              </tr>
+              <tr>
+                <td><strong>Dedicated VPC</strong></td>
+                <td>Custom SLA</td>
+                <td>Unlimited</td>
+                <td>Custom SLA</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Client SDKs Section -->
+      <section id="sdk-quickstart" class="doc-section">
+        <h2>Official Client Libraries</h2>
+        <p>Integrate Prisma Orchestrator seamlessly into your existing application stack using our officially supported TypeScript and Python SDKs. Each SDK includes automatic retry logic, type-safe streaming generators, and built-in distributed tracing.</p>
+        
+        <h3>Node.js & TypeScript</h3>
+        <pre class="code-block"><code>import { PrismaAgentClient } from '@prisma/agent-sdk';
+
+const client = new PrismaAgentClient({
+  apiKey: process.env.PRISMA_API_KEY,
+  region: 'us-east-1'
+});
+
+const responseStream = await client.agents.dispatchStream({
+  agentId: 'rag-worker-01',
+  prompt: 'Synthesize quarterly latency metrics'
+});
+
+for await (const chunk of responseStream) {
+  process.stdout.write(chunk.token);
+}</code></pre>
+
+        <h3>Python (Asyncio)</h3>
+        <pre class="code-block"><code>from prisma_agent import AsyncPrismaClient
+
+async with AsyncPrismaClient(api_key="prisma_live_...") as client:
+    stream = await client.agents.dispatch_stream(
+        agent_id="rag-worker-01",
+        prompt="Analyze vector embeddings for chunk #92"
+    )
+    async for chunk in stream:
+        print(chunk.token, end="", flush=True)</code></pre>
+      </section>
+
+      <!-- Error Handling Section -->
+      <section id="error-codes" class="doc-section">
+        <h2>Error Handling & Diagnostics</h2>
+        <p>All errors conform to RFC 7807 Problem Details specifications. When an API call fails, the response contains machine-readable diagnostic details along with a troubleshooting link:</p>
+        <pre class="code-block"><code>{
+  "type": "https://docs.prisma.io/errors/ERR_TOKEN_CAP_EXCEEDED",
+  "title": "Rate Limit Exceeded",
+  "status": 429,
+  "detail": "Workspace token consumption exceeded tier threshold of 10,000 TPS.",
+  "instance": "/v1/agents/dispatch",
+  "retry_after_seconds": 3
+}</code></pre>
+      </section>
+
+      <!-- Article Footer -->
+      <footer class="doc-footer">
+        <div class="feedback-box">
+          <p>Was this documentation helpful?</p>
+          <div class="feedback-btns">
+            <button class="feedback-btn" id="helpfulYes">👍 Yes</button>
+            <button class="feedback-btn" id="helpfulNo">👎 No</button>
+          </div>
+        </div>
+        <p class="updated-time">Last updated: October 2026 • Contributed via Nexus Spring of Code</p>
+      </footer>
     </main>
   </div>
-
-  <!-- Toast Notification Container -->
-  <div id="toastNotification" class="toast" style="display: none;"></div>
 
   <script src="script.js"></script>
 </body>
