@@ -14,25 +14,12 @@ on:
 permissions:
   contents: read
   security-events: write  # Required to publish findings to GitHub Security tab
+  actions: read
 
 jobs:
-  osv-scan:
-    name: Google OSV Vulnerability Audit
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Run OSV-Scanner
-        uses: google/osv-scanner-action@v1.9.2
-        with:
-          scan-args: |-
-            --format=sarif
-            --output=osv-results.sarif
-            ./
-
-      - name: Upload Results to GitHub Security Tab
-        uses: github/codeql-action/upload-sarif@v3
-        if: always()
-        with:
-          sarif_file: osv-results.sarif
+  scan-full:
+    uses: google/osv-scanner-action/.github/workflows/osv-scanner-reusable.yml@v2.3.8
+    with:
+      scan-args: |-
+        --recursive
+        ./
