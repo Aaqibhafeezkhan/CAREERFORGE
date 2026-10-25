@@ -1,0 +1,27 @@
+name: 'Dependency Review'
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  dependency-review:
+    name: Scan PR Dependencies for Vulnerabilities
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Run GitHub Dependency Review
+        uses: actions/dependency-review-action@v4
+        with:
+          # Fail the check if a dependency has 'moderate', 'high', or 'critical' severity
+          fail-on-severity: moderate
+          # Posts a helpful Markdown summary table directly into the PR
+          comment-summary-in-pr: always
+          # Warn on copyleft / GPL licenses if you wish to enforce MIT
+          warn-on-licenses: GPL-2.0, GPL-3.0, AGPL-3.0
