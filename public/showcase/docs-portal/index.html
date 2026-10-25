@@ -10,42 +10,206 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div className="layout">
-    <aside className="sidebar">
-      <div className="logo">📖 PRISMA DOCS</div>
-      <nav className="doc-nav">
-        <div className="section-title">GETTING STARTED</div>
-        <a href="#overview" className="active">Overview</a>
-        <a href="#authentication">Authentication</a>
-        <div className="section-title">CORE APIS</div>
-        <a href="#agents">Agent Dispatcher API</a>
-        <a href="#streaming">SSE Event Stream</a>
-        <a href="#rate-limits">Rate Limits</a>
+  <!-- Fixed Top Reading Progress Bar -->
+  <div class="scroll-progress-track">
+    <div class="scroll-progress" id="scrollProgress" role="progressbar" aria-label="Reading progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+  </div>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo">📖 PRISMA DOCS</div>
+      <nav class="doc-nav">
+        <div class="section-title">GETTING STARTED</div>
+        <a href="#overview" class="nav-link active">Overview</a>
+        <a href="#authentication" class="nav-link">Authentication</a>
+        <div class="section-title">CORE APIS</div>
+        <a href="#agents" class="nav-link">Agent Dispatcher API</a>
+        <a href="#streaming" class="nav-link">SSE Event Stream</a>
+        <a href="#rate-limits" class="nav-link">Rate Limits</a>
+        <div class="section-title">ADVANCED & SDks</div>
+        <a href="#sdk-quickstart" class="nav-link">Client SDKs</a>
+        <a href="#error-codes" class="nav-link">Error Handling</a>
       </nav>
     </aside>
 
-    <main className="content">
-      <section id="overview">
-        <span className="badge">v2.4.0 STABLE</span>
-        <h1>Prisma Agent Orchestrator API</h1>
-        <p className="lead">Interact with vector RAG pipelines, stream response tokens, and manage multi-agent worker nodes.</p>
+    <main class="content" id="docArticle">
+      <!-- Article Header & Metadata -->
+      <section id="overview" class="doc-section">
+        <div class="meta-row">
+          <span class="badge">v2.4.0 STABLE</span>
+          <span class="badge read-time-badge" id="readTimeBadge">⏱️ 4 min read</span>
+          <span class="badge category-badge">REST & SSE API</span>
+        </div>
 
-        <h2>Authentication Header</h2>
-        <p>All HTTP API requests require a Bearer token in your authorization header:</p>
-        <pre className="code-block"><code>Authorization: Bearer prisma_live_99a84b12c</code></pre>
+        <h1>Prisma Agent Orchestrator API</h1>
+        <p class="lead">Interact with high-throughput vector RAG pipelines, stream response tokens in real-time, and coordinate multi-agent worker nodes with enterprise zero-trust telemetry.</p>
+
+        <p>The Prisma Agent Orchestrator is designed for engineering teams deploying generative AI pipelines and autonomous agents in production environments. Built on an ultra-low-latency distributed edge architecture, the platform enables sub-10ms agent dispatch, automatic vector context routing, and granular observability over prompt token spend.</p>
+
+        <div class="callout tip">
+          <div class="callout-icon">💡</div>
+          <div class="callout-body">
+            <strong>Architecture Note:</strong> All API requests are processed through our global edge mesh. Regional routing is automatically inferred from client proximity unless an explicit <code>region</code> parameter is supplied.
+          </div>
+        </div>
       </section>
 
-      <section id="agents" className="doc-section">
+      <!-- Authentication Section -->
+      <section id="authentication" class="doc-section">
+        <h2>Authentication Header</h2>
+        <p>All HTTP API requests require an API Bearer token passed in the standard HTTP <code>Authorization</code> header. API keys can be provisioned and rotated through your organization console or via the Prisma CLI.</p>
+        <pre class="code-block"><code>Authorization: Bearer prisma_live_99a84b12c58e4d1f887201a09e</code></pre>
+        <p>Every token is bound to a specific environment workspace (e.g., Development, Staging, or Production) and carries granular role-based permissions. If an expired or invalid token is supplied, the gateway returns an <code>HTTP 401 Unauthorized</code> response with a structured JSON error body.</p>
+      </section>
+
+      <!-- Agent Dispatcher Section -->
+      <section id="agents" class="doc-section">
         <h2>Dispatch Agent Task</h2>
-        <div className="endpoint-pill post"><span className="method">POST</span> /v1/agents/dispatch</div>
-        <pre className="code-block"><code>{
+        <p>The Agent Dispatcher endpoint submits asynchronous inference tasks to specialized multi-modal agent workers. Requests support payload validation, contextual memory attachments, and dynamic temperature overrides.</p>
+        <div class="endpoint-pill post"><span class="method">POST</span> /v1/agents/dispatch</div>
+        <pre class="code-block"><code>{
   "agent_id": "rag-worker-01",
   "prompt": "Analyze vector embeddings for chunk #92",
-  "max_tokens": 1024
+  "max_tokens": 1024,
+  "temperature": 0.2,
+  "stream": false,
+  "metadata": {
+    "tenant_id": "org_48921",
+    "cost_center": "mlops-platform"
+  }
+}</code></pre>
+
+        <h3>Response Payload</h3>
+        <p>Successful dispatches return an instant <code>HTTP 202 Accepted</code> confirmation along with task execution metadata and a unique stream trace ID:</p>
+        <pre class="code-block"><code>{
+  "task_id": "tsk_8f93e2b10ca4",
+  "status": "queued",
+  "estimated_latency_ms": 8.4,
+  "worker_node": "edge-us-east-4a",
+  "created_at": "2026-10-25T13:30:00Z"
 }</code></pre>
       </section>
+
+      <!-- SSE Streaming Section -->
+      <section id="streaming" class="doc-section">
+        <h2>SSE Event Stream</h2>
+        <p>For conversational interfaces and real-time generative output, subscribe to Server-Sent Events (SSE) using the streaming gateway. Each event packet delivers UTF-8 encoded token chunks and real-time cost telemetry.</p>
+        <div class="endpoint-pill get"><span class="method">GET</span> /v1/agents/tasks/:task_id/stream</div>
+        <pre class="code-block"><code>event: token
+data: {"chunk": "Synthesizing", "index": 0}
+
+event: token
+data: {"chunk": " semantic", "index": 1}
+
+event: token
+data: {"chunk": " vectors...", "index": 2}
+
+event: done
+data: {"total_tokens": 42, "latency_ms": 114, "finish_reason": "stop"}</code></pre>
+
+        <p>Clients should handle network reconnects gracefully. The stream includes an automatic exponential backoff header specifying retry recommendations should the HTTP connection terminate unexpectedly.</p>
+      </section>
+
+      <!-- Rate Limits Section -->
+      <section id="rate-limits" class="doc-section">
+        <h2>Rate Limits & Quotas</h2>
+        <p>To preserve high availability and protect global cluster health, standard tier rate limits are enforced across sliding 60-second windows. Every response header includes your real-time usage metrics:</p>
+        <div class="table-container">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th>Subscription Tier</th>
+                <th>Requests / Min</th>
+                <th>Concurrent Streams</th>
+                <th>Token Cap / Sec</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Developer Starter</strong></td>
+                <td>600 RPM</td>
+                <td>25 Streams</td>
+                <td>10,000 TPS</td>
+              </tr>
+              <tr>
+                <td><strong>Enterprise Pro</strong></td>
+                <td>12,000 RPM</td>
+                <td>500 Streams</td>
+                <td>250,000 TPS</td>
+              </tr>
+              <tr>
+                <td><strong>Dedicated VPC</strong></td>
+                <td>Custom SLA</td>
+                <td>Unlimited</td>
+                <td>Custom SLA</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Client SDKs Section -->
+      <section id="sdk-quickstart" class="doc-section">
+        <h2>Official Client Libraries</h2>
+        <p>Integrate Prisma Orchestrator seamlessly into your existing application stack using our officially supported TypeScript and Python SDKs. Each SDK includes automatic retry logic, type-safe streaming generators, and built-in distributed tracing.</p>
+        
+        <h3>Node.js & TypeScript</h3>
+        <pre class="code-block"><code>import { PrismaAgentClient } from '@prisma/agent-sdk';
+
+const client = new PrismaAgentClient({
+  apiKey: process.env.PRISMA_API_KEY,
+  region: 'us-east-1'
+});
+
+const responseStream = await client.agents.dispatchStream({
+  agentId: 'rag-worker-01',
+  prompt: 'Synthesize quarterly latency metrics'
+});
+
+for await (const chunk of responseStream) {
+  process.stdout.write(chunk.token);
+}</code></pre>
+
+        <h3>Python (Asyncio)</h3>
+        <pre class="code-block"><code>from prisma_agent import AsyncPrismaClient
+
+async with AsyncPrismaClient(api_key="prisma_live_...") as client:
+    stream = await client.agents.dispatch_stream(
+        agent_id="rag-worker-01",
+        prompt="Analyze vector embeddings for chunk #92"
+    )
+    async for chunk in stream:
+        print(chunk.token, end="", flush=True)</code></pre>
+      </section>
+
+      <!-- Error Handling Section -->
+      <section id="error-codes" class="doc-section">
+        <h2>Error Handling & Diagnostics</h2>
+        <p>All errors conform to RFC 7807 Problem Details specifications. When an API call fails, the response contains machine-readable diagnostic details along with a troubleshooting link:</p>
+        <pre class="code-block"><code>{
+  "type": "https://docs.prisma.io/errors/ERR_TOKEN_CAP_EXCEEDED",
+  "title": "Rate Limit Exceeded",
+  "status": 429,
+  "detail": "Workspace token consumption exceeded tier threshold of 10,000 TPS.",
+  "instance": "/v1/agents/dispatch",
+  "retry_after_seconds": 3
+}</code></pre>
+      </section>
+
+      <!-- Article Footer -->
+      <footer class="doc-footer">
+        <div class="feedback-box">
+          <p>Was this documentation helpful?</p>
+          <div class="feedback-btns">
+            <button class="feedback-btn" id="helpfulYes">👍 Yes</button>
+            <button class="feedback-btn" id="helpfulNo">👎 No</button>
+          </div>
+        </div>
+        <p class="updated-time">Last updated: October 2026 • Contributed via Nexus Spring of Code</p>
+      </footer>
     </main>
   </div>
+
   <script src="script.js"></script>
 </body>
 </html>
