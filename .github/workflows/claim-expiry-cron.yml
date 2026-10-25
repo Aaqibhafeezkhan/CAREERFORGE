@@ -1,4 +1,4 @@
-name: 24h Claim Expiration Checker
+name: 3-Day Claim Expiration Checker
 
 on:
   schedule:
@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   check-expired-claims:
-    name: Check 24h Claim Deadlines
+    name: Check 3-Day Claim Deadlines
     runs-on: ubuntu-latest
     steps:
       - name: Scan and Unassign Stale Claims
@@ -21,7 +21,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const now = new Date();
-            const TWENTY_FOUR_HOURS_MS = 24 * 60 * 60 * 1000;
+            const THREE_DAYS_MS = 3 * 24 * 60 * 60 * 1000;
 
             // Fetch open issues that have assignees
             const issues = await github.rest.issues.listForRepo({
@@ -55,7 +55,7 @@ jobs:
               const claimTime = new Date(latestClaim.created_at);
               const timeElapsed = now - claimTime;
 
-              if (timeElapsed > TWENTY_FOUR_HOURS_MS) {
+              if (timeElapsed > THREE_DAYS_MS) {
                 const expiredUsers = issue.assignees.map(a => a.login);
 
                 // Unassign users
@@ -77,8 +77,8 @@ jobs:
                 } catch (e) {}
 
                 // Post expiration notice
-                const expiredMessage = `### ⏰ 24-Hour Claim Expired\n\n` +
-                  `@${expiredUsers.join(', @')}, the 24-hour claim window for this issue has expired with no linked Pull Request submitted.\n\n` +
+                const expiredMessage = `### ⏰ 3-Day Claim Expired\n\n` +
+                  `@${expiredUsers.join(', @')}, the 3-day claim window for this issue has expired with no linked Pull Request submitted.\n\n` +
                   `🔓 This issue is now **unassigned and open** for any contributor to claim by replying with **\`/claim\`**.`;
 
                 await github.rest.issues.createComment({
@@ -88,6 +88,6 @@ jobs:
                   body: expiredMessage
                 });
 
-                console.log(`Unassigned ${expiredUsers.join(', ')} from issue #${issue.number} due to 24h deadline.`);
+                console.log(`Unassigned ${expiredUsers.join(', ')} from issue #${issue.number} due to 3-day deadline.`);
               }
             }

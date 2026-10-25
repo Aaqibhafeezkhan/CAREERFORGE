@@ -50,7 +50,7 @@ All issues and pull requests in this repository follow the official **Nexus Spri
 carrers-frontend/
 ├── .github/
 │   └── workflows/
-│       ├── claim-expiry-cron.yml    # 24h Claim Expiration & Auto-Unassign Cron
+│       ├── claim-expiry-cron.yml    # 3-Day Claim Expiration & Auto-Unassign Cron
 │       ├── codeql.yml               # CodeQL SAST Security Scanner
 │       ├── dependency-review.yml    # PR Dependency Vulnerability & License Scanner
 │       ├── issue-manager.yml        # First-Time Welcome & /claim Bot

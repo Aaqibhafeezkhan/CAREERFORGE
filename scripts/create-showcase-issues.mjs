@@ -472,7 +472,7 @@ ${suggestionsList}
 ### 🛡️ Contribution Guidelines & Rules
 1. ⏳ **How to Claim:**
    - Reply with **\`/claim\`** in the comments below.
-   - Our automation bot will assign you and start your **24-hour timer**.
+   - Our automation bot will assign you and start your **3-day timer (72 hours)**.
 2. 🔒 **Showcase Scope Policy:**
    - All code changes must strictly reside inside **\`public/showcase/${item.project}/\`**.
    - **Do not** touch \`src/\`, root configuration, or workflows (PRs violating this will be auto-closed by our PR Gatekeeper).
