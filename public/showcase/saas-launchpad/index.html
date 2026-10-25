@@ -24,9 +24,165 @@
     <p>Monitor token latency, prompt costs, and API throughput in a single glassmorphic dashboard.</p>
     <div class="cta-group">
       <button class="btn btn-lg btn-primary">Deploy Cluster ↗</button>
-      <button class="btn btn-lg btn-secondary">Read Docs</button>
+      <a href="#roi-calculator" class="btn btn-lg btn-secondary">Calculate ROI ↓</a>
     </div>
   </header>
+
+  <!-- Interactive ROI Value Calculator Section -->
+  <section class="roi-section" id="roi-calculator">
+    <div class="roi-container">
+      <div class="roi-header">
+        <div class="pill">// VALUE &amp; IMPACT CALCULATOR</div>
+        <h2>Calculate Your Engineering ROI</h2>
+        <p>See how much time and budget CloudPulse saves your engineering organization through automated observability and cost guards.</p>
+      </div>
+
+      <div class="roi-grid">
+        <!-- Controls Column -->
+        <div class="roi-controls-card">
+          <!-- Team Size Slider -->
+          <div class="control-group">
+            <div class="control-header">
+              <label for="team-size-slider">Engineering Team Size</label>
+              <span class="control-value" id="team-size-val">50 Devs</span>
+            </div>
+            <input type="range" id="team-size-slider" min="5" max="500" step="5" value="50" class="roi-slider" />
+            <div class="slider-marks">
+              <span>5</span>
+              <span>100</span>
+              <span>250</span>
+              <span>500+</span>
+            </div>
+            <div class="quick-presets">
+              <span class="preset-label">Quick Presets:</span>
+              <div class="preset-chips">
+                <button type="button" class="preset-btn" data-size="15">15 (Startup)</button>
+                <button type="button" class="preset-btn active" data-size="50">50 (Growth)</button>
+                <button type="button" class="preset-btn" data-size="150">150 (Scale)</button>
+                <button type="button" class="preset-btn" data-size="300">300+ (Enterprise)</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hourly Rate Input -->
+          <div class="control-group">
+            <div class="control-header">
+              <label for="hourly-rate-input">Avg. Hourly Blended Rate ($/hr)</label>
+              <span class="control-value" id="hourly-rate-val">$85 / hr</span>
+            </div>
+            <div class="input-with-currency">
+              <span class="currency-prefix">$</span>
+              <input type="number" id="hourly-rate-input" min="30" max="300" step="5" value="85" class="roi-input" />
+              <span class="currency-suffix">USD / hr</span>
+            </div>
+            <div class="input-hint">Industry average for AI &amp; backend engineers: $75 – $110/hr</div>
+          </div>
+
+          <!-- Efficiency Note -->
+          <div class="efficiency-note">
+            <span class="note-icon">⚡</span>
+            <span>Based on <strong>4 hours saved per week per developer</strong> on token debugging, telemetry instrumentation, and latency incident triage.</span>
+          </div>
+        </div>
+
+        <!-- Output Cards Column -->
+        <div class="roi-results-card">
+          <!-- Main Annual Savings Banner -->
+          <div class="savings-banner">
+            <span class="banner-tag">PROJECTED ANNUAL SAVINGS</span>
+            <div class="annual-dollar-value" id="annual-savings">$850,000</div>
+            <p class="annual-savings-sub">Estimated net engineering value recovered per year</p>
+          </div>
+
+          <!-- Stats Grid -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon">⏱️</div>
+              <div class="stat-meta">
+                <span class="stat-label">Hours Saved / Year</span>
+                <span class="stat-value" id="hours-saved">10,000</span>
+                <span class="stat-sub">~833 hrs / month</span>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">💰</div>
+              <div class="stat-meta">
+                <span class="stat-label">Monthly Savings</span>
+                <span class="stat-value" id="monthly-savings">$70,833</span>
+                <span class="stat-sub">Recurring capital saved</span>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">📈</div>
+              <div class="stat-meta">
+                <span class="stat-label">Projected ROI</span>
+                <span class="stat-value stat-roi" id="roi-multiplier">14.2x</span>
+                <span class="stat-sub">Value-to-cost ratio</span>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">🛡️</div>
+              <div class="stat-meta">
+                <span class="stat-label">Capacity Restored</span>
+                <span class="stat-value" id="dev-weeks-saved">250 wks</span>
+                <span class="stat-sub">Developer weeks saved</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- CTA Button -->
+          <div class="roi-cta-wrap">
+            <button class="btn btn-lg btn-roi" id="book-demo-btn">
+              <span>Book a Demo with this ROI Report</span>
+              <span class="btn-arrow">↗</span>
+            </button>
+            <span class="cta-microcopy">Includes custom executive breakdown for leadership review • No card required</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Demo / Report Modal -->
+  <div class="roi-modal-backdrop" id="roi-modal" style="display: none;">
+    <div class="roi-modal-content">
+      <button class="modal-close-btn" id="modal-close-btn" aria-label="Close modal">×</button>
+      <div class="modal-badge">📊 CUSTOM EXECUTIVE SUMMARY</div>
+      <h3>Your CloudPulse ROI Report</h3>
+      <p class="modal-subtitle">Ready to share with your VP of Engineering and Finance leadership.</p>
+      
+      <div class="modal-summary-box">
+        <div class="modal-row">
+          <span>Target Team Size:</span>
+          <strong id="modal-team-size">50 Developers</strong>
+        </div>
+        <div class="modal-row">
+          <span>Blended Rate:</span>
+          <strong id="modal-hourly-rate">$85 / hr</strong>
+        </div>
+        <div class="modal-row highlight">
+          <span>Projected Annual Savings:</span>
+          <strong id="modal-annual-savings">$850,000</strong>
+        </div>
+        <div class="modal-row">
+          <span>Engineering Hours Saved:</span>
+          <strong id="modal-hours-saved">10,000 hrs/yr</strong>
+        </div>
+        <div class="modal-row">
+          <span>Expected ROI Multiplier:</span>
+          <strong id="modal-roi">14.2x</strong>
+        </div>
+      </div>
+
+      <form class="modal-form" id="demo-form">
+        <input type="email" placeholder="Enter work email (e.g. alex@company.com)" required id="demo-email-input" />
+        <button type="submit" class="btn btn-primary btn-block">Confirm Demo &amp; Send Report</button>
+      </form>
+      <div class="modal-success" id="modal-success" style="display: none;">
+        ✅ Report confirmed! A calendar invite and executive summary have been generated.
+      </div>
+    </div>
+  </div>
 
   <section class="features">
     <div class="feature-card">

@@ -1,7 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
   console.log('CloudPulse SaaS Launchpad initialized');
 
-  // Carousel Elements
+  initTestimonialsCarousel();
+  initRoiCalculator();
+});
+
+/* ==========================================================
+   Customer Testimonials Carousel Module
+   ========================================================== */
+function initTestimonialsCarousel() {
   const track = document.getElementById('testimonialsTrack');
   const slides = document.querySelectorAll('.testimonial-slide');
   const prevBtn = document.getElementById('prevTestimonialBtn');
@@ -213,4 +220,216 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initial State Setup
   updateSlider(false);
   startAutoplayTimer();
-});
+}
+
+/* ==========================================================
+   Interactive ROI Value Calculator Module
+   ========================================================== */
+function initRoiCalculator() {
+  const teamSizeSlider = document.getElementById('team-size-slider');
+  const teamSizeVal = document.getElementById('team-size-val');
+  const hourlyRateInput = document.getElementById('hourly-rate-input');
+  const hourlyRateVal = document.getElementById('hourly-rate-val');
+
+  const annualSavingsEl = document.getElementById('annual-savings');
+  const hoursSavedEl = document.getElementById('hours-saved');
+  const monthlySavingsEl = document.getElementById('monthly-savings');
+  const roiMultiplierEl = document.getElementById('roi-multiplier');
+  const devWeeksSavedEl = document.getElementById('dev-weeks-saved');
+
+  const presetBtns = document.querySelectorAll('.preset-btn');
+  const bookDemoBtn = document.getElementById('book-demo-btn');
+  const roiModal = document.getElementById('roi-modal');
+  const modalCloseBtn = document.getElementById('modal-close-btn');
+  const demoForm = document.getElementById('demo-form');
+  const modalSuccess = document.getElementById('modal-success');
+
+  if (!teamSizeSlider || !hourlyRateInput) return;
+
+  // Animated numbers tracking state
+  let currentMetrics = {
+    annualSavings: 0,
+    hoursSaved: 0,
+    monthlySavings: 0,
+    devWeeks: 0,
+    roi: 0
+  };
+
+  let animationFrameId = null;
+
+  function calculateTargetMetrics(teamSize, hourlyRate) {
+    // 4 hours per week saved per engineer across 50 working weeks = 200 hrs/dev/yr
+    const annualHoursPerDev = 200;
+    const hoursSaved = teamSize * annualHoursPerDev;
+    const annualSavings = hoursSaved * hourlyRate;
+    const monthlySavings = Math.round(annualSavings / 12);
+    const devWeeks = Math.round(hoursSaved / 40);
+
+    // SaaS investment ratio: assumed standard CloudPulse seat of ~$99/dev/mo (~$1,188/dev/yr)
+    const annualSaasCost = Math.max(teamSize * 1188, 1);
+    const roi = parseFloat((annualSavings / annualSaasCost).toFixed(1));
+
+    return {
+      annualSavings,
+      hoursSaved,
+      monthlySavings,
+      devWeeks,
+      roi
+    };
+  }
+
+  function formatCurrency(num) {
+    return '$' + Math.round(num).toLocaleString('en-US');
+  }
+
+  function formatNumber(num) {
+    return Math.round(num).toLocaleString('en-US');
+  }
+
+  function animateMetrics(targetMetrics, duration = 300) {
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId);
+    }
+
+    const startMetrics = { ...currentMetrics };
+    const startTime = performance.now();
+
+    function updateFrame(now) {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // Ease out quadratic
+      const ease = progress * (2 - progress);
+
+      currentMetrics.annualSavings = startMetrics.annualSavings + (targetMetrics.annualSavings - startMetrics.annualSavings) * ease;
+      currentMetrics.hoursSaved = startMetrics.hoursSaved + (targetMetrics.hoursSaved - startMetrics.hoursSaved) * ease;
+      currentMetrics.monthlySavings = startMetrics.monthlySavings + (targetMetrics.monthlySavings - startMetrics.monthlySavings) * ease;
+      currentMetrics.devWeeks = startMetrics.devWeeks + (targetMetrics.devWeeks - startMetrics.devWeeks) * ease;
+      currentMetrics.roi = startMetrics.roi + (targetMetrics.roi - startMetrics.roi) * ease;
+
+      // Render to DOM
+      if (annualSavingsEl) annualSavingsEl.textContent = formatCurrency(currentMetrics.annualSavings);
+      if (hoursSavedEl) hoursSavedEl.textContent = formatNumber(currentMetrics.hoursSaved);
+      if (monthlySavingsEl) monthlySavingsEl.textContent = formatCurrency(currentMetrics.monthlySavings);
+      if (devWeeksSavedEl) devWeeksSavedEl.textContent = `${formatNumber(currentMetrics.devWeeks)} wks`;
+      if (roiMultiplierEl) roiMultiplierEl.textContent = `${currentMetrics.roi.toFixed(1)}x`;
+
+      if (progress < 1) {
+        animationFrameId = requestAnimationFrame(updateFrame);
+      } else {
+        currentMetrics = { ...targetMetrics };
+      }
+    }
+
+    animationFrameId = requestAnimationFrame(updateFrame);
+  }
+
+  function updateCalculator(animate = true) {
+    const teamSize = parseInt(teamSizeSlider.value, 10) || 50;
+    const hourlyRate = Math.max(parseFloat(hourlyRateInput.value) || 85, 1);
+
+    if (teamSizeVal) teamSizeVal.textContent = `${teamSize} Devs`;
+    if (hourlyRateVal) hourlyRateVal.textContent = `$${Math.round(hourlyRate)} / hr`;
+
+    // Highlight matching preset
+    presetBtns.forEach(btn => {
+      const presetSize = parseInt(btn.dataset.size, 10);
+      btn.classList.toggle('active', presetSize === teamSize);
+    });
+
+    const targets = calculateTargetMetrics(teamSize, hourlyRate);
+    if (animate) {
+      animateMetrics(targets);
+    } else {
+      currentMetrics = { ...targets };
+      if (annualSavingsEl) annualSavingsEl.textContent = formatCurrency(targets.annualSavings);
+      if (hoursSavedEl) hoursSavedEl.textContent = formatNumber(targets.hoursSaved);
+      if (monthlySavingsEl) monthlySavingsEl.textContent = formatCurrency(targets.monthlySavings);
+      if (devWeeksSavedEl) devWeeksSavedEl.textContent = `${formatNumber(targets.devWeeks)} wks`;
+      if (roiMultiplierEl) roiMultiplierEl.textContent = `${targets.roi.toFixed(1)}x`;
+    }
+  }
+
+  // Event Listeners for Controls
+  if (teamSizeSlider) {
+    teamSizeSlider.addEventListener('input', () => updateCalculator(true));
+  }
+
+  if (hourlyRateInput) {
+    hourlyRateInput.addEventListener('input', () => updateCalculator(true));
+  }
+
+  presetBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const size = btn.dataset.size;
+      if (teamSizeSlider) {
+        teamSizeSlider.value = size;
+        updateCalculator(true);
+      }
+    });
+  });
+
+  // Modal logic
+  function openModal() {
+    const teamSize = parseInt(teamSizeSlider.value, 10) || 50;
+    const hourlyRate = Math.round(parseFloat(hourlyRateInput.value) || 85);
+    const targets = calculateTargetMetrics(teamSize, hourlyRate);
+
+    const mTeam = document.getElementById('modal-team-size');
+    const mRate = document.getElementById('modal-hourly-rate');
+    const mAnnual = document.getElementById('modal-annual-savings');
+    const mHours = document.getElementById('modal-hours-saved');
+    const mRoi = document.getElementById('modal-roi');
+
+    if (mTeam) mTeam.textContent = `${teamSize} Developers`;
+    if (mRate) mRate.textContent = `$${hourlyRate} / hr`;
+    if (mAnnual) mAnnual.textContent = formatCurrency(targets.annualSavings);
+    if (mHours) mHours.textContent = `${formatNumber(targets.hoursSaved)} hrs / yr`;
+    if (mRoi) mRoi.textContent = `${targets.roi.toFixed(1)}x`;
+
+    if (modalSuccess) modalSuccess.style.display = 'none';
+    if (demoForm) demoForm.style.display = 'flex';
+
+    if (roiModal) roiModal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    if (roiModal) roiModal.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  if (bookDemoBtn) {
+    bookDemoBtn.addEventListener('click', openModal);
+  }
+
+  if (modalCloseBtn) {
+    modalCloseBtn.addEventListener('click', closeModal);
+  }
+
+  if (roiModal) {
+    roiModal.addEventListener('click', (e) => {
+      if (e.target === roiModal) closeModal();
+    });
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && roiModal && roiModal.style.display === 'flex') {
+      closeModal();
+    }
+  });
+
+  if (demoForm) {
+    demoForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const emailInput = document.getElementById('demo-email-input');
+      if (emailInput && emailInput.value) {
+        demoForm.style.display = 'none';
+        if (modalSuccess) modalSuccess.style.display = 'block';
+      }
+    });
+  }
+
+  // Initial render (without animation delay)
+  updateCalculator(false);
+  console.log('CloudPulse SaaS Launchpad ROI Calculator ready');
+}
