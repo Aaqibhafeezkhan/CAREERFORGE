@@ -12,16 +12,30 @@ permissions:
 
 jobs:
   handle-first-issue:
-    name: Welcome First-Time Issue Creator
+    name: Tag & Welcome New Issue Creator
     if: github.event_name == 'issues' && github.event.action == 'opened'
     runs-on: ubuntu-latest
     steps:
-      - name: Greet First-Time Issue Creator
+      - name: Tag with nsoc26 and Greet First-Time Issue Creator
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const author = context.payload.issue.user.login;
+            const issueNumber = context.payload.issue.number;
+
+            // Automatically apply 'nsoc26' label to every newly opened issue
+            try {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber,
+                labels: ['nsoc26']
+              });
+              console.log(`Tagged issue #${issueNumber} with 'nsoc26'`);
+            } catch (err) {
+              console.error(`Error tagging issue #${issueNumber} with 'nsoc26':`, err.message);
+            }
             
             // Check previous issues created by this user in this repo
             const issues = await github.rest.issues.listForRepo({
@@ -45,7 +59,7 @@ jobs:
               await github.rest.issues.createComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                issue_number: context.payload.issue.number,
+                issue_number: issueNumber,
                 body: welcomeMessage
               });
             }
@@ -83,13 +97,13 @@ jobs:
               assignees: [commenter]
             });
 
-            // Add assigned label
+            // Add assigned label and ensure nsoc26 is present
             try {
               await github.rest.issues.addLabels({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: issueNumber,
-                labels: ['claimed', 'in-progress']
+                labels: ['claimed', 'in-progress', 'nsoc26']
               });
             } catch (err) {
               console.log('Label add skipped/optional:', err.message);

@@ -27,10 +27,39 @@ jobs:
             const repo = context.repo.repo;
             const prBody = pr.body || '';
 
+            // 0. Automatically tag PR with 'nsoc26'
+            try {
+              await github.rest.issues.addLabels({
+                owner,
+                repo,
+                issue_number: prNumber,
+                labels: ['nsoc26']
+              });
+              console.log(`Tagged PR #${prNumber} with 'nsoc26'`);
+            } catch (err) {
+              console.error(`Error adding nsoc26 label to PR #${prNumber}:`, err.message);
+            }
+
             // 1. Verify Issue Linking Keyword in PR Description
             // Matches: closes #12, fixes #12, resolve #12, closed #12, etc. (case-insensitive)
-            const issueLinkRegex = /\b(close|closes|closed|fix|fixes|fixed|resolve|resolves|resolved)\s+#\d+\b/i;
-            const hasLinkedIssue = issueLinkRegex.test(prBody);
+            const issueLinkRegex = /\b(close|closes|closed|fix|fixes|fixed|resolve|resolves|resolved)\s+#(\d+)\b/i;
+            const match = prBody.match(issueLinkRegex);
+            const hasLinkedIssue = !!match;
+
+            if (match && match[2]) {
+              const linkedIssueNumber = parseInt(match[2], 10);
+              try {
+                await github.rest.issues.addLabels({
+                  owner,
+                  repo,
+                  issue_number: linkedIssueNumber,
+                  labels: ['nsoc26']
+                });
+                console.log(`Ensured linked issue #${linkedIssueNumber} is tagged with 'nsoc26'`);
+              } catch (err) {
+                console.error(`Error tagging linked issue #${linkedIssueNumber} with 'nsoc26':`, err.message);
+              }
+            }
 
             if (!hasLinkedIssue) {
               const issueMissingComment = `### ⚠️ Missing Linked Issue Keyword\n\n` +
