@@ -7,44 +7,417 @@
   <link rel="stylesheet" href="styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-  <nav className="nav">
-    <div className="logo">☁️ CloudPulse</div>
-    <div className="nav-btns">
-      <button className="btn btn-secondary">Sign In</button>
-      <button className="btn btn-primary">Start Free Trial</button>
+  <nav class="nav">
+    <div class="logo">☁️ CloudPulse</div>
+    <div class="nav-btns">
+      <button class="btn btn-secondary">Sign In</button>
+      <button class="btn btn-primary">Start Free Trial</button>
     </div>
   </nav>
 
-  <header className="hero">
-    <div className="pill">// NEXT-GEN CLOUD TELEMETRY</div>
+  <header class="hero">
+    <div class="pill">// NEXT-GEN CLOUD TELEMETRY</div>
     <h1>Real-time observability for autonomous LLM workloads</h1>
     <p>Monitor token latency, prompt costs, and API throughput in a single glassmorphic dashboard.</p>
-    <div className="cta-group">
-      <button className="btn btn-lg btn-primary">Deploy Cluster ↗</button>
-      <button className="btn btn-lg btn-secondary">Read Docs</button>
+    <div class="cta-group">
+      <button class="btn btn-lg btn-primary">Deploy Cluster ↗</button>
+      <button class="btn btn-lg btn-secondary">Read Docs</button>
     </div>
   </header>
 
-  <section className="features">
-    <div className="feature-card">
-      <div className="icon">🚀</div>
+  <section class="features">
+    <div class="feature-card">
+      <div class="icon">🚀</div>
       <h3>Sub-10ms Latency</h3>
       <p>Distributed Edge routing ensures microsecond response rates across all global regions.</p>
     </div>
-    <div className="feature-card">
-      <div className="icon">🛡️</div>
+    <div class="feature-card">
+      <div class="icon">🛡️</div>
       <h3>SOC2 Type II Certified</h3>
       <p>Enterprise zero-trust data encryption for sensitive AI prompt context and vectors.</p>
     </div>
-    <div className="feature-card">
-      <div className="icon">📊</div>
+    <div class="feature-card">
+      <div class="icon">📊</div>
       <h3>Automated Cost Guards</h3>
       <p>Prevent API budget overruns with real-time token spend alerts and automated rate caps.</p>
     </div>
   </section>
+
+  <!-- Social Proof & Customer Testimonial Slider Section -->
+  <section class="testimonials-section" id="testimonials" aria-roledescription="carousel" aria-label="Customer Testimonials">
+    <div class="section-header">
+      <div class="pill">// TRUSTED BY LEADING AI TEAMS</div>
+      <h2>Loved by engineers, trusted by enterprises</h2>
+      <p>Discover how engineering leaders scale their autonomous LLM workloads with zero downtime and guaranteed latency.</p>
+    </div>
+
+    <div class="testimonial-carousel-wrapper">
+      <!-- Navigation Prev Arrow -->
+      <button class="slider-arrow prev-btn" id="prevTestimonialBtn" aria-label="Previous Testimonial">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+
+      <!-- Carousel Viewport & Track -->
+      <div class="testimonials-viewport" id="testimonialsViewport">
+        <div class="testimonials-track" id="testimonialsTrack">
+
+          <!-- Slide 1 -->
+          <div class="testimonial-slide active" role="group" aria-roledescription="slide" aria-label="1 of 5">
+            <div class="testimonial-card">
+              <div class="card-glass-glow"></div>
+              <div class="card-header">
+                <div class="company-brand">
+                  <div class="company-logo-badge logo-synthetix">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                  </div>
+                  <span class="company-name">Synthetix AI</span>
+                </div>
+                <div class="verified-badge">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+                  </svg>
+                  <span>Verified Customer</span>
+                </div>
+              </div>
+
+              <div class="rating-row">
+                <div class="star-rating" aria-label="5 out of 5 stars">
+                  <span class="star-icon">★</span>
+                  <span class="star-icon">★</span>
+                  <span class="star-icon">★</span>
+                  <span class="star-icon">★</span>
+                  <span class="star-icon">★</span>
+                </div>
+                <span class="rating-score">5.0</span>
+                <span class="impact-pill">⚡ 68% Latency Drop</span>
+              </div>
+
+              <blockquote class="testimonial-quote">
+                "CloudPulse reduced our LLM token latency by 68% across distributed inference nodes. The real-time telemetry and automated cost caps prevented runaway loops, saving us over $42,000 in API spend within our very first month."
+              </blockquote>
+
+              <div class="customer-profile">
+                <div class="avatar-wrapper">
+                  <div class="avatar avatar-1">
+                    <svg viewBox="0 0 100 100" width="100%" height="100%">
+                      <defs>
+                        <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stop-color="#3b82f6" />
+                          <stop offset="100%" stop-color="#8b5cf6" />
+                        </linearGradient>
+                      </defs>
+                      <circle cx="50" cy="50" r="48" fill="url(#grad1)" />
+                      <circle cx="50" cy="40" r="18" fill="#ffffff" opacity="0.9" />
+                      <path d="M 24 82 C 24 64, 76 64, 76 82 Z" fill="#ffffff" opacity="0.9" />
+                    </svg>
+                  </div>
+                  <span class="status-indicator"></span>
+                </div>
+                <div class="customer-info">
+                  <div class="customer-name">Dr. Elena Rostova</div>
+                  <div class="customer-role-badge">Head of AI Research</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 2 -->
+          <div class="testimonial-slide" role="group" aria-roledescription="slide" aria-label="2 of 5">
+            <div class="testimonial-card">
+              <div class="card-glass-glow"></div>
+              <div class="card-header">
+                <div class="company-brand">
+                  <div class="company-logo-badge logo-hyperscale">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/>
+                    </svg>
+                  </div>
+                  <span class="company-name">HyperScale Vector</span>
+                </div>
+                <div class="verified-badge">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+                  </svg>
+                  <span>Verified Customer</span>
+                </div>
+              </div>
+
+              <div class="rating-row">
+                <div class="star-rating" aria-label="5 out of 5 stars">
+                  <span class="star-icon">★</span>
+                  <span class="star-icon">★</span>
+                  <span class="star-icon">★</span>
+                  <span class="star-icon">★</span>
+                  <span class="star-icon">★</span>
+                </div>
+                <span class="rating-score">5.0</span>
+                <span class="impact-pill">🛡️ Zero Context Breaches</span>
+              </div>
+
+              <blockquote class="testimonial-quote">
+                "Deploying multi-agent LLM systems in high-compliance financial environments was daunting before CloudPulse. The SOC2 Type II audit logging and enterprise zero-trust telemetry gave our compliance committee immediate peace of mind."
+              </blockquote>
+
+              <div class="customer-profile">
+                <div class="avatar-wrapper">
+                  <div class="avatar avatar-2">
+                    <svg viewBox="0 0 100 100" width="100%" height="100%">
+                      <defs>
+                        <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stop-color="#06b6d4" />
+                          <stop offset="100%" stop-color="#3b82f6" />
+                        </linearGradient>
+                      </defs>
+                      <circle cx="50" cy="50" r="48" fill="url(#grad2)" />
+                      <circle cx="50" cy="40" r="18" fill="#ffffff" opacity="0.9" />
+                      <path d="M 24 82 C 24 64, 76 64, 76 82 Z" fill="#ffffff" opacity="0.9" />
+                    </svg>
+                  </div>
+                  <span class="status-indicator"></span>
+                </div>
+                <div class="customer-info">
+                  <div class="customer-name">Marcus Vance</div>
+                  <div class="customer-role-badge">VP of Cloud Engineering</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 3 -->
+          <div class="testimonial-slide" role="group" aria-roledescription="slide" aria-label="3 of 5">
+            <div class="testimonial-card">
+              <div class="card-glass-glow"></div>
+              <div class="card-header">
+                <div class="company-brand">
+                  <div class="company-logo-badge logo-nexus">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                  </div>
+                  <span class="company-name">NexusLogic Labs</span>
+                </div>
+                <div class="verified-badge">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+                  </svg>
+                  <span>Verified Customer</span>
+                </div>
+              </div>
+
+              <div class="rating-row">
+                <div class="star-rating" aria-label="5 out of 5 stars">
+                  <span class="star-icon">★</span>
+                  <span class="star-icon">★</span>
+                  <span class="star-icon">★</span>
+                  <span class="star-icon">★</span>
+                  <span class="star-icon">★</span>
+                </div>
+                <span class="rating-score">5.0</span>
+                <span class="impact-pill">💰 $35k/mo Cost Savings</span>
+              </div>
+
+              <blockquote class="testimonial-quote">
+                "We operate thousands of prompt queries per minute. CloudPulse's prompt cost breakdown pinpointed inefficient tokens instantly. It paid for itself within the trial period, hands down the best observability investment."
+              </blockquote>
+
+              <div class="customer-profile">
+                <div class="avatar-wrapper">
+                  <div class="avatar avatar-3">
+                    <svg viewBox="0 0 100 100" width="100%" height="100%">
+                      <defs>
+                        <linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stop-color="#10b981" />
+                          <stop offset="100%" stop-color="#059669" />
+                        </linearGradient>
+                      </defs>
+                      <circle cx="50" cy="50" r="48" fill="url(#grad3)" />
+                      <circle cx="50" cy="40" r="18" fill="#ffffff" opacity="0.9" />
+                      <path d="M 24 82 C 24 64, 76 64, 76 82 Z" fill="#ffffff" opacity="0.9" />
+                    </svg>
+                  </div>
+                  <span class="status-indicator"></span>
+                </div>
+                <div class="customer-info">
+                  <div class="customer-name">Sarah Lin</div>
+                  <div class="customer-role-badge">Principal MLOps Architect</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 4 -->
+          <div class="testimonial-slide" role="group" aria-roledescription="slide" aria-label="4 of 5">
+            <div class="testimonial-card">
+              <div class="card-glass-glow"></div>
+              <div class="card-header">
+                <div class="company-brand">
+                  <div class="company-logo-badge logo-cognitive">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                      <circle cx="12" cy="12" r="10"/>
+                      <path d="M12 6v6l4 2" stroke="#0b0f19" stroke-width="2"/>
+                    </svg>
+                  </div>
+                  <span class="company-name">CognitiveFlow</span>
+                </div>
+                <div class="verified-badge">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+                  </svg>
+                  <span>Verified Customer</span>
+                </div>
+              </div>
+
+              <div class="rating-row">
+                <div class="star-rating" aria-label="5 out of 5 stars">
+                  <span class="star-icon">★</span>
+                  <span class="star-icon">★</span>
+                  <span class="star-icon">★</span>
+                  <span class="star-icon">★</span>
+                  <span class="star-icon">★</span>
+                </div>
+                <span class="rating-score">5.0</span>
+                <span class="impact-pill">🚀 99.999% Service Uptime</span>
+              </div>
+
+              <blockquote class="testimonial-quote">
+                "Our global autonomous customer agent platform relies on CloudPulse 24/7. The glassmorphic telemetry graphs make detecting API anomalies effortless, giving our SRE team instant clarity across every region."
+              </blockquote>
+
+              <div class="customer-profile">
+                <div class="avatar-wrapper">
+                  <div class="avatar avatar-4">
+                    <svg viewBox="0 0 100 100" width="100%" height="100%">
+                      <defs>
+                        <linearGradient id="grad4" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stop-color="#f59e0b" />
+                          <stop offset="100%" stop-color="#ef4444" />
+                        </linearGradient>
+                      </defs>
+                      <circle cx="50" cy="50" r="48" fill="url(#grad4)" />
+                      <circle cx="50" cy="40" r="18" fill="#ffffff" opacity="0.9" />
+                      <path d="M 24 82 C 24 64, 76 64, 76 82 Z" fill="#ffffff" opacity="0.9" />
+                    </svg>
+                  </div>
+                  <span class="status-indicator"></span>
+                </div>
+                <div class="customer-info">
+                  <div class="customer-name">David Kim</div>
+                  <div class="customer-role-badge">Chief Technology Officer</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 5 -->
+          <div class="testimonial-slide" role="group" aria-roledescription="slide" aria-label="5 of 5">
+            <div class="testimonial-card">
+              <div class="card-glass-glow"></div>
+              <div class="card-header">
+                <div class="company-brand">
+                  <div class="company-logo-badge logo-vortex">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/>
+                    </svg>
+                  </div>
+                  <span class="company-name">Vortex Data Systems</span>
+                </div>
+                <div class="verified-badge">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+                  </svg>
+                  <span>Verified Customer</span>
+                </div>
+              </div>
+
+              <div class="rating-row">
+                <div class="star-rating" aria-label="5 out of 5 stars">
+                  <span class="star-icon">★</span>
+                  <span class="star-icon">★</span>
+                  <span class="star-icon">★</span>
+                  <span class="star-icon">★</span>
+                  <span class="star-icon">★</span>
+                </div>
+                <span class="rating-score">5.0</span>
+                <span class="impact-pill">📈 4.2x Throughput Scale</span>
+              </div>
+
+              <blockquote class="testimonial-quote">
+                "Scaling generative AI pipelines without bottlenecking token throughput felt impossible until we adopted CloudPulse Edge routing. The microsecond latency and intelligent batch caching changed everything."
+              </blockquote>
+
+              <div class="customer-profile">
+                <div class="avatar-wrapper">
+                  <div class="avatar avatar-5">
+                    <svg viewBox="0 0 100 100" width="100%" height="100%">
+                      <defs>
+                        <linearGradient id="grad5" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stop-color="#ec4899" />
+                          <stop offset="100%" stop-color="#8b5cf6" />
+                        </linearGradient>
+                      </defs>
+                      <circle cx="50" cy="50" r="48" fill="url(#grad5)" />
+                      <circle cx="50" cy="40" r="18" fill="#ffffff" opacity="0.9" />
+                      <path d="M 24 82 C 24 64, 76 64, 76 82 Z" fill="#ffffff" opacity="0.9" />
+                    </svg>
+                  </div>
+                  <span class="status-indicator"></span>
+                </div>
+                <div class="customer-info">
+                  <div class="customer-name">Amara Okonjo</div>
+                  <div class="customer-role-badge">Director of Machine Learning</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Navigation Next Arrow -->
+      <button class="slider-arrow next-btn" id="nextTestimonialBtn" aria-label="Next Testimonial">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Bottom Controls: Indicators, Counter, & Auto-Rotate Toggle -->
+    <div class="slider-controls-bar">
+      <div class="slider-indicators" id="sliderIndicators" role="tablist" aria-label="Choose testimonial slide">
+        <!-- Generated by JavaScript with fallbacks -->
+        <button class="indicator-dot active" role="tab" aria-selected="true" aria-label="Slide 1"></button>
+        <button class="indicator-dot" role="tab" aria-selected="false" aria-label="Slide 2"></button>
+        <button class="indicator-dot" role="tab" aria-selected="false" aria-label="Slide 3"></button>
+        <button class="indicator-dot" role="tab" aria-selected="false" aria-label="Slide 4"></button>
+        <button class="indicator-dot" role="tab" aria-selected="false" aria-label="Slide 5"></button>
+      </div>
+
+      <div class="slider-meta-controls">
+        <span class="slide-counter" id="slideCounter">01 / 05</span>
+        <button class="auto-rotate-toggle" id="autoRotateToggle" aria-label="Pause 5-second auto-rotation" title="Pause / Resume auto-rotate">
+          <span class="toggle-icon" id="toggleIcon">⏸</span>
+          <span class="toggle-label" id="toggleLabel">Auto-rotate (5s)</span>
+          <span class="timer-progress-ring">
+            <span class="timer-progress-fill" id="timerProgressFill"></span>
+          </span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="logo">☁️ CloudPulse</div>
+      <p>© 2026 CloudPulse Technologies Inc. All rights reserved.</p>
+    </div>
+  </footer>
 
   <script src="script.js"></script>
 </body>
