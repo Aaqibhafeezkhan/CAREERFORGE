@@ -52,9 +52,12 @@ carrers-frontend/
 │   └── workflows/
 │       ├── claim-expiry-cron.yml    # 24h Claim Expiration & Auto-Unassign Cron
 │       ├── codeql.yml               # CodeQL SAST Security Scanner
+│       ├── dependency-review.yml    # PR Dependency Vulnerability & License Scanner
 │       ├── issue-manager.yml        # First-Time Welcome & /claim Bot
 │       ├── leaderboard-sync.yml     # 24h Automated Leaderboard Sync
-│       └── pr-gatekeeper.yml        # Scope Gatekeeper & Auto-Close Action
+│       ├── osv-scanner.yml          # Google OSV Open-Source Vulnerability Audit
+│       ├── pr-gatekeeper.yml        # Scope Gatekeeper & Auto-Close Action
+│       └── semgrep.yml              # Semgrep Client-Side SAST Security Scanner
 ├── public/
 │   ├── leaderboard.json             # Flat-JSON Daily Leaderboard Data
 │   └── showcase/                    # 20 Standalone Website Templates
