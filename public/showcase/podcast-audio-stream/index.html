@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Waveform — Deep Tech & AI Podcast Network</title>
+  <title>Waveform — Deep Tech &amp; AI Podcast Network</title>
   <link rel="stylesheet" href="styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;800&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <header class="hero">
@@ -15,20 +15,81 @@
     <h1>Unfiltered Conversations with AI Researchers &amp; Founders</h1>
     <p>Hosted by Sarah Lin. Streaming on Spotify, Apple Podcasts &amp; RSS.</p>
     <div class="player-controls">
-      <button class="play-btn" onclick="playEpisode('Ep 142')">▶ Play Latest Episode (#142)</button>
+      <button class="play-btn" id="hero-play-btn" onclick="playEpisode('Ep 142')">▶ Play Latest Episode (#142)</button>
       <button id="speed-btn" class="speed-btn" onclick="toggleSpeed()" aria-label="Playback speed: 1x" title="Cycle playback speed">1x</button>
     </div>
   </header>
 
+  <!-- Interactive Mini Player Dock & Timeline Scrubber -->
+  <section class="player-dock-section" id="player-dock">
+    <div class="dock-container">
+      <div class="dock-now-playing">
+        <div class="dock-art">🎙️</div>
+        <div class="dock-info">
+          <div class="dock-ep-tag" id="dock-ep-tag">NOW STREAMING • EP 142</div>
+          <h4 class="dock-title" id="dock-title">The Future of Agentic AI &amp; Spatial Compute</h4>
+          <span class="dock-guest" id="dock-guest">Guest: Dr. Aris Thorne (OpenAI Lead)</span>
+        </div>
+      </div>
+
+      <div class="dock-timeline-wrap">
+        <div class="dock-controls-row">
+          <button type="button" class="dock-btn" id="dock-rewind-btn" title="Rewind 15 seconds">↺ 15s</button>
+          <button type="button" class="dock-play-pause-btn" id="dock-play-pause-btn" title="Play / Pause Episode">▶</button>
+          <button type="button" class="dock-btn" id="dock-forward-btn" title="Forward 15 seconds">15s ↻</button>
+          <button type="button" class="dock-speed-pill" id="dock-speed-pill" onclick="toggleSpeed()" title="Cycle Playback Speed">1x</button>
+        </div>
+
+        <div class="dock-scrubber-row">
+          <span class="time-label" id="current-time-label">00:00</span>
+          <div class="scrubber-bar-container">
+            <input type="range" class="dock-scrubber" id="dock-scrubber" min="0" max="2880" value="0" step="1" aria-label="Episode timeline scrubber" />
+            <div class="scrubber-fill" id="scrubber-fill"></div>
+          </div>
+          <span class="time-label" id="duration-label">48:00</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Transcript Reader Section -->
+  <section class="transcript-section" id="episode-transcript-section">
+    <div class="transcript-container">
+      <div class="transcript-header">
+        <div class="transcript-header-left">
+          <div class="tag">📝 INTERACTIVE TRANSCRIPT</div>
+          <h2>Episode 142 Transcript</h2>
+          <p>Click any timestamp badge to jump audio playback directly to that discussion point.</p>
+        </div>
+
+        <div class="transcript-tools">
+          <div class="transcript-search">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="transcript-search-input" placeholder="Search transcript keywords..." />
+          </div>
+          <label class="autoscroll-toggle" title="Automatically keep currently playing segment in view">
+            <input type="checkbox" id="autoscroll-checkbox" checked />
+            <span class="toggle-switch"></span>
+            <span class="toggle-text">Auto-scroll</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="transcript-body" id="transcript-body">
+        <!-- Transcript paragraphs with clickable timestamps dynamically populated via script.js -->
+      </div>
+    </div>
+  </section>
+
   <main class="episodes">
     <h2>RECENT EPISODES</h2>
     <div class="grid">
-      <div class="card">
-        <div class="ep-num">EP 142</div>
-        <h3>The Future of Agentic AI & Spatial Compute</h3>
+      <div class="card active-card" id="card-142" onclick="playEpisode('Ep 142')" style="cursor: pointer;">
+        <div class="ep-num">EP 142 • ACTIVE IN PLAYER</div>
+        <h3>The Future of Agentic AI &amp; Spatial Compute</h3>
         <p>48 Mins • Guest: Dr. Aris Thorne (OpenAI Lead)</p>
       </div>
-      <div class="card">
+      <div class="card" id="card-141" onclick="playEpisode('Ep 141')" style="cursor: pointer;">
         <div class="ep-num">EP 141</div>
         <h3>Scaling Vector Databases to 10 Billion Chunks</h3>
         <p>54 Mins • Guest: Marcus Vance (ChromaDB Creator)</p>
