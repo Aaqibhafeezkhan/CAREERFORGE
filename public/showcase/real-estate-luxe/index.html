@@ -7,39 +7,268 @@
   <link rel="stylesheet" href="styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header className="hero">
-    <div className="brand">VANGUARD ESTATES</div>
+  <header class="hero">
+    <div class="brand">VANGUARD ESTATES</div>
     <h1>Extraordinary Architectural Residences &amp; Penthouses</h1>
     <p>Exclusive luxury property listings in Beverly Hills, Aspen, and Côte d'Azur.</p>
+    <div class="hero-actions">
+      <a href="#mortgage-calculator" class="hero-link">Mortgage Financing Calculator ↓</a>
+    </div>
   </header>
 
-  <main className="listings">
+  <main class="listings">
     <h2>Featured Estates</h2>
-    <div className="grid">
-      <div className="card">
-        <div className="card-badge">$14,500,000</div>
-        <div className="img-holder">🏰</div>
+    <div class="grid">
+      <div class="card" data-price="14500000">
+        <div class="card-badge">$14,500,000</div>
+        <div class="img-holder">🏰</div>
         <h3>The Glass Horizon Villa</h3>
-        <p className="location">Malibu, California</p>
-        <div className="specs">
+        <p class="location">Malibu, California</p>
+        <div class="specs">
           <span>5 Beds</span> • <span>7 Baths</span> • <span>9,200 sqft</span>
         </div>
+        <button class="calc-estate-btn" onclick="applyEstatePrice(14500000)">Calculate Mortgage ↗</button>
       </div>
 
-      <div className="card">
-        <div className="card-badge">$22,000,000</div>
-        <div className="img-holder">🏙️</div>
+      <div class="card" data-price="22000000">
+        <div class="card-badge">$22,000,000</div>
+        <div class="img-holder">🏙️</div>
         <h3>Skyline Sky-Penthouse</h3>
-        <p className="location">Tribeca, New York</p>
-        <div className="specs">
+        <p class="location">Tribeca, New York</p>
+        <div class="specs">
           <span>4 Beds</span> • <span>5 Baths</span> • <span>6,800 sqft</span>
         </div>
+        <button class="calc-estate-btn" onclick="applyEstatePrice(22000000)">Calculate Mortgage ↗</button>
       </div>
     </div>
   </main>
+
+  <!-- Comprehensive Mortgage Financing Calculator Section -->
+  <section class="calculator-section" id="mortgage-calculator">
+    <div class="calc-container">
+      <div class="calc-header">
+        <div class="gold-tag">FINANCIAL ARCHITECTURE</div>
+        <h2>Luxury Mortgage &amp; Amortization Calculator</h2>
+        <p>Model custom financing structures, itemized escrow fees, and multi-decade amortization for bespoke acquisitions.</p>
+      </div>
+
+      <div class="calc-grid">
+        <!-- Input Parameters Card -->
+        <div class="calc-card inputs-card">
+          <div class="card-title-wrap">
+            <span class="card-num">01</span>
+            <h3>Financing Parameters</h3>
+          </div>
+
+          <!-- Home Price -->
+          <div class="input-field-group">
+            <div class="label-row">
+              <label for="home-price-input">Home Purchase Price</label>
+              <span class="val-display" id="home-price-badge">$14,500,000</span>
+            </div>
+            <div class="currency-input-wrap">
+              <span class="curr-sign">$</span>
+              <input type="number" id="home-price-input" min="500000" max="100000000" step="100000" value="14500000" class="num-input" />
+            </div>
+            <div class="quick-price-chips">
+              <button type="button" class="chip active" id="chip-145" onclick="applyEstatePrice(14500000)">$14.5M (Malibu)</button>
+              <button type="button" class="chip" id="chip-22" onclick="applyEstatePrice(22000000)">$22M (Tribeca)</button>
+              <button type="button" class="chip" id="chip-35" onclick="applyEstatePrice(35000000)">$35M (Aspen)</button>
+            </div>
+          </div>
+
+          <!-- Down Payment -->
+          <div class="input-field-group">
+            <div class="label-row">
+              <label for="down-payment-range">Down Payment (<span id="down-payment-pct-badge">20%</span>)</label>
+              <span class="val-display" id="down-payment-dollars">$2,900,000</span>
+            </div>
+            <input type="range" id="down-payment-range" min="5" max="60" step="5" value="20" class="custom-range" />
+            <div class="range-marks">
+              <span>5%</span>
+              <span>20%</span>
+              <span>35%</span>
+              <span>50%+</span>
+            </div>
+          </div>
+
+          <!-- Loan Term & Interest Rate -->
+          <div class="two-col-inputs">
+            <!-- Loan Term -->
+            <div class="input-field-group">
+              <label>Loan Term</label>
+              <div class="term-toggle-group">
+                <button type="button" class="term-btn active" data-years="30" id="term-30-btn">30 Yrs</button>
+                <button type="button" class="term-btn" data-years="15" id="term-15-btn">15 Yrs</button>
+              </div>
+            </div>
+
+            <!-- Interest Rate -->
+            <div class="input-field-group">
+              <div class="label-row">
+                <label for="interest-rate-input">Interest Rate</label>
+                <span class="val-display" id="interest-rate-badge">6.50%</span>
+              </div>
+              <div class="pct-input-wrap">
+                <input type="number" id="interest-rate-input" min="1.0" max="15.0" step="0.05" value="6.5" class="num-input" />
+                <span class="pct-sign">%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Secondary Escrow Expenses (Taxes, Insurance, HOA) -->
+          <div class="escrow-collapsible">
+            <div class="escrow-header">
+              <span>Escrow Estimates (Taxes, Insurance, HOA)</span>
+            </div>
+            <div class="three-col-inputs">
+              <div class="mini-input-group">
+                <label for="tax-rate-input">Tax Rate</label>
+                <div class="pct-input-wrap mini">
+                  <input type="number" id="tax-rate-input" min="0.1" max="4.0" step="0.1" value="1.2" class="num-input" />
+                  <span class="pct-sign">%</span>
+                </div>
+              </div>
+              <div class="mini-input-group">
+                <label for="ins-rate-input">Insurance</label>
+                <div class="pct-input-wrap mini">
+                  <input type="number" id="ins-rate-input" min="0.1" max="2.0" step="0.05" value="0.35" class="num-input" />
+                  <span class="pct-sign">%</span>
+                </div>
+              </div>
+              <div class="mini-input-group">
+                <label for="hoa-input">HOA / Mo</label>
+                <div class="currency-input-wrap mini">
+                  <span class="curr-sign">$</span>
+                  <input type="number" id="hoa-input" min="0" max="25000" step="50" value="850" class="num-input" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Output Breakdown & Donut Chart Card -->
+        <div class="calc-card results-card">
+          <div class="card-title-wrap">
+            <span class="card-num">02</span>
+            <h3>Estimated Monthly Payment</h3>
+          </div>
+
+          <!-- Total Monthly Output -->
+          <div class="total-monthly-banner">
+            <span class="total-sub">TOTAL ESTIMATED PAYMENT</span>
+            <div class="total-amount" id="total-monthly-payment">$90,838</div>
+            <span class="total-freq">per month</span>
+          </div>
+
+          <!-- Donut Chart & Itemized Legend -->
+          <div class="breakdown-wrap">
+            <!-- SVG Donut Chart -->
+            <div class="donut-chart-container">
+              <svg class="donut-svg" width="180" height="180" viewBox="0 0 180 180">
+                <circle class="donut-bg" cx="90" cy="90" r="65" />
+                <circle class="donut-segment seg-principal" id="seg-principal" cx="90" cy="90" r="65" />
+                <circle class="donut-segment seg-taxes" id="seg-taxes" cx="90" cy="90" r="65" />
+                <circle class="donut-segment seg-insurance" id="seg-insurance" cx="90" cy="90" r="65" />
+                <circle class="donut-segment seg-hoa" id="seg-hoa" cx="90" cy="90" r="65" />
+              </svg>
+              <div class="donut-center-label">
+                <span class="donut-center-sub">LOAN PRINCIPAL</span>
+                <span class="donut-center-val" id="donut-loan-val">$11.6M</span>
+              </div>
+            </div>
+
+            <!-- Itemized Breakdown Legend -->
+            <div class="itemized-legend" id="payment-legend">
+              <div class="legend-row">
+                <div class="legend-meta">
+                  <span class="color-dot dot-principal"></span>
+                  <span class="legend-title">Principal &amp; Interest</span>
+                </div>
+                <div class="legend-amounts">
+                  <strong id="legend-principal-val">$73,320</strong>
+                  <span class="legend-pct" id="legend-principal-pct">80.7%</span>
+                </div>
+              </div>
+
+              <div class="legend-row">
+                <div class="legend-meta">
+                  <span class="color-dot dot-taxes"></span>
+                  <span class="legend-title">Property Taxes</span>
+                </div>
+                <div class="legend-amounts">
+                  <strong id="legend-taxes-val">$14,500</strong>
+                  <span class="legend-pct" id="legend-taxes-pct">16.0%</span>
+                </div>
+              </div>
+
+              <div class="legend-row">
+                <div class="legend-meta">
+                  <span class="color-dot dot-insurance"></span>
+                  <span class="legend-title">Homeowners Insurance</span>
+                </div>
+                <div class="legend-amounts">
+                  <strong id="legend-insurance-val">$4,229</strong>
+                  <span class="legend-pct" id="legend-insurance-pct">4.7%</span>
+                </div>
+              </div>
+
+              <div class="legend-row">
+                <div class="legend-meta">
+                  <span class="color-dot dot-hoa"></span>
+                  <span class="legend-title">HOA / Maintenance</span>
+                </div>
+                <div class="legend-amounts">
+                  <strong id="legend-hoa-val">$850</strong>
+                  <span class="legend-pct" id="legend-hoa-pct">0.9%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Schedule Trigger -->
+          <div class="schedule-actions">
+            <button type="button" class="schedule-btn" id="toggle-schedule-btn">
+              <span id="schedule-btn-text">View 30-Year Amortization Schedule</span>
+              <span class="toggle-icon" id="schedule-toggle-icon">↓</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Amortization Schedule Table Drawer -->
+      <div class="amortization-drawer" id="amortization-drawer" style="display: none;">
+        <div class="drawer-header">
+          <div>
+            <h3>Annual Amortization Schedule</h3>
+            <p>Year-by-year principal paydown, interest cost, and remaining balance.</p>
+          </div>
+          <button type="button" class="drawer-close-btn" id="drawer-close-btn">Hide Schedule ×</button>
+        </div>
+        <div class="table-responsive">
+          <table class="amort-table">
+            <thead>
+              <tr>
+                <th>Year</th>
+                <th>Principal Paid</th>
+                <th>Interest Paid</th>
+                <th>Total Annual Cost</th>
+                <th>Remaining Balance</th>
+                <th>Home Equity Built</th>
+              </tr>
+            </thead>
+            <tbody id="amortization-tbody">
+              <!-- Dynamically populated via script.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <script src="script.js"></script>
 </body>
 </html>
