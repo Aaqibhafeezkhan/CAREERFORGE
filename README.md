@@ -6,8 +6,31 @@
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4.0-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![CodeQL Security](https://img.shields.io/badge/CodeQL-Active-10B981?style=for-the-badge&logo=githubactions&logoColor=white)](.github/workflows/codeql.yml)
 [![PR Gatekeeper](https://img.shields.io/badge/PR_Gatekeeper-Enforced-F59E0B?style=for-the-badge&logo=githubactions&logoColor=white)](.github/workflows/pr-gatekeeper.yml)
+[![Nexus Spring of Code](https://img.shields.io/badge/Nexus_Spring_of_Code-2026_Official_Participant-6366F1?style=for-the-badge&logo=open-source-initiative&logoColor=white)](https://github.com/Pratyush-Panda-2006/CAREERFORGE)
 
 > **CAREERFORGE** is a next-generation open-source contribution portal and standalone website showcase platform. Designed around a **Single-Repository Isolated Architecture**, it allows open-source contributors to build, preview, and refine standalone web templates under `public/showcase/` without risk of breaking core platform code.
+
+---
+
+## 🌸 Nexus Spring of Code (NSoC '26) — Official Participation
+
+> 🌟 **Official Confirmation:** CAREERFORGE is officially participating in the **Nexus Spring of Code (NSoC 2026)**! We warmly welcome all student developers, open-source contributors, and mentors participating in this edition of Nexus Spring of Code.
+
+### 🏷️ Mandatory Labels and Points
+
+All issues and pull requests in this repository follow the official **Nexus Spring of Code** scoring structure:
+
+| Label | Points | Used for |
+| :--- | :--- | :--- |
+| `nsoc26` | **Mandatory tag** | Every NSoC issue and PR |
+| `level1` | **3 points** | Documentation, typo fixes and other small work |
+| `level2` | **5 points** | UI and frontend work: layouts, components, styling and page-level changes |
+| `level3` | **10 points** | Core logic, database changes and complex features |
+
+> [!TIP]
+> - Our automated GitHub bots immediately attach the **`nsoc26`** label to any new issue and pull request.
+> - Maintainers assign the corresponding difficulty level tag (`level1`, `level2`, or `level3`) to reflect the points awarded upon merging.
+> - Contributor rankings and merged metrics are automatically updated every 24 hours on the live platform [Leaderboard](https://careerforge.live/leaderboard).
 
 ---
 

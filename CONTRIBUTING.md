@@ -2,7 +2,24 @@
 
 Welcome to the CAREERFORGE Open Source Contribution Program! We run our community website projects within a single repository using an isolated public showcase architecture.
 
-To ensure stability, safety, and seamless live previews, all contributors must strictly adhere to the following rules:
+---
+
+## 🌸 Nexus Spring of Code (NSoC '26) Participation
+
+CAREERFORGE is an official participating organization in the **Nexus Spring of Code (NSoC 2026)**.
+
+### 🏷️ Mandatory Labels and Points Structure
+Every task and contribution is graded under the official NSoC scoring system:
+
+| Label | Points | Used for |
+| :--- | :--- | :--- |
+| `nsoc26` | **Mandatory tag** | Every NSoC issue and PR |
+| `level1` | **3 points** | Documentation, typo fixes and other small work |
+| `level2` | **5 points** | UI and frontend work: layouts, components, styling and page-level changes |
+| `level3` | **10 points** | Core logic, database changes and complex features |
+
+- The **`nsoc26`** tag is automatically added to all issues and PRs by our CI automation bots.
+- Issues will have their difficulty assigned by maintainers (`level1`, `level2`, or `level3`).
 
 ---
 
