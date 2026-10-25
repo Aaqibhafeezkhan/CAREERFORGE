@@ -3,35 +3,356 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>VitalityAI — Personalized Health & Longevity</title>
+  <title>VitalityAI — Personalized Health &amp; Longevity</title>
   <link rel="stylesheet" href="styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header className="hero">
-    <div className="pill">🌿 AI-POWERED LONGEVITY</div>
+  <header class="hero">
+    <div class="pill">🌿 AI-POWERED LONGEVITY</div>
     <h1>Optimize Your Bio-Metrics &amp; Longevity Score</h1>
     <p>Continuous biomarker tracking, personalized metabolic plans, and sleep optimization.</p>
-    <button className="cta-btn" onclick="startScan()">Analyze Biomarkers ↗</button>
+    <div class="hero-cta-group">
+      <a href="#assessment-section" class="cta-btn" onclick="startAssessment()">Take Biological Age Test ↗</a>
+    </div>
   </header>
 
-  <main className="metrics">
-    <div className="card">
-      <div className="icon">❤️</div>
+  <!-- Interactive Biological Age Assessment Wizard Section -->
+  <section class="assessment-section" id="assessment-section">
+    <div class="assessment-container">
+      <div class="assessment-header">
+        <div class="pill">🧬 CLINICAL LONGEVITY WIZARD</div>
+        <h2>Biological Age &amp; Cellular Vitality Test</h2>
+        <p>Answer 6 evidence-based lifestyle and biomarker questions to calculate your true biological age vs chronological age.</p>
+      </div>
+
+      <!-- Wizard Card -->
+      <div class="wizard-card" id="wizard-card">
+        <!-- Progress Bar & Step Tracker -->
+        <div class="wizard-progress-wrap">
+          <div class="step-meta">
+            <span class="step-label" id="step-label">Question 1 of 6</span>
+            <span class="step-category" id="step-category">Biographical Baseline</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-bar-fill" id="wizard-progress-bar" style="width: 16.66%;"></div>
+          </div>
+        </div>
+
+        <!-- Question Slides Container -->
+        <form class="wizard-form" id="wizard-form" onsubmit="event.preventDefault();">
+          <!-- Step 1: Chronological Age -->
+          <div class="wizard-step active" data-step="1">
+            <div class="question-header">
+              <span class="q-icon">🎂</span>
+              <h3>What is your current chronological age?</h3>
+              <p>Your calendar age provides the foundational benchmark for cellular age offset calculation.</p>
+            </div>
+            <div class="age-input-container">
+              <div class="age-display" id="age-display">35 Years Old</div>
+              <input type="range" id="chronological-age-slider" min="18" max="85" value="35" class="custom-range" />
+              <div class="range-marks">
+                <span>18</span>
+                <span>35</span>
+                <span>55</span>
+                <span>75</span>
+                <span>85+</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2: Sleep Duration & Quality -->
+          <div class="wizard-step" data-step="2">
+            <div class="question-header">
+              <span class="q-icon">🌙</span>
+              <h3>How many hours of restorative sleep do you average per night?</h3>
+              <p>Deep REM sleep drives glymphatic brain clearance, telomere protection, and nocturnal repair.</p>
+            </div>
+            <div class="options-grid">
+              <label class="option-card">
+                <input type="radio" name="sleep" value="2.5" />
+                <div class="opt-content">
+                  <span class="opt-badge">&lt; 6 Hours</span>
+                  <span class="opt-title">Chronically Deprived</span>
+                  <span class="opt-desc">Restless, frequent waking, low deep sleep</span>
+                </div>
+              </label>
+              <label class="option-card">
+                <input type="radio" name="sleep" value="0.8" />
+                <div class="opt-content">
+                  <span class="opt-badge">6 – 7 Hours</span>
+                  <span class="opt-title">Moderate / Sub-optimal</span>
+                  <span class="opt-desc">Occasional grogginess, irregular schedule</span>
+                </div>
+              </label>
+              <label class="option-card">
+                <input type="radio" name="sleep" value="-2.2" checked />
+                <div class="opt-content">
+                  <span class="opt-badge">7 – 8.5 Hours</span>
+                  <span class="opt-title">Optimal Restorative</span>
+                  <span class="opt-desc">Consistent circadian rhythm, high REM</span>
+                </div>
+              </label>
+              <label class="option-card">
+                <input type="radio" name="sleep" value="-0.4" />
+                <div class="opt-content">
+                  <span class="opt-badge">&gt; 9 Hours</span>
+                  <span class="opt-title">Extended Sleep</span>
+                  <span class="opt-desc">Long duration, variable sleep efficiency</span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Step 3: Exercise & Zone 2 Cardio -->
+          <div class="wizard-step" data-step="3">
+            <div class="question-header">
+              <span class="q-icon">🏃</span>
+              <h3>What is your weekly physical activity &amp; conditioning level?</h3>
+              <p>Zone 2 aerobic conditioning stimulates mitochondrial biogenesis and enhances VO2 max longevity.</p>
+            </div>
+            <div class="options-grid">
+              <label class="option-card">
+                <input type="radio" name="exercise" value="3.0" />
+                <div class="opt-content">
+                  <span class="opt-badge">Sedentary</span>
+                  <span class="opt-title">&lt; 1 Hour / Week</span>
+                  <span class="opt-desc">Desk-bound, minimal cardio or lifting</span>
+                </div>
+              </label>
+              <label class="option-card">
+                <input type="radio" name="exercise" value="0.5" />
+                <div class="opt-content">
+                  <span class="opt-badge">Light</span>
+                  <span class="opt-title">1 – 2 Hours / Week</span>
+                  <span class="opt-desc">Casual walking, occasional bodyweight</span>
+                </div>
+              </label>
+              <label class="option-card">
+                <input type="radio" name="exercise" value="-1.8" checked />
+                <div class="opt-content">
+                  <span class="opt-badge">Moderate</span>
+                  <span class="opt-title">3 – 4 Hours / Week</span>
+                  <span class="opt-desc">Mix of Zone 2 cardio and hypertrophy</span>
+                </div>
+              </label>
+              <label class="option-card">
+                <input type="radio" name="exercise" value="-3.2" />
+                <div class="opt-content">
+                  <span class="opt-badge">High Performance</span>
+                  <span class="opt-title">5+ Hours / Week</span>
+                  <span class="opt-desc">Rigorous aerobic baseline, HIIT, heavy lifting</span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Step 4: Resting Heart Rate & Cardiovascular Health -->
+          <div class="wizard-step" data-step="4">
+            <div class="question-header">
+              <span class="q-icon">❤️</span>
+              <h3>What is your typical morning resting heart rate (RHR)?</h3>
+              <p>Lower resting heart rate reflects greater stroke volume and elevated parasympathetic vagal tone.</p>
+            </div>
+            <div class="options-grid">
+              <label class="option-card">
+                <input type="radio" name="rhr" value="-2.8" />
+                <div class="opt-content">
+                  <span class="opt-badge">&lt; 55 BPM</span>
+                  <span class="opt-title">Athletic / High HRV</span>
+                  <span class="opt-desc">Exceptional autonomic tone &amp; recovery</span>
+                </div>
+              </label>
+              <label class="option-card">
+                <input type="radio" name="rhr" value="-1.2" checked />
+                <div class="opt-content">
+                  <span class="opt-badge">56 – 65 BPM</span>
+                  <span class="opt-title">Optimal Health</span>
+                  <span class="opt-desc">Strong cardio baseline &amp; steady recovery</span>
+                </div>
+              </label>
+              <label class="option-card">
+                <input type="radio" name="rhr" value="0.8" />
+                <div class="opt-content">
+                  <span class="opt-badge">66 – 75 BPM</span>
+                  <span class="opt-title">Average Range</span>
+                  <span class="opt-desc">Typical population baseline, room to optimize</span>
+                </div>
+              </label>
+              <label class="option-card">
+                <input type="radio" name="rhr" value="2.2" />
+                <div class="opt-content">
+                  <span class="opt-badge">&gt; 75 BPM</span>
+                  <span class="opt-title">Elevated</span>
+                  <span class="opt-desc">Sympathetic dominance, cardiac strain risk</span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Step 5: Stress Load & Cortisol -->
+          <div class="wizard-step" data-step="5">
+            <div class="question-header">
+              <span class="q-icon">⚡</span>
+              <h3>How would you rate your ongoing stress &amp; workload exposure?</h3>
+              <p>Sustained cortisol elevation accelerates epigenetic methylation clocks and cellular senescence.</p>
+            </div>
+            <div class="options-grid">
+              <label class="option-card">
+                <input type="radio" name="stress" value="-1.6" />
+                <div class="opt-content">
+                  <span class="opt-badge">Low Stress</span>
+                  <span class="opt-title">Calm &amp; Mindful</span>
+                  <span class="opt-desc">Daily breathwork, balanced work-life</span>
+                </div>
+              </label>
+              <label class="option-card">
+                <input type="radio" name="stress" value="0.0" checked />
+                <div class="opt-content">
+                  <span class="opt-badge">Moderate</span>
+                  <span class="opt-title">Manageable Deadlines</span>
+                  <span class="opt-desc">Periodic work sprints with weekend recovery</span>
+                </div>
+              </label>
+              <label class="option-card">
+                <input type="radio" name="stress" value="2.0" />
+                <div class="opt-content">
+                  <span class="opt-badge">High Stress</span>
+                  <span class="opt-title">Frequent Anxiety</span>
+                  <span class="opt-desc">Persistent deadlines, difficulty unplugging</span>
+                </div>
+              </label>
+              <label class="option-card">
+                <input type="radio" name="stress" value="3.5" />
+                <div class="opt-content">
+                  <span class="opt-badge">Chronic / Severe</span>
+                  <span class="opt-title">Burnout Threshold</span>
+                  <span class="opt-desc">Exhaustion, insomnia, constant autonomic tension</span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Step 6: Nutrition & Metabolic Fasting -->
+          <div class="wizard-step" data-step="6">
+            <div class="question-header">
+              <span class="q-icon">🥗</span>
+              <h3>What best characterizes your dietary and fasting pattern?</h3>
+              <p>Autophagy-promoting fasting windows and polyphenol-dense whole foods slow biological wear.</p>
+            </div>
+            <div class="options-grid">
+              <label class="option-card">
+                <input type="radio" name="nutrition" value="-2.5" checked />
+                <div class="opt-content">
+                  <span class="opt-badge">Longevity Protocol</span>
+                  <span class="opt-title">Mediterranean &amp; 16:8 Fasting</span>
+                  <span class="opt-desc">Zero processed sugars, high polyphenols</span>
+                </div>
+              </label>
+              <label class="option-card">
+                <input type="radio" name="nutrition" value="-1.0" />
+                <div class="opt-content">
+                  <span class="opt-badge">Clean Whole Foods</span>
+                  <span class="opt-title">High Protein, Low Sugar</span>
+                  <span class="opt-desc">Home-cooked, organic, minimal preservatives</span>
+                </div>
+              </label>
+              <label class="option-card">
+                <input type="radio" name="nutrition" value="1.5" />
+                <div class="opt-content">
+                  <span class="opt-badge">Standard Mixed</span>
+                  <span class="opt-title">Moderate Processed Foods</span>
+                  <span class="opt-desc">Dining out, snacks, late evening meals</span>
+                </div>
+              </label>
+              <label class="option-card">
+                <input type="radio" name="nutrition" value="3.2" />
+                <div class="opt-content">
+                  <span class="opt-badge">Inflammatory Diet</span>
+                  <span class="opt-title">High Refined Carbohydrates</span>
+                  <span class="opt-desc">Frequent fast food, seed oils, sugar crashes</span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Wizard Navigation Buttons -->
+          <div class="wizard-nav-row">
+            <button type="button" class="wizard-btn btn-prev" id="btn-prev" disabled>← Previous</button>
+            <button type="button" class="wizard-btn btn-next" id="btn-next">Next Step →</button>
+          </div>
+        </form>
+
+        <!-- Results Dashboard (Hidden Initially) -->
+        <div class="results-dashboard" id="results-dashboard" style="display: none;">
+          <div class="results-header">
+            <div class="pill">✨ BIOLOGICAL AGE REVEALED</div>
+            <h3>Your Longevity Diagnostics Report</h3>
+          </div>
+
+          <!-- Bio Age Comparison Grid -->
+          <div class="bio-age-banner">
+            <div class="dial-container">
+              <svg class="score-dial-svg" width="160" height="160" viewBox="0 0 160 160">
+                <circle class="dial-track" cx="80" cy="80" r="62" />
+                <circle class="dial-fill" id="dial-fill" cx="80" cy="80" r="62" />
+              </svg>
+              <div class="dial-center">
+                <span class="dial-age-number" id="bio-age-num">31.5</span>
+                <span class="dial-age-unit">BIO AGE</span>
+              </div>
+            </div>
+
+            <div class="bio-summary">
+              <div class="diff-badge" id="diff-badge">-3.5 Years Younger 🌟</div>
+              <div class="ages-comparison-row">
+                <div class="age-stat">
+                  <span class="age-stat-label">Chronological Age</span>
+                  <strong class="age-stat-val" id="res-chrono-age">35 Years</strong>
+                </div>
+                <div class="age-stat-divider">vs</div>
+                <div class="age-stat">
+                  <span class="age-stat-label">Estimated Biological Age</span>
+                  <strong class="age-stat-val text-teal" id="res-bio-age">31.5 Years</strong>
+                </div>
+              </div>
+              <p class="bio-tier-text" id="bio-tier-text">Your cellular repair pathways are operating ahead of your chronological baseline.</p>
+            </div>
+          </div>
+
+          <!-- Personalized Health Recommendations Cards -->
+          <div class="recommendations-section">
+            <h4>Personalized Health Optimization Protocol</h4>
+            <div class="recs-grid" id="recs-grid">
+              <!-- Dynamically populated via script.js -->
+            </div>
+          </div>
+
+          <div class="results-actions">
+            <button type="button" class="cta-btn" onclick="retakeAssessment()">↺ Retake Assessment</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main class="metrics">
+    <div class="card">
+      <div class="icon">❤️</div>
       <h3>Heart Rate Variability</h3>
-      <div className="val">68 ms <span className="tag-good">Optimal</span></div>
+      <div class="val">68 ms <span class="tag-good">Optimal</span></div>
     </div>
-    <div className="card">
-      <div className="icon">🌙</div>
+    <div class="card">
+      <div class="icon">🌙</div>
       <h3>Deep Sleep Score</h3>
-      <div className="val">92% <span className="tag-good">Excellent</span></div>
+      <div class="val">92% <span class="tag-good">Excellent</span></div>
     </div>
-    <div className="card">
-      <div className="icon">⚡</div>
+    <div class="card">
+      <div class="icon">⚡</div>
       <h3>Metabolic Efficiency</h3>
-      <div className="val">8.4 / 10</div>
+      <div class="val">8.4 / 10</div>
     </div>
   </main>
   <script src="script.js"></script>
