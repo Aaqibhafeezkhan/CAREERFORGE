@@ -10,23 +10,26 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;800&family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header className="hero">
-    <div className="tag">🎙️ WEEKLY TECH EPISODES</div>
+  <header class="hero">
+    <div class="tag">🎙️ WEEKLY TECH EPISODES</div>
     <h1>Unfiltered Conversations with AI Researchers &amp; Founders</h1>
     <p>Hosted by Sarah Lin. Streaming on Spotify, Apple Podcasts &amp; RSS.</p>
-    <button className="play-btn" onclick="playEpisode('Ep 142')">▶ Play Latest Episode (#142)</button>
+    <div class="player-controls">
+      <button class="play-btn" onclick="playEpisode('Ep 142')">▶ Play Latest Episode (#142)</button>
+      <button id="speed-btn" class="speed-btn" onclick="toggleSpeed()" aria-label="Playback speed: 1x" title="Cycle playback speed">1x</button>
+    </div>
   </header>
 
-  <main className="episodes">
+  <main class="episodes">
     <h2>RECENT EPISODES</h2>
-    <div className="grid">
-      <div className="card">
-        <div className="ep-num">EP 142</div>
+    <div class="grid">
+      <div class="card">
+        <div class="ep-num">EP 142</div>
         <h3>The Future of Agentic AI & Spatial Compute</h3>
         <p>48 Mins • Guest: Dr. Aris Thorne (OpenAI Lead)</p>
       </div>
-      <div className="card">
-        <div className="ep-num">EP 141</div>
+      <div class="card">
+        <div class="ep-num">EP 141</div>
         <h3>Scaling Vector Databases to 10 Billion Chunks</h3>
         <p>54 Mins • Guest: Marcus Vance (ChromaDB Creator)</p>
       </div>
