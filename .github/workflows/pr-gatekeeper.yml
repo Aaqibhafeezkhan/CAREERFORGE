@@ -48,6 +48,8 @@ jobs:
 
             if (match && match[2]) {
               const linkedIssueNumber = parseInt(match[2], 10);
+
+              // 1a. Ensure linked issue is tagged with 'nsoc26'
               try {
                 await github.rest.issues.addLabels({
                   owner,
@@ -58,6 +60,33 @@ jobs:
                 console.log(`Ensured linked issue #${linkedIssueNumber} is tagged with 'nsoc26'`);
               } catch (err) {
                 console.error(`Error tagging linked issue #${linkedIssueNumber} with 'nsoc26':`, err.message);
+              }
+
+              // 1b. Fetch all labels from the linked issue and mirror them onto this PR
+              try {
+                const linkedIssue = await github.rest.issues.get({
+                  owner,
+                  repo,
+                  issue_number: linkedIssueNumber
+                });
+
+                if (linkedIssue.data && Array.isArray(linkedIssue.data.labels) && linkedIssue.data.labels.length > 0) {
+                  const issueLabels = linkedIssue.data.labels
+                    .map(l => (typeof l === 'string' ? l : l.name))
+                    .filter(Boolean);
+
+                  if (issueLabels.length > 0) {
+                    await github.rest.issues.addLabels({
+                      owner,
+                      repo,
+                      issue_number: prNumber,
+                      labels: issueLabels
+                    });
+                    console.log(`Successfully synced labels [${issueLabels.join(', ')}] from issue #${linkedIssueNumber} to PR #${prNumber}`);
+                  }
+                }
+              } catch (err) {
+                console.error(`Error copying labels from issue #${linkedIssueNumber} to PR #${prNumber}:`, err.message);
               }
             }
 
