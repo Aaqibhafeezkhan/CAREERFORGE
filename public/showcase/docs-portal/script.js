@@ -1,3 +1,8 @@
+/**
+ * Prisma API Documentation Portal
+ * Live Interactive API Request Playground & Simulated Engine
+ */
+
 document.addEventListener('DOMContentLoaded', () => {
   console.log('Docs Portal script initialized');
 
@@ -106,3 +111,12 @@ document.addEventListener('DOMContentLoaded', () => {
     updateReadingProgress();
   }, { passive: true });
 });
+
+// --- Global Snippet Copy Helper ---
+function copySnippet(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    alert(`Copied to clipboard:\n${text}`);
+  }).catch(() => {
+    prompt('Copy snippet:', text);
+  });
+}

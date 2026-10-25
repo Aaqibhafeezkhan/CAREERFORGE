@@ -1,7 +1,16 @@
+/* ==========================================================
+   Prisma API Docs Portal & Interactive Live Playground Styles
+   ========================================================== */
+
 :root {
   --bg: #090d16;
-  --sidebar: #0f172a;
-  --border: rgba(255, 255, 255, 0.08);
+  --bg-darker: #050811;
+  --sidebar: #0b1120;
+  --sidebar-active: rgba(56, 189, 248, 0.12);
+  --panel-bg: rgba(15, 23, 42, 0.6);
+  --card-bg: rgba(255, 255, 255, 0.035);
+  --border: rgba(255, 255, 255, 0.09);
+  --border-focus: rgba(56, 189, 248, 0.45);
   --accent: #38bdf8;
   --accent-gradient: linear-gradient(90deg, #38bdf8 0%, #6366f1 50%, #a855f7 100%);
   --accent-glow: 0 0 12px rgba(56, 189, 248, 0.8), 0 0 24px rgba(99, 102, 241, 0.5);
@@ -30,7 +39,6 @@ body {
 
 /* =========================================
    Top Fixed Reading Progress Bar
-========================================= */
 .scroll-progress-track {
   position: fixed;
   top: 0;
@@ -91,8 +99,10 @@ body {
   font-weight: 600;
 }
 
-.doc-nav a {
-  display: block;
+.nav-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   color: #cbd5e1;
   text-decoration: none;
   font-size: 0.88rem;
@@ -149,6 +159,12 @@ body {
   background: rgba(168, 85, 247, 0.14);
   color: #c084fc;
   border-color: rgba(168, 85, 247, 0.3);
+}
+
+.spec-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.74rem;
+  color: var(--text-muted);
 }
 
 .content h1 {
@@ -250,6 +266,67 @@ body {
   border: 1px solid var(--border);
   padding: 8px 16px;
   border-radius: 8px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  outline: none;
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  transition: all 0.2s ease;
+}
+
+.method-select.post { color: var(--method-post); border-color: rgba(16, 185, 129, 0.4); }
+.method-select.get { color: var(--method-get); border-color: rgba(56, 189, 248, 0.4); }
+.method-select.put { color: var(--method-put); border-color: rgba(245, 158, 11, 0.4); }
+.method-select.delete { color: var(--method-delete); border-color: rgba(244, 63, 94, 0.4); }
+
+.endpoint-input-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0 12px;
+  transition: border-color 0.2s ease;
+}
+
+.endpoint-input-wrap:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
+}
+
+.base-url {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  user-select: none;
+  margin-right: 2px;
+}
+
+.endpoint-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.88rem;
+  font-weight: 500;
+  padding: 10px 4px;
+  outline: none;
+}
+
+/* Send Button */
+.btn-send {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #fff;
+  border: none;
+  padding: 0 20px;
+  border-radius: 8px;
+  font-family: inherit;
+  font-weight: 700;
   font-size: 0.9rem;
   margin-bottom: 14px;
   display: inline-flex;
