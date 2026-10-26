@@ -46,6 +46,85 @@
     </div>
   </main>
 
+  <section class="tickets" id="tickets" aria-labelledby="tickets-title">
+    <h2 id="tickets-title">GET YOUR PASS</h2>
+    <p class="tickets-intro">Pick your tiers, add extras, and watch the total update. Groups of 5 or more tickets get 10% off.</p>
+
+    <div class="tickets-layout">
+      <form class="tickets-form" id="ticket-form" novalidate>
+        <fieldset class="tier-list">
+          <legend>Ticket tiers</legend>
+
+          <div class="tier-card" data-tier="ga">
+            <div class="tier-info">
+              <h3 id="tier-ga-name">General Admission</h3>
+              <p>3-day entry, all stages.</p>
+              <span class="tier-price">$149.00</span>
+            </div>
+            <div class="stepper" role="group" aria-labelledby="tier-ga-name">
+              <button type="button" class="step-btn" data-step="-1" aria-label="Remove one General Admission ticket">&minus;</button>
+              <input type="number" class="qty" id="qty-ga" min="0" max="10" value="0" inputmode="numeric" aria-label="General Admission quantity" />
+              <button type="button" class="step-btn" data-step="1" aria-label="Add one General Admission ticket">+</button>
+            </div>
+          </div>
+
+          <div class="tier-card" data-tier="vip">
+            <div class="tier-info">
+              <h3 id="tier-vip-name">VIP Access</h3>
+              <p>Raised viewing decks, lounge and private bars.</p>
+              <span class="tier-price">$349.00</span>
+            </div>
+            <div class="stepper" role="group" aria-labelledby="tier-vip-name">
+              <button type="button" class="step-btn" data-step="-1" aria-label="Remove one VIP Access ticket">&minus;</button>
+              <input type="number" class="qty" id="qty-vip" min="0" max="10" value="0" inputmode="numeric" aria-label="VIP Access quantity" />
+              <button type="button" class="step-btn" data-step="1" aria-label="Add one VIP Access ticket">+</button>
+            </div>
+          </div>
+
+          <div class="tier-card" data-tier="ultra">
+            <div class="tier-info">
+              <h3 id="tier-ultra-name">Ultra Platinum</h3>
+              <p>Front-of-stage pit, artist meet-ups, free merch pack.</p>
+              <span class="tier-price">$799.00</span>
+            </div>
+            <div class="stepper" role="group" aria-labelledby="tier-ultra-name">
+              <button type="button" class="step-btn" data-step="-1" aria-label="Remove one Ultra Platinum ticket">&minus;</button>
+              <input type="number" class="qty" id="qty-ultra" min="0" max="10" value="0" inputmode="numeric" aria-label="Ultra Platinum quantity" />
+              <button type="button" class="step-btn" data-step="1" aria-label="Add one Ultra Platinum ticket">+</button>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="addon-list">
+          <legend>Add-ons (price per ticket)</legend>
+          <label class="addon"><input type="checkbox" name="addon" value="tent" /> <span class="addon-name">Tent Camping</span> <span class="addon-price">$60.00</span></label>
+          <label class="addon"><input type="checkbox" name="addon" value="locker" /> <span class="addon-name">Locker</span> <span class="addon-price">$25.00</span></label>
+          <label class="addon"><input type="checkbox" name="addon" value="fastpass" /> <span class="addon-name">Fast-Pass</span> <span class="addon-price">$45.00</span></label>
+        </fieldset>
+      </form>
+
+      <aside class="order-panel" aria-labelledby="order-title">
+        <div class="holo-ticket" aria-hidden="true">
+          <span class="holo-event">PULSE WAVE 2026</span>
+          <span class="holo-tier" id="holo-tier">NO PASS SELECTED</span>
+          <span class="holo-count" id="holo-count">0 tickets</span>
+        </div>
+        <h3 id="order-title">Order summary</h3>
+        <div id="order-live" aria-live="polite" aria-atomic="true">
+          <ul class="order-lines" id="order-lines"></ul>
+          <dl class="totals">
+            <div class="total-row"><dt>Subtotal</dt><dd id="t-subtotal">$0.00</dd></div>
+            <div class="total-row" id="row-discount" hidden><dt>Group discount (10%)</dt><dd id="t-discount">-$0.00</dd></div>
+            <div class="total-row"><dt>Service fee (8%)</dt><dd id="t-fee">$0.00</dd></div>
+            <div class="total-row grand"><dt>Total</dt><dd id="t-total">$0.00</dd></div>
+          </dl>
+        </div>
+        <button type="button" class="checkout-btn" id="checkout-btn" disabled>Proceed to Checkout</button>
+        <p class="checkout-msg" id="checkout-msg" role="status"></p>
+      </aside>
+    </div>
+  </section>
+
   <script src="script.js"></script>
 </body>
 </html>
