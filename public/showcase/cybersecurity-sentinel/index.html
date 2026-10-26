@@ -21,6 +21,44 @@
     <div className="status-row"><span className="title">SYSTEM DEFENSE STATUS:</span> <span className="val-secure">ACTIVE & PROTECTED</span></div>
     <div className="status-row"><span className="title">PACKET THREAT RATE:</span> <span className="val-rate">0 THREATS DETECTED</span></div>
   </main>
+  <section class="audit-card" id="passwordAudit" aria-labelledby="auditTitle">
+    <div class="audit-tag">// CREDENTIAL AUDIT</div>
+    <h2 id="auditTitle">Password Strength Analyzer</h2>
+    <p class="audit-note">Runs entirely in your browser. Nothing you type is stored or sent anywhere. The estimate assumes random characters, so dictionary words and phrases are weaker than the number suggests.</p>
+
+    <label class="audit-label" for="pwInput">Password to test</label>
+    <div class="audit-input-row">
+      <input type="password" id="pwInput" class="audit-input" autocomplete="new-password" autocapitalize="off" spellcheck="false" aria-describedby="auditSummary" />
+      <button type="button" id="pwToggle" class="audit-toggle" aria-pressed="false" aria-controls="pwInput">Show</button>
+    </div>
+
+    <div class="meter" id="strengthMeter" aria-hidden="true" data-level="0">
+      <span class="seg"></span><span class="seg"></span><span class="seg"></span><span class="seg"></span><span class="seg"></span>
+    </div>
+
+    <div class="audit-results" id="auditSummary" role="status" aria-live="polite" aria-atomic="true">
+      <div class="verdict" id="verdict">Type a password to begin the audit.</div>
+      <dl class="stats">
+        <div><dt>Entropy</dt><dd id="statEntropy">0 bits</dd></div>
+        <div><dt>Shannon (per char)</dt><dd id="statShannon">0 bits</dd></div>
+        <div><dt>Length</dt><dd id="statLength">0</dd></div>
+        <div><dt>Character pool</dt><dd id="statPool">0</dd></div>
+        <div class="wide"><dt>Offline attack, 10 billion guesses/s</dt><dd id="statOffline">-</dd></div>
+        <div class="wide"><dt>Online attack, 100 guesses/s</dt><dd id="statOnline">-</dd></div>
+      </dl>
+    </div>
+
+    <h3 class="checklist-title" id="checklistTitle">Security checklist</h3>
+    <ul class="checklist" aria-labelledby="checklistTitle">
+      <li data-rule="length"><span class="mark" aria-hidden="true"></span><span class="rule-text">At least 12 characters</span><span class="sr-only status-text"></span></li>
+      <li data-rule="lower"><span class="mark" aria-hidden="true"></span><span class="rule-text">Contains a lowercase letter</span><span class="sr-only status-text"></span></li>
+      <li data-rule="upper"><span class="mark" aria-hidden="true"></span><span class="rule-text">Contains an uppercase letter</span><span class="sr-only status-text"></span></li>
+      <li data-rule="digit"><span class="mark" aria-hidden="true"></span><span class="rule-text">Contains a number</span><span class="sr-only status-text"></span></li>
+      <li data-rule="symbol"><span class="mark" aria-hidden="true"></span><span class="rule-text">Contains a symbol</span><span class="sr-only status-text"></span></li>
+      <li data-rule="common"><span class="mark" aria-hidden="true"></span><span class="rule-text">Not a commonly leaked password</span><span class="sr-only status-text"></span></li>
+      <li data-rule="pattern"><span class="mark" aria-hidden="true"></span><span class="rule-text">No repeated or sequential runs (aaa, 1234, qwerty)</span><span class="sr-only status-text"></span></li>
+    </ul>
+  </section>
   <script src="script.js"></script>
 </body>
 </html>

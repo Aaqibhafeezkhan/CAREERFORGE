@@ -7,30 +7,162 @@
   <link rel="stylesheet" href="styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header className="hero">
-    <div className="badge">LIVE TOURNAMENT // SEASON 4</div>
+  <header class="hero">
+    <div class="badge">LIVE TOURNAMENT // SEASON 4</div>
     <h1>VORTEX GLOBAL CHAMPIONSHIP</h1>
     <p>$500,000 PRIZE POOL • 16 PRO TEAMS • LIVE ON TWITCH</p>
-    <button className="btn-glitch" onclick="watchStream()">🔴 Watch Live Stream</button>
+    <button class="btn-glitch" onclick="watchStream()">🔴 Watch Live Stream</button>
   </header>
 
-  <main className="matches">
-    <h2>UPCOMING MATCHES</h2>
-    <div className="grid">
-      <div className="match-card">
-        <div className="team">TEAM CYBER</div>
-        <div className="vs">VS</div>
-        <div className="team">PHANTOM SQUAD</div>
-        <div className="time">18:00 UTC</div>
+  <!-- ===== Fantasy Esports Roster Builder (Issue #102) START ===== -->
+  <section class="fr-builder-section" id="fantasy-roster-builder" aria-labelledby="fr-title">
+    <div class="fr-container">
+      <div class="fr-header">
+        <div class="fr-tag">VORTEX FANTASY LEAGUE // OFFICIAL DRAFT</div>
+        <h2 id="fr-title">FANTASY ESPORTS ROSTER BUILDER</h2>
+        <p class="fr-subtitle">
+          Draft a dream lineup of 5 pro players across key tactical roles (<span class="role-tag duelist">Duelist</span>, <span class="role-tag initiator">Initiator</span>, <span class="role-tag controller">Controller</span>, <span class="role-tag sentinel">Sentinel</span>, <span class="role-tag igl">IGL</span>) under the strict <strong id="fr-cap-display">$50,000</strong> salary cap. Boost projected fantasy points through team chemistry &amp; tactical synergy.
+        </p>
       </div>
-      <div className="match-card">
-        <div className="team">NEON RIDERS</div>
-        <div className="vs">VS</div>
-        <div className="team">APEX TITANS</div>
-        <div className="time">21:00 UTC</div>
+
+      <!-- Live Analytics Dashboard -->
+      <div class="fr-dashboard-grid">
+        <!-- Salary Budget Panel -->
+        <div class="fr-metric-card" id="card-salary">
+          <div class="fr-card-header">
+            <span class="fr-metric-title">SALARY BUDGET</span>
+            <span class="fr-badge-count" id="fr-draft-counter">0 / 5 PLAYERS</span>
+          </div>
+          <div class="fr-meter-container">
+            <div class="fr-meter-bar" id="fr-salary-meter" role="progressbar" aria-label="Salary cap utilized" aria-valuemin="0" aria-valuemax="50000" aria-valuenow="0">
+              <div class="fr-meter-fill" id="fr-salary-fill"></div>
+            </div>
+          </div>
+          <div class="fr-meter-labels">
+            <div class="fr-label-col">
+              <span class="fr-label-sub">TOTAL SPENT</span>
+              <span class="fr-label-val" id="fr-spent-val">$0</span>
+            </div>
+            <div class="fr-label-col text-right">
+              <span class="fr-label-sub">REMAINING CAP</span>
+              <span class="fr-label-val val-green" id="fr-remaining-val">$50,000</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Team Synergy Panel -->
+        <div class="fr-metric-card" id="card-synergy">
+          <div class="fr-card-header">
+            <span class="fr-metric-title">PROJECTED SYNERGY</span>
+            <div class="fr-synergy-score">
+              <span class="synergy-val" id="fr-synergy-val">0</span>
+              <span class="synergy-max">/100</span>
+            </div>
+          </div>
+          <div class="fr-meter-container">
+            <div class="fr-meter-bar fr-synergy-bar" id="fr-synergy-meter" role="progressbar" aria-label="Team synergy score" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <div class="fr-meter-fill synergy-fill" id="fr-synergy-fill"></div>
+            </div>
+          </div>
+          <div class="fr-synergy-breakdown">
+            <span class="syn-chip" id="syn-roles-chip">Coverage: 0/50</span>
+            <span class="syn-chip" id="syn-chem-chip">Chemistry: 0/30</span>
+            <span class="syn-chip" id="syn-igl-chip">IGL Link: 0/20</span>
+          </div>
+        </div>
+
+        <!-- Projected Fantasy Points Panel -->
+        <div class="fr-metric-card fr-points-card" id="card-points">
+          <div class="fr-card-header">
+            <span class="fr-metric-title">PROJECTED FANTASY PTS</span>
+            <span class="fr-bonus-badge" id="fr-multiplier-badge">+0% SYNERGY BONUS</span>
+          </div>
+          <div class="fr-points-hero">
+            <div class="fr-hero-number" id="fr-projected-pts">0.0</div>
+            <div class="fr-points-formula">
+              Base: <strong id="fr-base-pts">0.0</strong> × Multiplier: <strong id="fr-multiplier-val">x1.00</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Roster Slot Lineup -->
+      <div class="fr-section-header">
+        <h3 class="fr-section-title">ACTIVE ROSTER (5 SLOTS)</h3>
+        <div class="fr-roster-actions">
+          <button type="button" class="fr-btn fr-btn-secondary" id="fr-btn-autofill" title="Draft optimal synergy lineup">⚡ Auto-Draft</button>
+          <button type="button" class="fr-btn fr-btn-secondary" id="fr-btn-copy" title="Copy roster lineup to clipboard">📋 Share Roster</button>
+          <button type="button" class="fr-btn fr-btn-danger" id="fr-btn-clear" title="Clear all drafted slots">✖ Reset Roster</button>
+        </div>
+      </div>
+      <div class="fr-slots-grid" id="fr-slots-container" role="region" aria-label="Drafted Player Slots">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Player Bench & Drafting Pool -->
+      <div class="fr-section-header bench-header">
+        <div>
+          <h3 class="fr-section-title">PRO PLAYER BENCH</h3>
+          <p class="fr-section-desc">Select players to draft into your roster. Swapping a role automatically calculates the net salary change.</p>
+        </div>
+        <div class="fr-bench-stats-summary" id="fr-bench-pool-count">
+          Showing 25 players
+        </div>
+      </div>
+
+      <!-- Bench Controls (Filters, Search, Sort) -->
+      <div class="fr-controls-bar">
+        <div class="fr-filter-chips" id="fr-role-filters" role="group" aria-label="Filter pro players by role">
+          <!-- Rendered dynamically -->
+        </div>
+
+        <div class="fr-controls-right">
+          <div class="fr-search-wrapper">
+            <span class="fr-search-icon" aria-hidden="true">🔍</span>
+            <input type="search" id="fr-search-input" placeholder="Search player or team..." aria-label="Search players by name or team" autocomplete="off" />
+          </div>
+
+          <div class="fr-sort-wrapper">
+            <label for="fr-sort-select">SORT</label>
+            <select id="fr-sort-select" aria-label="Sort players">
+              <option value="salary-desc">Salary: High to Low</option>
+              <option value="salary-asc">Salary: Low to High</option>
+              <option value="pts-desc">Projected PTS: High to Low</option>
+              <option value="pts-asc">Projected PTS: Low to High</option>
+              <option value="name-asc">Player Name (A-Z)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Player Bench Grid -->
+      <div class="fr-bench-grid" id="fr-bench-container" role="region" aria-label="Available Player Bench">
+        <!-- Rendered dynamically with XSS-safe DOM methods -->
+      </div>
+
+      <!-- Accessible Live Announcements / Notification Bar -->
+      <div class="fr-announcement" id="fr-live-status" role="status" aria-live="polite"></div>
+    </div>
+  </section>
+  <!-- ===== Fantasy Esports Roster Builder (Issue #102) END ===== -->
+
+  <main class="matches">
+    <h2>UPCOMING MATCHES</h2>
+    <div class="grid">
+      <div class="match-card">
+        <div class="team">TEAM CYBER</div>
+        <div class="vs">VS</div>
+        <div class="team">PHANTOM SQUAD</div>
+        <div class="time">18:00 UTC</div>
+      </div>
+      <div class="match-card">
+        <div class="team">NEON RIDERS</div>
+        <div class="vs">VS</div>
+        <div class="team">APEX TITANS</div>
+        <div class="time">21:00 UTC</div>
       </div>
     </div>
   </main>
@@ -77,6 +209,8 @@
       </div>
     </div>
   </section>
+
+  <div id="fr-toast-container" class="fr-toast-container" aria-live="polite"></div>
 
   <script src="script.js"></script>
 </body>

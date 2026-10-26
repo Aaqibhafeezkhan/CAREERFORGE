@@ -91,6 +91,25 @@
       <div class="empty-cart">Your cart is currently empty.</div>
     </div>
     <div class="drawer-footer">
+      <form class="coupon-form" id="couponForm" novalidate>
+        <label class="coupon-label" for="couponInput">Promo code</label>
+        <div class="coupon-row">
+          <input type="text" id="couponInput" class="coupon-input" placeholder="e.g. CAREER20" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="couponMessage" />
+          <button type="submit" class="coupon-apply" id="couponApply">Apply</button>
+        </div>
+        <p class="coupon-message" id="couponMessage" role="status" aria-live="polite"></p>
+        <div class="promo-chip" id="promoChip" hidden>
+          <span class="promo-check" aria-hidden="true">&#10003;</span>
+          <span class="promo-chip-text" id="promoChipText"></span>
+          <button type="button" class="promo-remove" id="promoRemove">Remove</button>
+        </div>
+      </form>
+      <dl class="summary" id="cartSummary" aria-live="polite">
+        <div class="summary-row"><dt>Subtotal</dt><dd id="cartSubtotal">$0.00</dd></div>
+        <div class="summary-row discount-row" id="discountRow" hidden><dt id="discountLabel">Discount</dt><dd id="cartDiscount">-$0.00</dd></div>
+        <div class="summary-row"><dt>Shipping</dt><dd id="cartShipping">$0.00</dd></div>
+        <div class="summary-row"><dt>Est. tax (8%)</dt><dd id="cartTax">$0.00</dd></div>
+      </dl>
       <div class="total-row">
         <span>Total:</span>
         <span id="cartTotal">$0.00</span>
