@@ -32,6 +32,58 @@
       </div>
     </div>
   </main>
+  <section class="quiz" id="quiz" aria-labelledby="quizTitle">
+    <h2 id="quizTitle">TEST YOUR SYSTEMS KNOWLEDGE</h2>
+
+    <div class="quiz-card">
+      <!-- Intro -->
+      <div class="quiz-panel" id="quizIntro">
+        <p class="quiz-lead">5 multiple choice questions on LLM serving, distributed systems, Rust and eBPF. You get 60 seconds in total, and the clock stops while you read each explanation.</p>
+        <p class="quiz-lead">Score 80% or more to earn a completion certificate.</p>
+        <button type="button" class="btn-primary" id="quizStart">Start quiz</button>
+      </div>
+
+      <!-- Question -->
+      <div class="quiz-panel" id="quizPlay" hidden>
+        <div class="quiz-bar">
+          <span class="quiz-counter" id="quizCounter">Question 1 of 5</span>
+          <span class="quiz-timer" id="quizTimer" role="timer" aria-label="Time remaining">1:00</span>
+        </div>
+        <div class="timer-track" aria-hidden="true"><div class="timer-fill" id="timerFill"></div></div>
+        <h3 class="quiz-question" id="quizQuestion" tabindex="-1"></h3>
+        <ul class="quiz-options" id="quizOptions" aria-label="Answer options"></ul>
+        <div class="quiz-feedback" id="quizFeedback" role="status" aria-live="polite"></div>
+        <button type="button" class="btn-primary" id="quizNext" hidden>Next question</button>
+        <p class="quiz-hint">Tip: press 1 to 4 to pick an answer.</p>
+      </div>
+
+      <!-- Result -->
+      <div class="quiz-panel" id="quizResult" hidden>
+        <h3 class="result-heading" id="resultHeading" tabindex="-1"></h3>
+        <div class="result-score" id="resultScore"></div>
+        <p class="quiz-lead" id="resultDetail" role="status" aria-live="polite"></p>
+
+        <form class="cert-form" id="certForm" hidden>
+          <label for="certName">Your name for the certificate</label>
+          <div class="cert-row">
+            <input type="text" id="certName" maxlength="60" autocomplete="name" />
+            <button type="submit" class="btn-primary">Show certificate</button>
+          </div>
+        </form>
+
+        <div class="certificate" id="certificate" hidden>
+          <div class="cert-seal" aria-hidden="true">&#9733;</div>
+          <div class="cert-title">Certificate of Completion</div>
+          <div class="cert-line">This certifies that</div>
+          <div class="cert-name" id="certNameOut"></div>
+          <div class="cert-line">passed the Synapse Academy Systems Knowledge Quiz</div>
+          <div class="cert-meta" id="certMeta"></div>
+        </div>
+
+        <button type="button" class="btn-secondary" id="quizRetry">Try again</button>
+      </div>
+    </div>
+  </section>
   <script src="script.js"></script>
 </body>
 </html>
