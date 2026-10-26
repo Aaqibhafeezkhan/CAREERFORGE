@@ -15,6 +15,7 @@
     <nav className="nav-links">
       <a href="#work">Work</a>
       <a href="#services">Services</a>
+      <a href="#estimator">Estimator</a>
       <a href="#contact" className="cta-btn">Start Project</a>
     </nav>
   </header>
@@ -43,6 +44,58 @@
             <span>Design System • WebGL 3D</span>
           </div>
         </div>
+      </div>
+    </section>
+
+    <section id="estimator" class="estimator" aria-labelledby="estTitle">
+      <h2 id="estTitle">Project Scope Estimator</h2>
+      <p class="est-intro">Pick a scope and see a ballpark price and timeline. Final quotes follow a short discovery call.</p>
+
+      <div class="est-layout">
+        <form class="est-form" id="estForm" onsubmit="return false">
+          <fieldset class="est-group">
+            <legend>1. Project type</legend>
+            <div class="pill-row" id="typeOptions"></div>
+          </fieldset>
+
+          <fieldset class="est-group">
+            <legend>2. Timeline</legend>
+            <label class="est-label" for="urgency">How soon do you need it? <strong id="urgencyLabel"></strong></label>
+            <input type="range" id="urgency" min="0" max="3" step="1" value="1" aria-describedby="urgencyHint" />
+            <div class="range-ticks" aria-hidden="true" id="urgencyTicks"></div>
+            <p class="est-hint" id="urgencyHint"></p>
+          </fieldset>
+
+          <fieldset class="est-group">
+            <legend>3. Deliverable add-ons</legend>
+            <div class="pill-row" id="addonOptions"></div>
+          </fieldset>
+        </form>
+
+        <aside class="invoice" aria-labelledby="invTitle">
+          <h3 id="invTitle">Estimate</h3>
+          <div class="inv-summary" id="invSummary" role="status" aria-live="polite" aria-atomic="true">
+            <div class="inv-range" id="invRange"></div>
+            <div class="inv-weeks" id="invWeeks"></div>
+          </div>
+          <table class="inv-table">
+            <caption class="sr-only">Cost breakdown</caption>
+            <tbody id="invRows"></tbody>
+            <tfoot>
+              <tr><th scope="row">Estimate</th><td id="invTotal"></td></tr>
+            </tfoot>
+          </table>
+          <button type="button" class="quote-btn" id="quoteBtn" aria-expanded="false" aria-controls="quoteBox">Request Quote with this Spec</button>
+
+          <div class="quote-box" id="quoteBox" hidden>
+            <form id="quoteForm" novalidate>
+              <label class="est-label" for="quoteEmail">Your email</label>
+              <input type="email" id="quoteEmail" class="est-input" autocomplete="email" aria-describedby="quoteMsg" required />
+              <button type="submit" class="quote-btn solid">Send request</button>
+            </form>
+            <p class="quote-msg" id="quoteMsg" role="status" aria-live="polite"></p>
+          </div>
+        </aside>
       </div>
     </section>
   </main>
