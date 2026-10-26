@@ -15,30 +15,106 @@
     <h1>Artisanal Gastronomy &amp; Fine Wines</h1>
     <p>Seasonal farm-to-table tasting menus curated by Chef Gabriel Laurent in downtown Paris.</p>
     <button className="reserve-btn" onclick="reserveTable()">Reserve a Table</button>
+    <button type="button" class="order-btn order-hero" id="orderOnline">Order Online</button>
   </header>
 
-  <main className="menu-section">
+  <main className="menu-section" id="menu">
     <h2>Tonight's Tasting Highlights</h2>
     <div className="menu-grid">
-      <div className="menu-item">
+      <div className="menu-item" data-dish="wagyu">
         <div className="dish-img">🍷</div>
         <div className="item-header">
           <h3>Seared Wagyu Ribeye</h3>
           <span className="price">€68</span>
         </div>
         <p>Truffled potato puree, wild chanterelles, and aged Bordeaux reduction.</p>
+        <button type="button" class="order-btn" data-order="wagyu" aria-label="Order Online: Seared Wagyu Ribeye">Order Online</button>
       </div>
 
-      <div className="menu-item">
+      <div className="menu-item" data-dish="bisque">
         <div className="dish-img">🦞</div>
         <div className="item-header">
           <h3>Brittany Lobster Bisque</h3>
           <span className="price">€34</span>
         </div>
         <p>Cognac flambéed lobster foam, saffron tuile, and micro tarragon.</p>
+        <button type="button" class="order-btn" data-order="bisque" aria-label="Order Online: Brittany Lobster Bisque">Order Online</button>
       </div>
     </div>
   </main>
+  <!-- Floating order tray button -->
+  <button type="button" class="tray-btn" id="trayBtn" aria-haspopup="dialog" aria-controls="cartPanel">
+    <span>Your order</span>
+    <span class="tray-count" id="trayCount">0</span>
+    <span class="tray-total" id="trayTotal">&euro;0.00</span>
+  </button>
+
+  <div class="overlay" id="overlay" hidden></div>
+
+  <!-- Dish customization modal -->
+  <div class="dialog dish-dialog" id="dishDialog" role="dialog" aria-modal="true" aria-labelledby="dishTitle" hidden>
+    <form id="dishForm" novalidate>
+      <div class="dialog-head">
+        <h2 id="dishTitle"></h2>
+        <button type="button" class="icon-btn" id="dishClose" aria-label="Close dish options">&times;</button>
+      </div>
+      <p class="dialog-desc" id="dishDesc"></p>
+      <div id="dishOptions"></div>
+      <div class="field">
+        <label for="dishNote">Special requests (optional)</label>
+        <input type="text" id="dishNote" maxlength="120" placeholder="Allergies, no onion, etc." autocomplete="off" />
+      </div>
+      <div class="dialog-foot">
+        <div class="qty" role="group" aria-label="Quantity">
+          <button type="button" class="qty-btn" id="dishMinus" aria-label="Decrease quantity">-</button>
+          <output id="dishQty" aria-live="polite">1</output>
+          <button type="button" class="qty-btn" id="dishPlus" aria-label="Increase quantity">+</button>
+        </div>
+        <button type="submit" class="order-btn solid" id="dishAdd">Add to order</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Slide-out checkout bill -->
+  <aside class="dialog cart-panel" id="cartPanel" role="dialog" aria-modal="true" aria-labelledby="cartTitle" hidden>
+    <div class="dialog-head">
+      <h2 id="cartTitle">Your takeout order</h2>
+      <button type="button" class="icon-btn" id="cartClose" aria-label="Close order">&times;</button>
+    </div>
+
+    <div id="cartView">
+      <ul class="cart-lines" id="cartLines"></ul>
+      <p class="cart-empty" id="cartEmpty">Nothing here yet. Choose a dish and tap Order Online.</p>
+
+      <fieldset class="tip-group" id="tipGroup">
+        <legend>Tip for the kitchen</legend>
+        <label class="tip-opt"><input type="radio" name="tip" value="15" /><span>15%</span></label>
+        <label class="tip-opt"><input type="radio" name="tip" value="18" checked /><span>18%</span></label>
+        <label class="tip-opt"><input type="radio" name="tip" value="20" /><span>20%</span></label>
+      </fieldset>
+
+      <dl class="bill" aria-live="polite">
+        <div><dt>Subtotal</dt><dd id="billSubtotal">&euro;0.00</dd></div>
+        <div><dt>Tax (8.5%)</dt><dd id="billTax">&euro;0.00</dd></div>
+        <div><dt id="billTipLabel">Tip (18%)</dt><dd id="billTip">&euro;0.00</dd></div>
+        <div class="bill-total"><dt>Total</dt><dd id="billTotal">&euro;0.00</dd></div>
+      </dl>
+      <button type="button" class="order-btn solid wide" id="placeOrder" disabled>Place takeout order</button>
+    </div>
+
+    <div class="receipt" id="receipt" hidden>
+      <div class="receipt-head">
+        <div class="receipt-brand">LUMI&Egrave;RE BISTRO</div>
+        <div class="receipt-sub">Takeout confirmation</div>
+        <div class="receipt-no" id="receiptNo" tabindex="-1"></div>
+      </div>
+      <ul class="receipt-lines" id="receiptLines"></ul>
+      <dl class="bill" id="receiptBill"></dl>
+      <p class="receipt-note">Ready for pickup in about 25 minutes. Thank you!</p>
+      <button type="button" class="order-btn wide" id="newOrder">Start a new order</button>
+    </div>
+  </aside>
+
   <script src="script.js"></script>
 </body>
 </html>
