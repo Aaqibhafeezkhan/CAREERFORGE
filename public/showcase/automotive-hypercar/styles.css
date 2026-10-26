@@ -44,6 +44,67 @@ body {
   box-shadow: 0 0 20px rgba(239,68,68,0.5);
 }
 
+/* ===== Performance Comparator (issue #52) START ===== */
+.cmp {
+  --cmp-red: #ef4444;
+  --cmp-silver: #cbd5e1;
+  --cmp-amber: #f59e0b;
+  --cmp-muted: #9ca3af;
+  --cmp-line: rgba(255,255,255,0.1);
+  max-width: 1000px;
+  margin: 60px auto 0;
+  padding: 0 24px;
+}
+.cmp * { min-width: 0; }
+.cmp h2 { font-family: 'Orbitron', sans-serif; text-align: center; letter-spacing: 3px; margin-bottom: 12px; }
+.cmp-intro { text-align: center; color: var(--cmp-muted); margin-bottom: 24px; }
+.cmp-bar-top { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; margin-bottom: 16px; padding: 14px 16px; border: 1px solid var(--cmp-line); border-radius: 12px; background: rgba(255,255,255,0.03); }
+.cmp-pick { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.cmp-pick label { font-family: 'Orbitron', sans-serif; font-size: 0.75rem; letter-spacing: 2px; color: var(--cmp-muted); }
+.cmp-pick select { background: #0d0d10; color: #fff; border: 1px solid rgba(255,255,255,0.25); border-radius: 6px; padding: 10px 12px; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 1rem; max-width: 100%; }
+.cmp-pick select:focus-visible { outline: 2px solid var(--cmp-red); outline-offset: 2px; }
+.cmp-summary { flex: 1 1 260px; font-family: 'Orbitron', sans-serif; font-size: 0.8rem; line-height: 1.5; color: #fff; }
+
+/* HUD panel: carbon fibre weave + telemetry grid lines */
+.cmp-grid {
+  list-style: none;
+  display: grid;
+  gap: 1px;
+  border: 1px solid rgba(239,68,68,0.3);
+  border-radius: 12px;
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(239,68,68,0.06) 1px, transparent 1px) 0 0 / 100% 40px,
+    repeating-linear-gradient(45deg, #0c0c0e 0 3px, #151518 3px 6px),
+    #0b0b0d;
+}
+.cmp-row { padding: 16px 18px; border-bottom: 1px solid var(--cmp-line); }
+.cmp-row:last-child { border-bottom: 0; }
+.cmp-row-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 12px; margin-bottom: 10px; }
+.cmp-metric { font-family: 'Orbitron', sans-serif; font-size: 0.85rem; letter-spacing: 2px; }
+.cmp-hint { color: var(--cmp-muted); font-size: 0.8rem; }
+.cmp-car[hidden] { display: none; }
+.cmp-car { --c: var(--cmp-red); display: grid; grid-template-columns: minmax(80px, 150px) minmax(0, 1fr) minmax(86px, auto); align-items: center; gap: 12px; margin-top: 8px; }
+.cmp-car.cmp-rival-a { --c: var(--cmp-silver); }
+.cmp-car.cmp-rival-b { --c: var(--cmp-amber); }
+.cmp-name { color: var(--c); font-size: 0.85rem; font-weight: 600; overflow-wrap: anywhere; }
+.cmp-track { height: 14px; border-radius: 3px; background: rgba(255,255,255,0.08); overflow: hidden; }
+.cmp-fill { display: block; height: 100%; width: 0; background: var(--c); box-shadow: 0 0 12px var(--c); transition: width 0.8s cubic-bezier(.2,.8,.2,1); }
+.cmp-val { font-family: 'Orbitron', sans-serif; font-size: 0.85rem; text-align: right; white-space: nowrap; }
+.cmp-best { display: inline-block; margin-left: 6px; padding: 1px 6px; border: 1px solid #34d399; border-radius: 3px; color: #34d399; font-size: 0.65rem; letter-spacing: 1px; vertical-align: 1px; }
+.cmp-best[hidden] { display: none; }
+.cmp-key { margin-top: 14px; color: var(--cmp-muted); font-size: 0.85rem; }
+.cmp-warn { margin-top: 10px; padding: 12px 14px; border-left: 3px solid var(--cmp-amber); background: rgba(245,158,11,0.08); color: #e5e7eb; font-size: 0.9rem; }
+@media (prefers-reduced-motion: reduce) {
+  .cmp-fill { transition: none; }
+}
+@media (max-width: 560px) {
+  .cmp { padding: 0 14px; }
+  .cmp-car { grid-template-columns: minmax(0, 1fr) auto; }
+  .cmp-track { grid-column: 1 / -1; grid-row: 2; }
+}
+/* ===== Performance Comparator (issue #52) END ===== */
+
 .specs-grid {
   max-width: 900px;
   margin: 60px auto;
