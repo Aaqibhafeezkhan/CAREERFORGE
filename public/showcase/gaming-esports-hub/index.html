@@ -34,6 +34,50 @@
       </div>
     </div>
   </main>
+
+  <section class="compare" id="compare" aria-labelledby="compare-title">
+    <h2 id="compare-title">PLAYER COMPARATOR</h2>
+    <p class="compare-intro">Pick two pros and see how they stack up head to head.</p>
+
+    <div class="compare-pickers">
+      <div class="picker picker-a">
+        <label for="player-a">Player A</label>
+        <select id="player-a"></select>
+        <span class="picker-team" id="team-a"></span>
+      </div>
+      <div class="picker picker-b">
+        <label for="player-b">Player B</label>
+        <select id="player-b"></select>
+        <span class="picker-team" id="team-b"></span>
+      </div>
+    </div>
+
+    <div class="compare-body">
+      <figure class="radar-fig">
+        <svg id="radar" viewBox="0 0 440 400" role="img" aria-labelledby="radar-title radar-desc">
+          <title id="radar-title">Radar chart comparing two players</title>
+          <desc id="radar-desc"></desc>
+        </svg>
+        <figcaption class="radar-legend">
+          <span class="lg lg-a" id="legend-a">Player A</span>
+          <span class="lg lg-b" id="legend-b">Player B</span>
+        </figcaption>
+      </figure>
+
+      <div class="table-wrap">
+        <table class="compare-table" id="compare-table">
+          <caption class="sr-only">Stat comparison. The better value in each row is marked.</caption>
+          <thead>
+            <tr><th scope="col">Stat</th><th scope="col" id="th-a">Player A</th><th scope="col" id="th-b">Player B</th></tr>
+          </thead>
+          <tbody id="compare-body"></tbody>
+        </table>
+        <p class="compare-summary" id="compare-summary" role="status" aria-live="polite"></p>
+        <p class="compare-note">Reaction time is inverted on the chart because lower is better. Stats are made-up demo data.</p>
+      </div>
+    </div>
+  </section>
+
   <script src="script.js"></script>
 </body>
 </html>
