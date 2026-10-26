@@ -10,27 +10,85 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header className="hero">
-    <div className="pill">🌱 501(c)(3) CLIMATE INITIATIVE</div>
+  <header class="hero">
+    <div class="pill">🌱 501(c)(3) CLIMATE INITIATIVE</div>
     <h1>Restoring 10 Million Acres of Rainforest by 2030</h1>
     <p>Open-source satellite tracking &amp; verified community reforestation grants.</p>
-    <button className="donate-btn" onclick="openDonateModal()">Plant 10 Trees ($15) ↗</button>
+    <button class="donate-btn" onclick="openDonateModal()">Plant 10 Trees ($15) ↗</button>
   </header>
 
-  <main className="impact">
-    <div className="card">
+  <main class="impact">
+    <div class="card">
       <h3>14,820,000+</h3>
       <p>Trees Planted Worldwide</p>
     </div>
-    <div className="card">
+    <div class="card">
       <h3>42 Countries</h3>
       <p>Local Farming Partners</p>
     </div>
-    <div className="card">
+    <div class="card">
       <h3>100% Transparent</h3>
       <p>On-Chain Satellite Verification</p>
     </div>
   </main>
+  <section class="calc" id="calculator" aria-labelledby="calc-title">
+    <h2 id="calc-title">Carbon Footprint Calculator</h2>
+    <p class="calc-sub">Estimate your yearly emissions in metric tons of CO2e and see which changes matter most.</p>
+    <div class="calc-grid">
+      <form id="carbon-form" novalidate>
+        <fieldset>
+          <legend><span aria-hidden="true">🚗</span> Commute &amp; travel</legend>
+          <label for="carKm">Car driving <output id="carKm-out">100</output> km / week</label>
+          <input type="range" id="carKm" name="carKm" min="0" max="1000" step="10" value="100" />
+          <label for="transitKm">Public transit <output id="transitKm-out">30</output> km / week</label>
+          <input type="range" id="transitKm" name="transitKm" min="0" max="500" step="5" value="30" />
+          <label for="flightHours">Flight hours per year <output id="flightHours-out">4</output> h</label>
+          <input type="range" id="flightHours" name="flightHours" min="0" max="100" step="1" value="4" />
+        </fieldset>
+        <fieldset>
+          <legend><span aria-hidden="true">🥗</span> Diet</legend>
+          <label for="diet">Diet habits</label>
+          <select id="diet" name="diet">
+            <option value="vegan">Vegan</option>
+            <option value="vegetarian">Vegetarian</option>
+            <option value="pescatarian">Pescatarian (fish, no meat)</option>
+            <option value="lowMeat" selected>Low meat (under 50 g/day)</option>
+            <option value="mediumMeat">Medium meat (50-99 g/day)</option>
+            <option value="highMeat">High meat (100 g+/day)</option>
+          </select>
+        </fieldset>
+        <fieldset>
+          <legend><span aria-hidden="true">🏠</span> Home energy</legend>
+          <label for="electricityKwh">Electricity <output id="electricityKwh-out">250</output> kWh / month</label>
+          <input type="range" id="electricityKwh" name="electricityKwh" min="0" max="2000" step="10" value="250" />
+          <label for="gasKwh">Natural gas heating/cooking <output id="gasKwh-out">300</output> kWh / month</label>
+          <input type="range" id="gasKwh" name="gasKwh" min="0" max="3000" step="10" value="300" />
+          <label for="household">People sharing the home</label>
+          <input type="number" id="household" name="household" min="1" max="20" step="1" value="2" inputmode="numeric" />
+        </fieldset>
+        <p id="form-error" class="form-error" role="alert" hidden></p>
+        <button type="submit" class="donate-btn">Calculate my footprint</button>
+      </form>
+
+      <div class="results" id="results" aria-live="polite" hidden>
+        <div class="gauge-label"><strong id="total-t">0.0</strong><span>t CO2e / year</span></div>
+        <div class="gauge" id="gauge" role="img" aria-label="Footprint gauge">
+          <div class="gauge-fill" id="gauge-fill"></div>
+        </div>
+        <ul class="breakdown" id="breakdown"></ul>
+        <h3>Compared with benchmarks</h3>
+        <ul class="bench" id="bench"></ul>
+        <h3>Biggest ways to cut your footprint</h3>
+        <ol class="tips" id="tips"></ol>
+        <div class="offset">
+          <p>Offsetting your full footprint would cost about <strong id="offset-cost">$0</strong> per year (about <span id="offset-trees">0</span> trees of yearly absorption).</p>
+          <button type="button" class="donate-btn" id="offset-btn">Offset My Emissions</button>
+          <p id="offset-msg" class="offset-msg" hidden></p>
+        </div>
+      </div>
+    </div>
+    <p class="sources">Estimates only. Factors: car 0.17 kg CO2e/km and transit 0.07 kg/passenger-km (UK DEFRA conversion factors, rounded); flights about 100 kg per hour (approximate economy average, DEFRA); diet from Scarborough et al. 2014 (Climatic Change); electricity 0.44 kg/kWh (IEA world average grid) and gas 0.18 kg/kWh (DEFRA); benchmarks from Global Carbon Project; the $20/t offset price and 22 kg per tree per year are assumptions.</p>
+  </section>
   <script src="script.js"></script>
 </body>
 </html>
