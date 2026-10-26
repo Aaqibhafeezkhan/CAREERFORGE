@@ -51,6 +51,48 @@
       <span className="lbl">EV RANGE</span>
     </div>
   </main>
+
+  <!-- ===== Virtual Wind Tunnel (issue #99) START ===== -->
+  <section class="wt" id="wind-tunnel" aria-labelledby="wt-title">
+    <h2 id="wt-title">VIRTUAL WIND TUNNEL</h2>
+    <p class="wt-intro">Switch the active aero wing, push the wind speed and watch drag and downforce change. This is a simplified model, not a real CFD result.</p>
+
+    <div class="wt-layout">
+      <figure class="wt-stage">
+        <canvas id="wt-canvas" width="800" height="320" role="img" aria-label="Side view of the hypercar in an airflow tunnel"></canvas>
+        <figcaption class="wt-caption" id="wt-caption"></figcaption>
+      </figure>
+
+      <div class="wt-controls">
+        <fieldset class="wt-fieldset">
+          <legend>Active aero wing</legend>
+          <div class="wt-states" id="wt-states"></div>
+        </fieldset>
+
+        <div class="wt-field">
+          <label for="wt-speed">Wind speed <output id="wt-speed-out" for="wt-speed">200 mph</output></label>
+          <input type="range" id="wt-speed" min="100" max="300" step="5" value="200" />
+          <div class="wt-ticks" aria-hidden="true"><span>100</span><span>200</span><span>300 mph</span></div>
+        </div>
+
+        <button type="button" class="wt-btn" id="wt-pause" aria-pressed="false">Pause airflow</button>
+      </div>
+    </div>
+
+    <dl class="wt-readouts">
+      <div class="wt-read"><dt>Drag coefficient (Cd)</dt><dd id="wt-cd">0.30</dd></div>
+      <div class="wt-read"><dt>Drag force</dt><dd id="wt-drag">0 N</dd></div>
+      <div class="wt-read"><dt>Downforce</dt><dd id="wt-down">0 kg</dd></div>
+      <div class="wt-read"><dt>Power lost to drag</dt><dd id="wt-power">0 kW</dd></div>
+    </dl>
+
+    <p class="wt-formula" id="wt-formula"></p>
+    <p class="wt-delta" id="wt-delta"></p>
+    <p class="wt-sr" id="wt-live" role="status" aria-live="polite"></p>
+    <p class="wt-note" id="wt-note"></p>
+  </section>
+  <!-- ===== Virtual Wind Tunnel (issue #99) END ===== -->
+
   <script src="script.js"></script>
 </body>
 </html>

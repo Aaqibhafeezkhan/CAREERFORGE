@@ -124,3 +124,53 @@ body {
 
 .val { font-family: 'Orbitron', sans-serif; font-size: 2.2rem; font-weight: 900; color: #ef4444; display: block; margin-bottom: 6px; }
 .lbl { font-size: 0.8rem; color: #9ca3af; letter-spacing: 1px; }
+
+/* ===== Virtual Wind Tunnel (issue #99) START ===== */
+.wt {
+  --wt-red: #ef4444;
+  --wt-cyan: #22d3ee;
+  --wt-muted: #9ca3af;
+  --wt-line: rgba(255,255,255,0.1);
+  max-width: 1000px;
+  margin: 0 auto 80px;
+  padding: 0 24px;
+}
+.wt * { min-width: 0; }
+.wt h2 { font-family: 'Orbitron', sans-serif; text-align: center; letter-spacing: 3px; margin-bottom: 12px; }
+.wt-intro { text-align: center; color: var(--wt-muted); margin-bottom: 28px; }
+.wt-layout { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 24px; align-items: start; }
+.wt-stage { margin: 0; background: radial-gradient(ellipse at 30% 40%, rgba(34,211,238,0.08), rgba(5,5,5,0) 70%), rgba(255,255,255,0.03); border: 1px solid var(--wt-line); border-radius: 12px; overflow: hidden; }
+.wt-stage canvas { display: block; width: 100%; height: auto; aspect-ratio: 800 / 320; }
+.wt-caption { padding: 10px 14px; border-top: 1px solid var(--wt-line); font-family: 'Orbitron', sans-serif; font-size: 0.75rem; letter-spacing: 1px; color: var(--wt-cyan); }
+.wt-controls { display: flex; flex-direction: column; gap: 20px; }
+.wt-fieldset { border: 1px solid var(--wt-line); border-radius: 12px; padding: 14px; background: rgba(255,255,255,0.03); }
+.wt-fieldset legend { padding: 0 8px; font-family: 'Orbitron', sans-serif; font-size: 0.75rem; letter-spacing: 2px; color: var(--wt-muted); }
+.wt-states { display: grid; gap: 8px; }
+.wt-state input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.wt-state label { display: block; padding: 10px 12px; border: 1px solid var(--wt-line); border-radius: 8px; cursor: pointer; }
+.wt-state label strong { display: block; font-family: 'Orbitron', sans-serif; font-size: 0.85rem; letter-spacing: 1px; }
+.wt-state label span { color: var(--wt-muted); font-size: 0.85rem; }
+.wt-state input:checked + label { border-color: var(--wt-red); background: rgba(239,68,68,0.12); box-shadow: 0 0 14px rgba(239,68,68,0.35); }
+.wt-state input:focus-visible + label { outline: 2px solid var(--wt-cyan); outline-offset: 2px; }
+.wt-field label { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 8px; font-family: 'Orbitron', sans-serif; font-size: 0.75rem; letter-spacing: 2px; color: var(--wt-muted); }
+.wt-field output { color: #fff; }
+.wt-field input[type="range"] { width: 100%; accent-color: var(--wt-red); }
+.wt-field input[type="range"]:focus-visible { outline: 2px solid var(--wt-cyan); outline-offset: 4px; }
+.wt-ticks { display: flex; justify-content: space-between; margin-top: 4px; color: var(--wt-muted); font-size: 0.75rem; }
+.wt-btn { align-self: flex-start; background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.3); border-radius: 6px; padding: 10px 16px; font-family: 'Orbitron', sans-serif; font-size: 0.75rem; font-weight: 700; cursor: pointer; }
+.wt-btn:hover { border-color: var(--wt-cyan); }
+.wt-btn:focus-visible { outline: 2px solid var(--wt-cyan); outline-offset: 2px; }
+.wt-btn[aria-pressed="true"] { border-color: var(--wt-cyan); color: var(--wt-cyan); }
+.wt-readouts { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; margin: 24px 0 16px; }
+.wt-read { background: rgba(255,255,255,0.03); border: 1px solid var(--wt-line); border-radius: 12px; padding: 16px; text-align: center; }
+.wt-read dt { color: var(--wt-muted); font-size: 0.75rem; letter-spacing: 1px; margin-bottom: 6px; }
+.wt-read dd { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; font-weight: 900; color: var(--wt-cyan); text-shadow: 0 0 12px rgba(34,211,238,0.45); overflow-wrap: anywhere; }
+.wt-formula { font-family: 'Orbitron', sans-serif; font-size: 0.8rem; color: #fff; text-align: center; overflow-wrap: anywhere; }
+.wt-delta { margin-top: 8px; text-align: center; color: var(--wt-red); font-size: 0.95rem; }
+.wt-note { margin-top: 10px; text-align: center; color: var(--wt-muted); font-size: 0.85rem; }
+.wt-sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+@media (max-width: 760px) {
+  .wt { padding: 0 14px; }
+  .wt-layout { grid-template-columns: 1fr; }
+}
+/* ===== Virtual Wind Tunnel (issue #99) END ===== */
