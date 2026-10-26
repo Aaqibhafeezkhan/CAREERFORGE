@@ -1,6 +1,92 @@
 // Cart state dictionary: { [id]: { name, price, qty, img } }
 const cart = {};
 
+// Promo coupon engine. type "percent" takes value off the subtotal,
+// type "freeship" waives the flat shipping fee.
+const COUPONS = {
+  CAREER20: { type: 'percent', value: 0.2, label: 'CAREER20: 20% off' },
+  FREESHIP: { type: 'freeship', value: 0, label: 'FREESHIP: free delivery' }
+};
+const SHIPPING_FEE = 12;
+const TAX_RATE = 0.08;
+const COUPON_KEY = 'nexusStoreCoupon';
+let appliedCoupon = null;
+
+function formatMoney(amount) {
+  return `$${amount.toFixed(2)}`;
+}
+
+function normalizeCode(raw) {
+  return String(raw || '').trim().toUpperCase();
+}
+
+function loadSavedCoupon() {
+  try {
+    const saved = normalizeCode(localStorage.getItem(COUPON_KEY));
+    if (COUPONS[saved]) appliedCoupon = saved;
+  } catch (e) {
+    appliedCoupon = null;
+  }
+}
+
+function saveCoupon() {
+  try {
+    if (appliedCoupon) localStorage.setItem(COUPON_KEY, appliedCoupon);
+    else localStorage.removeItem(COUPON_KEY);
+  } catch (e) {
+    // storage can be blocked, the promo then only lasts for this page view
+  }
+}
+
+// Pure helper so the maths is in one place.
+function calculateTotals(subtotal, couponCode) {
+  const coupon = COUPONS[couponCode] || null;
+  const discount = coupon && coupon.type === 'percent' ? subtotal * coupon.value : 0;
+  let shipping = subtotal > 0 ? SHIPPING_FEE : 0;
+  if (coupon && coupon.type === 'freeship') shipping = 0;
+  const tax = (subtotal - discount) * TAX_RATE;
+  const total = subtotal - discount + shipping + tax;
+  return { subtotal, discount, shipping, tax, total };
+}
+
+function setCouponMessage(text, isError) {
+  const msg = document.getElementById('couponMessage');
+  const input = document.getElementById('couponInput');
+  if (!msg || !input) return;
+  msg.textContent = text;
+  msg.classList.toggle('error', Boolean(isError));
+  if (isError) input.setAttribute('aria-invalid', 'true');
+  else input.removeAttribute('aria-invalid');
+}
+
+function applyCoupon(rawCode) {
+  const code = normalizeCode(rawCode);
+  if (!code) {
+    setCouponMessage('Enter a promo code first.', true);
+    return false;
+  }
+  if (!COUPONS[code]) {
+    setCouponMessage(`"${code}" is not a valid promo code.`, true);
+    return false;
+  }
+  if (appliedCoupon === code) {
+    setCouponMessage(`${code} is already applied.`, true);
+    return false;
+  }
+  appliedCoupon = code;
+  saveCoupon();
+  setCouponMessage(`${code} applied.`, false);
+  renderCart();
+  return true;
+}
+
+function removeCoupon() {
+  appliedCoupon = null;
+  saveCoupon();
+  setCouponMessage('Promo code removed.', false);
+  renderCart();
+}
+
 function showToast(message) {
   const toast = document.getElementById('toast');
   if (!toast) return;
@@ -61,10 +147,26 @@ function renderCart() {
     cartCountEl.innerText = totalItems;
   }
 
-  // Update Grand Total
-  const cartTotalEl = document.getElementById('cartTotal');
-  if (cartTotalEl) {
-    cartTotalEl.innerText = `$${totalPrice.toFixed(2)}`;
+  // Update order summary (subtotal, discount, shipping, tax, total)
+  const totals = calculateTotals(totalPrice, appliedCoupon);
+  const setText = (id, value) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value;
+  };
+  setText('cartSubtotal', formatMoney(totals.subtotal));
+  setText('cartDiscount', `-${formatMoney(totals.discount)}`);
+  setText('cartShipping', totals.shipping === 0 && appliedCoupon === 'FREESHIP' && totals.subtotal > 0 ? 'FREE' : formatMoney(totals.shipping));
+  setText('cartTax', formatMoney(totals.tax));
+  setText('cartTotal', formatMoney(totals.total));
+
+  const discountRow = document.getElementById('discountRow');
+  if (discountRow) discountRow.hidden = !(totals.discount > 0);
+  setText('discountLabel', appliedCoupon ? `Discount (${appliedCoupon})` : 'Discount');
+
+  const chip = document.getElementById('promoChip');
+  if (chip) {
+    chip.hidden = !appliedCoupon;
+    if (appliedCoupon) setText('promoChipText', COUPONS[appliedCoupon].label);
   }
 
   // 2. Render Product Card Buttons / Quantity Controls
@@ -140,6 +242,27 @@ function checkout() {
   renderCart();
   toggleCartDrawer();
 }
+
+// Coupon form wiring
+const couponForm = document.getElementById('couponForm');
+if (couponForm) {
+  couponForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const input = document.getElementById('couponInput');
+    if (applyCoupon(input.value)) input.value = '';
+  });
+}
+const promoRemoveBtn = document.getElementById('promoRemove');
+if (promoRemoveBtn) promoRemoveBtn.addEventListener('click', removeCoupon);
+
+// Escape closes the drawer
+document.addEventListener('keydown', (event) => {
+  const drawer = document.getElementById('cartDrawer');
+  if (event.key === 'Escape' && drawer && drawer.classList.contains('open')) toggleCartDrawer();
+});
+
+loadSavedCoupon();
+renderCart();
 
 // Category Tabs Navigation Listener
 document.querySelectorAll('.tab').forEach((tab) => {
