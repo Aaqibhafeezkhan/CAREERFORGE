@@ -148,3 +148,113 @@ body {
   .tm-log td:nth-child(3) { white-space: normal; min-width: 150px; }
 }
 /* ===== END issue #97 ===== */
+
+/* Password strength analyzer */
+.audit-card {
+  max-width: 600px;
+  margin: 0 auto 80px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(16,185,129,0.3);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.audit-tag { color: #10b981; font-size: 0.75rem; letter-spacing: 1px; margin-bottom: 8px; }
+.audit-card h2 { font-size: 1.4rem; margin-bottom: 8px; color: #fff; }
+.audit-note { font-family: 'Inter', sans-serif; font-size: 0.85rem; color: #9ca3af; margin-bottom: 20px; }
+.audit-label { display: block; font-size: 0.8rem; color: #9ca3af; margin-bottom: 6px; }
+
+.audit-input-row { display: flex; gap: 8px; margin-bottom: 14px; }
+
+.audit-input {
+  flex: 1;
+  min-width: 0;
+  background: #030712;
+  border: 1px solid rgba(16,185,129,0.4);
+  border-radius: 8px;
+  color: #f9fafb;
+  font-family: 'Fira Code', monospace;
+  font-size: 1rem;
+  padding: 12px;
+}
+
+.audit-input:focus-visible,
+.audit-toggle:focus-visible {
+  outline: 2px solid #10b981;
+  outline-offset: 2px;
+}
+
+.audit-toggle {
+  background: transparent;
+  color: #10b981;
+  border: 1px solid #10b981;
+  border-radius: 8px;
+  font-family: 'Fira Code', monospace;
+  font-weight: 600;
+  padding: 0 16px;
+  min-width: 70px;
+  cursor: pointer;
+}
+
+.audit-toggle:hover { background: rgba(16,185,129,0.15); }
+
+.meter { display: flex; gap: 6px; margin-bottom: 16px; }
+
+.meter .seg {
+  flex: 1;
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.08);
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.meter[data-level="1"] .seg.on { background: #ef4444; }
+.meter[data-level="2"] .seg.on { background: #f97316; }
+.meter[data-level="3"] .seg.on { background: #f59e0b; }
+.meter[data-level="4"] .seg.on { background: #84cc16; }
+.meter[data-level="5"] .seg.on { background: #10b981; }
+
+.verdict { font-weight: 700; margin-bottom: 14px; font-size: 1rem; }
+
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.stats > div {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.stats .wide { grid-column: 1 / -1; }
+.stats dt { font-size: 0.7rem; color: #9ca3af; margin-bottom: 4px; }
+.stats dd { font-size: 0.95rem; font-weight: 600; color: #34d399; overflow-wrap: anywhere; }
+
+.checklist-title { font-size: 0.85rem; color: #9ca3af; margin-bottom: 10px; font-weight: 600; }
+.checklist { list-style: none; display: grid; gap: 8px; }
+.checklist li { display: flex; gap: 10px; align-items: baseline; font-size: 0.8rem; color: #9ca3af; }
+.checklist .mark { color: #f87171; font-weight: 700; width: 1em; flex: none; }
+.checklist li.pass { color: #f9fafb; }
+.checklist li.pass .mark { color: #34d399; }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .audit-card { margin: 0 12px 60px; padding: 18px; }
+  .stats { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .meter .seg { transition: none; }
+}
