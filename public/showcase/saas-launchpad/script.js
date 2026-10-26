@@ -3,7 +3,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
   initTestimonialsCarousel();
   initRoiCalculator();
+  initFaqAccordion();
 });
+
+function initFaqAccordion() {
+  const items = document.querySelectorAll('.faq-section .faq-item');
+  items.forEach(item => {
+    const question = item.querySelector('.faq-question');
+    if (!question) return;
+    question.addEventListener('click', () => {
+      const shouldOpen = question.getAttribute('aria-expanded') !== 'true';
+      items.forEach(current => {
+        const button = current.querySelector('.faq-question');
+        const answer = current.querySelector('.faq-answer');
+        if (!button || !answer) return;
+        const open = current === item && shouldOpen;
+        current.classList.toggle('is-open', open);
+        button.setAttribute('aria-expanded', String(open));
+        answer.setAttribute('aria-hidden', String(!open));
+        answer.toggleAttribute('inert', !open);
+      });
+    });
+  });
+}
 
 /* ==========================================================
    Customer Testimonials Carousel Module
