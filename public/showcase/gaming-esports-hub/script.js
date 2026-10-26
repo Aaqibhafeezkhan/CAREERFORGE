@@ -6,9 +6,9 @@
  */
 
 // Global handler preserved for hero stream button
-function watchStream() {
+window.watchStream = function watchStream() {
   alert('Connecting to Vortex Esports Twitch stream feed...');
-}
+};
 
 (function () {
   'use strict';
@@ -116,16 +116,6 @@ function watchStream() {
 
   var lastToastTimestamp = 0;
 
-  // ===== Security Utilities =====
-  function sanitizeString(str) {
-    if (typeof str !== 'string') return '';
-    return str
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;');
-  }
 
   function formatMoney(amount) {
     var num = Math.round(Number(amount) || 0);
@@ -264,7 +254,7 @@ function watchStream() {
   function saveRoster() {
     try {
       localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(state.roster));
-    } catch (err) {
+    } catch {
       // Storage access blocked or quota exceeded
     }
   }
@@ -306,7 +296,7 @@ function watchStream() {
       });
 
       return true;
-    } catch (err) {
+    } catch {
       return false;
     }
   }
