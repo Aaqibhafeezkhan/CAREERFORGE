@@ -25,21 +25,69 @@
     <div className="ticker-grid">
       <div className="ticker-card">
         <span className="pair">BTC-PERP</span>
-        <span className="price">$94,250.00</span>
-        <span className="change green">+4.82%</span>
+        <span className="price" id="tick-btc-price">$94,250.00</span>
+        <span className="change green" id="tick-btc-change">+4.82%</span>
       </div>
       <div className="ticker-card">
         <span className="pair">ETH-PERP</span>
-        <span className="price">$3,840.50</span>
-        <span className="change green">+6.15%</span>
+        <span className="price" id="tick-eth-price">$3,840.50</span>
+        <span className="change green" id="tick-eth-change">+6.15%</span>
       </div>
       <div className="ticker-card">
         <span className="pair">SOL-PERP</span>
-        <span className="price">$214.80</span>
-        <span className="change green">+12.40%</span>
+        <span className="price" id="tick-sol-price">$214.80</span>
+        <span className="change green" id="tick-sol-change">+12.40%</span>
       </div>
     </div>
   </main>
+
+  <section class="market" aria-labelledby="market-title">
+    <div class="market-head">
+      <h2 id="market-title">Live Market</h2>
+      <div class="toggle-group" role="group" aria-label="Trading pair" id="pair-group">
+        <button type="button" class="toggle" data-pair="btc" aria-pressed="true">BTC-PERP</button>
+        <button type="button" class="toggle" data-pair="eth" aria-pressed="false">ETH-PERP</button>
+        <button type="button" class="toggle" data-pair="sol" aria-pressed="false">SOL-PERP</button>
+      </div>
+      <div class="toggle-group" role="group" aria-label="Chart interval" id="interval-group">
+        <button type="button" class="toggle" data-interval="1H" aria-pressed="false">1H</button>
+        <button type="button" class="toggle" data-interval="24H" aria-pressed="true">24H</button>
+        <button type="button" class="toggle" data-interval="1W" aria-pressed="false">1W</button>
+        <button type="button" class="toggle" data-interval="1M" aria-pressed="false">1M</button>
+      </div>
+    </div>
+
+    <dl class="market-stats">
+      <div><dt>Last price</dt><dd id="stat-last">--</dd></div>
+      <div><dt>24h change</dt><dd id="stat-change">--</dd></div>
+      <div><dt>Period high</dt><dd id="stat-high">--</dd></div>
+      <div><dt>Period low</dt><dd id="stat-low">--</dd></div>
+    </dl>
+
+    <div class="market-body">
+      <div class="chart-wrap" id="chart-wrap">
+        <svg id="chart" viewBox="0 0 800 380" tabindex="0" role="img" aria-label="Candlestick price chart. Use left and right arrow keys to inspect candles."></svg>
+        <div class="chart-tip" id="chart-tip" role="status" hidden></div>
+        <p class="chart-legend"><span class="lg-ma7">MA 7</span> <span class="lg-ma25">MA 25</span> <span class="lg-note">Simulated data, nothing here is a real market.</span></p>
+      </div>
+
+      <div class="orderbook" aria-label="Order book">
+        <h3>Order book</h3>
+        <table class="ob-table" id="ob-asks">
+          <caption class="sr-only">Asks (sell orders)</caption>
+          <thead><tr><th scope="col">Price</th><th scope="col">Size</th><th scope="col">Total</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <div class="ob-mid" id="ob-mid">--</div>
+        <table class="ob-table" id="ob-bids">
+          <caption class="sr-only">Bids (buy orders)</caption>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+    <p class="sr-only" id="chart-status" aria-live="polite"></p>
+  </section>
+
   <script src="script.js"></script>
 </body>
 </html>
