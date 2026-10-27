@@ -17,6 +17,26 @@
     <button className="reserve-btn" onclick="reserveHypercar()">Reserve Allocation ↗</button>
   </header>
 
+  <!-- ===== Performance Comparator (issue #52) START ===== -->
+  <section class="cmp" id="comparator" aria-labelledby="cmp-title">
+    <h2 id="cmp-title">HEAD-TO-HEAD TELEMETRY</h2>
+    <p class="cmp-intro">Pit the Apex Zero against a supercar benchmark.</p>
+
+    <div class="cmp-bar-top">
+      <div class="cmp-pick">
+        <label for="cmp-rival">Rival</label>
+        <select id="cmp-rival"></select>
+      </div>
+      <p class="cmp-summary" id="cmp-summary" role="status" aria-live="polite"></p>
+    </div>
+
+    <ul class="cmp-grid" id="cmp-grid" aria-label="Performance metrics"></ul>
+
+    <p class="cmp-key" id="cmp-key"></p>
+    <p class="cmp-warn"><strong>Figures are approximate.</strong> Rival numbers are rounded press and manufacturer style figures, the Apex Zero numbers are concept targets, and the quarter mile and G-force values are estimates. Use this as a demo, not as a spec sheet.</p>
+  </section>
+  <!-- ===== Performance Comparator (issue #52) END ===== -->
+
   <main className="specs-grid">
     <div className="spec-card">
       <span className="val">1.74s</span>
