@@ -3,35 +3,165 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Synapse Academy — Interactive AI & Systems Learning</title>
+  <title>Synapse Academy — Interactive AI &amp; Systems Learning</title>
   <link rel="stylesheet" href="styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header className="hero">
-    <div className="tag">// NEXT-GEN EDTECH</div>
+  <header class="hero">
+    <div class="tag">// NEXT-GEN EDTECH</div>
     <h1>Master LLM Engineering &amp; Distributed Systems</h1>
     <p>Project-based interactive curriculum mentored by industry staff engineers.</p>
-    <button className="btn-primary" onclick="enrollNow()">Enroll in Cohort ↗</button>
+    <button class="btn-primary" onclick="enrollNow()">Enroll in Cohort ↗</button>
   </header>
 
-  <main className="courses">
+  <main class="courses">
     <h2>POPULAR LEARNING PATHS</h2>
-    <div className="grid">
-      <div className="card">
-        <div className="badge">ADVANCED</div>
+    <div class="grid">
+      <div class="card">
+        <div class="badge">ADVANCED</div>
         <h3>LLM Inference Architecture</h3>
         <p>12 Weeks • vLLM, TensorRT, and Quantization</p>
       </div>
-      <div className="card">
-        <div className="badge">INTERMEDIATE</div>
-        <h3>Rust Kernel & eBPF Deep Dive</h3>
+      <div class="card">
+        <div class="badge">INTERMEDIATE</div>
+        <h3>Rust Kernel &amp; eBPF Deep Dive</h3>
         <p>8 Weeks • Zero-copy Packet Filtering</p>
       </div>
     </div>
   </main>
+
+  <!-- ===== Course Syllabus Accordion Section (Issue #65) START ===== -->
+  <section class="syllabus-section" id="syllabus" aria-labelledby="syllabusTitle">
+    <div class="syllabus-header">
+      <div class="tag">// DETAILED CURRICULUM</div>
+      <h2 id="syllabusTitle">COURSE SYLLABUS &amp; ROADMAP</h2>
+      <p class="syllabus-subtitle">Explore lecture topics, estimated durations, and watch free lesson previews from our production systems engineers.</p>
+    </div>
+
+    <!-- Curriculum Meta Summary -->
+    <div class="syllabus-summary-bar">
+      <div class="summary-stats">
+        <div class="summary-stat-item">
+          <span class="stat-num" id="totalModulesCount">4</span>
+          <span class="stat-lbl">Core Modules</span>
+        </div>
+        <div class="summary-stat-divider" aria-hidden="true"></div>
+        <div class="summary-stat-item">
+          <span class="stat-num" id="totalLessonsCount">16</span>
+          <span class="stat-lbl">In-Depth Lectures</span>
+        </div>
+        <div class="summary-stat-divider" aria-hidden="true"></div>
+        <div class="summary-stat-item">
+          <span class="stat-num">14.5 hrs</span>
+          <span class="stat-lbl">Total Runtime</span>
+        </div>
+        <div class="summary-stat-divider" aria-hidden="true"></div>
+        <div class="summary-stat-item">
+          <span class="stat-num highlight-preview">5 Previews</span>
+          <span class="stat-lbl">Free Access</span>
+        </div>
+      </div>
+
+      <div class="summary-actions">
+        <button type="button" class="btn-text-action" id="expandAllBtn">Expand All</button>
+        <button type="button" class="btn-text-action" id="collapseAllBtn">Collapse All</button>
+      </div>
+    </div>
+
+    <!-- Search / Filter Lessons -->
+    <div class="syllabus-filter-bar">
+      <div class="syllabus-search-box">
+        <span class="search-icon" aria-hidden="true">🔍</span>
+        <input type="search" id="syllabusSearchInput" placeholder="Filter topics by keyword (e.g. KV Cache, Rust, eBPF)..." aria-label="Search syllabus lectures" autocomplete="off" />
+      </div>
+      <div class="syllabus-filter-chips" role="group" aria-label="Filter modules">
+        <button type="button" class="filter-chip active" data-filter="all">All Lectures</button>
+        <button type="button" class="filter-chip" data-filter="preview">Free Previews (5)</button>
+      </div>
+    </div>
+
+    <!-- Accordion Module List -->
+    <div class="syllabus-accordion" id="syllabusAccordion" role="region" aria-label="Course Syllabus Accordion">
+      <!-- Generated dynamically in script.js -->
+    </div>
+  </section>
+
+  <!-- Lesson Preview Video Modal -->
+  <div class="preview-modal-backdrop" id="previewModalBackdrop" hidden aria-hidden="true">
+    <div class="preview-modal" id="previewModal" role="dialog" aria-modal="true" aria-labelledby="previewModalTitle">
+      <div class="modal-header">
+        <div class="modal-badge-row">
+          <span class="modal-module-tag" id="modalModuleTag">MODULE 01</span>
+          <span class="modal-duration-tag" id="modalDurationTag">⏱ 48 mins</span>
+          <span class="modal-status-tag">FREE PREVIEW</span>
+        </div>
+        <button type="button" class="modal-close-btn" id="modalCloseBtn" aria-label="Close preview modal">✕</button>
+      </div>
+
+      <h3 class="modal-title" id="previewModalTitle">Lesson Preview</h3>
+
+      <!-- Video Player Simulation -->
+      <div class="video-player-container">
+        <div class="video-screen" id="videoScreen">
+          <div class="video-overlay" id="videoOverlay">
+            <button type="button" class="video-play-btn" id="videoPlayToggle" aria-label="Play sample lecture preview">
+              <span class="play-icon" id="playIconSvg" aria-hidden="true">▶</span>
+            </button>
+            <div class="video-overlay-text">Click to Play Sample Lecture Stream</div>
+          </div>
+          <!-- Simulated Animated Audio/Signal Waves -->
+          <div class="video-canvas-placeholder" id="videoVisualizer" aria-hidden="true">
+            <div class="signal-bar"></div>
+            <div class="signal-bar"></div>
+            <div class="signal-bar"></div>
+            <div class="signal-bar"></div>
+            <div class="signal-bar"></div>
+            <div class="signal-bar"></div>
+            <div class="signal-bar"></div>
+            <div class="signal-bar"></div>
+          </div>
+          <div class="video-watermark">SYNAPSE ACADEMY // HD 1080P</div>
+        </div>
+
+        <!-- Video Control Bar -->
+        <div class="video-controls">
+          <button type="button" class="vid-btn" id="vidPlayBtn" aria-label="Play/Pause">▶</button>
+          <div class="vid-progress-track" id="vidProgressTrack" role="progressbar" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100">
+            <div class="vid-progress-fill" id="vidProgressFill" style="width: 15%;"></div>
+          </div>
+          <span class="vid-time" id="vidTimeDisplay">04:15 / 48:00</span>
+          <span class="vid-badge-hd">1080p HD</span>
+        </div>
+      </div>
+
+      <!-- Lesson Takeaways & Technical Summary -->
+      <div class="modal-lesson-body">
+        <div class="modal-section-title">Instructor Insights &amp; Learning Objectives</div>
+        <p class="modal-desc" id="modalLessonDesc"></p>
+
+        <div class="modal-takeaways-title">Key Core Competencies Covered:</div>
+        <ul class="modal-takeaways-list" id="modalTakeawaysList"></ul>
+
+        <div class="modal-code-preview" id="modalCodeBox">
+          <div class="code-box-header">
+            <span class="code-box-lang" id="modalCodeLang">Terminal / Architecture</span>
+            <span class="code-box-badge">Reference Sample</span>
+          </div>
+          <pre><code id="modalCodeSnippet"></code></pre>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" id="modalDismissBtn">Close Preview</button>
+        <button type="button" class="btn-primary" onclick="enrollNow()">Enroll in Full Cohort ↗</button>
+      </div>
+    </div>
+  </div>
+  <!-- ===== Course Syllabus Accordion Section (Issue #65) END ===== -->
+
   <section class="quiz" id="quiz" aria-labelledby="quizTitle">
     <h2 id="quizTitle">TEST YOUR SYSTEMS KNOWLEDGE</h2>
 
@@ -84,6 +214,10 @@
       </div>
     </div>
   </section>
+
+  <!-- Notification Toast Container -->
+  <div class="edtech-toast-container" id="edtechToastContainer" aria-live="polite"></div>
+
   <script src="script.js"></script>
 </body>
 </html>
