@@ -686,3 +686,117 @@ body {
     padding: 24px 18px;
   }
 }
+
+.sleep-score-card {
+  text-align: center;
+}
+
+.sleep-score-ring {
+  --sleep-ring-color: var(--emerald);
+  --sleep-ring-progress: 88;
+  position: relative;
+  width: 150px;
+  height: 150px;
+  margin: 20px auto 12px;
+}
+
+.sleep-score-ring svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+  overflow: visible;
+}
+
+.sleep-ring-track,
+.sleep-ring-progress {
+  fill: none;
+  stroke-width: 9;
+}
+
+.sleep-ring-track {
+  stroke: rgba(255, 255, 255, 0.1);
+}
+
+.sleep-ring-progress {
+  stroke: var(--sleep-ring-color);
+  stroke-linecap: round;
+  stroke-dasharray: 314.159;
+  stroke-dashoffset: 314.159;
+  transition:
+    stroke-dashoffset 1s ease,
+    stroke 0.3s ease;
+  filter: drop-shadow(0 0 5px var(--sleep-ring-color));
+  animation: sleep-ring-fill 1s ease forwards;
+}
+
+.sleep-score-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.sleep-score-number {
+  font-size: 2.3rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.sleep-score-label {
+  color: #94a3b8;
+  font-size: 0.8rem;
+  margin-top: 4px;
+}
+
+.sleep-score-status {
+  display: inline-block;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.sleep-score-description {
+  margin-top: 10px;
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+
+@keyframes sleep-ring-fill {
+  to {
+    stroke-dashoffset: calc(
+      314.159 * (1 - var(--sleep-ring-progress) / 100)
+    );
+  }
+}
+
+.sleep-score-ring[data-score="88"] {
+  --sleep-ring-color: var(--emerald);
+  --sleep-ring-progress: 88;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sleep-ring-progress {
+    animation: none;
+    stroke-dashoffset: calc(
+      314.159 * (1 - var(--sleep-ring-progress) / 100)
+    );
+  }
+}
+
+.sleep-score-ring.score-optimal {
+  --sleep-ring-color: var(--emerald);
+}
+
+.sleep-score-ring.score-moderate {
+  --sleep-ring-color: var(--amber);
+}
+
+.sleep-score-ring.score-low {
+  --sleep-ring-color: var(--rose);
+}

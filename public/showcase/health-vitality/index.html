@@ -344,10 +344,21 @@
       <h3>Heart Rate Variability</h3>
       <div class="val">68 ms <span class="tag-good">Optimal</span></div>
     </div>
-    <div class="card">
+    <div class="card sleep-score-card">
       <div class="icon">🌙</div>
-      <h3>Deep Sleep Score</h3>
-      <div class="val">92% <span class="tag-good">Excellent</span></div>
+      <h3>Sleep Quality Score</h3>
+      <div class="sleep-score-ring score-optimal" data-score="88">
+        <svg viewBox="0 0 120 120" role="img" aria-label="Sleep quality score: 88 out of 100, Optimal">
+          <circle class="sleep-ring-track" cx="60" cy="60" r="50"></circle>
+          <circle class="sleep-ring-progress" cx="60" cy="60" r="50"></circle>
+        </svg>
+        <div class="sleep-score-center">
+          <span class="sleep-score-number">88</span>
+          <span class="sleep-score-label">/ 100</span>
+        </div>
+      </div>
+      <div class="sleep-score-status" aria-live="polite">Optimal</div>
+      <p class="sleep-score-description">Your sleep quality score</p>
     </div>
     <div class="card">
       <div class="icon">⚡</div>
