@@ -1074,3 +1074,12 @@ body {
     align-items: flex-start;
   }
 }
+
+#balance-visibility { margin-left: 6px; min-width: 32px; min-height: 32px; border: 1px solid #34d399; border-radius: 6px; color: #a7f3d0; background: #052e26; cursor: pointer; font: inherit; }
+#balance-visibility:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+#portfolio-balance { font-variant-numeric: tabular-nums; }
+@media (max-width: 768px) {
+  .navbar { flex-wrap: wrap; gap: 12px; }
+  .nav-actions { flex-wrap: wrap; gap: 8px; }
+  .balance-badge { display: inline-flex; align-items: center; flex-wrap: wrap; padding: 6px 10px; }
+}

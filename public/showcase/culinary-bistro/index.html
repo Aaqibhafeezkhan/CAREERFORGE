@@ -40,8 +40,80 @@
         <p>Cognac flambéed lobster foam, saffron tuile, and micro tarragon.</p>
         <button type="button" class="order-btn" data-order="bisque" aria-label="Order Online: Brittany Lobster Bisque">Order Online</button>
       </div>
-    </div>
   </main>
+
+  <!-- ===== BEGIN issue #101: Digital Sommelier Wine Pairing Recommendation Finder ===== -->
+  <section class="sommelier-section" id="sommelier" aria-labelledby="sommelier-title">
+    <div class="sommelier-header">
+      <div class="sommelier-kicker">CAVE &amp; CELLIER PRIVÉ • ÉLÉONORE MOREAU</div>
+      <h2 id="sommelier-title">Digital Sommelier &amp; Wine Pairing Finder</h2>
+      <p>Discover Michelin-calibrated pairings tailored to our culinary creations. Select your entrée below to explore cellar vintages, grape varietals, aroma bouquets, and sensory intensity ratings.</p>
+    </div>
+
+    <!-- Entrée Selection Carousel / Tabs -->
+    <div class="entree-picker" role="region" aria-label="Entrée selection">
+      <span class="picker-label">Step 1: Select Your Chosen Entrée</span>
+      <div class="entree-tabs" role="tablist" aria-label="Entrée dishes">
+        <button type="button" class="entree-tab active" data-entree="steak-frites" role="tab" aria-selected="true">
+          <span class="tab-emoji">🥩</span>
+          <span class="tab-text">
+            <strong>Steak Frites</strong>
+            <small>Charred Ribeye &amp; Bordelaise</small>
+          </span>
+        </button>
+
+        <button type="button" class="entree-tab" data-entree="duck-confit" role="tab" aria-selected="false">
+          <span class="tab-emoji">🍗</span>
+          <span class="tab-text">
+            <strong>Duck Confit</strong>
+            <small>Périgord &amp; Orange Gastrique</small>
+          </span>
+        </button>
+
+        <button type="button" class="entree-tab" data-entree="truffle-risotto" role="tab" aria-selected="false">
+          <span class="tab-emoji">🍚</span>
+          <span class="tab-text">
+            <strong>Truffle Risotto</strong>
+            <small>Winter Truffle &amp; Parmigiano</small>
+          </span>
+        </button>
+
+        <button type="button" class="entree-tab" data-entree="salmon" role="tab" aria-selected="false">
+          <span class="tab-emoji">🐟</span>
+          <span class="tab-text">
+            <strong>Wild Salmon</strong>
+            <small>Beurre Blanc &amp; Caviar</small>
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Active Entrée Profile Banner -->
+    <div class="entree-profile-card" id="entreeProfileCard">
+      <!-- Populated dynamically by script.js -->
+    </div>
+
+    <!-- Wine Recommendations Display -->
+    <div class="sommelier-results-wrap" role="region" aria-label="Sommelier wine recommendations">
+      <div class="results-controls">
+        <div class="results-heading-group">
+          <span class="results-badge">CELLAR PAIRINGS</span>
+          <h3>Recommended Vintage Pairings</h3>
+        </div>
+
+        <div class="wine-style-filter" role="radiogroup" aria-label="Filter wine style">
+          <button type="button" class="style-filter-btn active" data-filter="all" aria-checked="true">All Cellar</button>
+          <button type="button" class="style-filter-btn" data-filter="red" aria-checked="false">Red Wines</button>
+          <button type="button" class="style-filter-btn" data-filter="white" aria-checked="false">White Wines</button>
+        </div>
+      </div>
+
+      <div class="wine-cards-grid" id="wineCardsGrid">
+        <!-- Rendered dynamically by script.js -->
+      </div>
+    </div>
+  </section>
+  <!-- ===== END issue #101 ===== -->
   <!-- Floating order tray button -->
   <button type="button" class="tray-btn" id="trayBtn" aria-haspopup="dialog" aria-controls="cartPanel">
     <span>Your order</span>
