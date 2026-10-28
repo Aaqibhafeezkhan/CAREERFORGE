@@ -103,3 +103,157 @@ body {
 .offset-msg { margin-top: 12px; color: #86efac; }
 .sources { margin-top: 20px; font-size: 0.75rem; color: #86efac; opacity: 0.8; }
 [hidden] { display: none !important; }
+
+/* Volunteer signup modal */
+.volunteer-btn {
+  display: inline-block;
+  margin: 12px 0 0 8px;
+  padding: 12px 28px;
+  border: 1px solid var(--green);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.volunteer-btn:hover {
+  background: rgba(34, 197, 94, 0.12);
+}
+
+.volunteer-modal {
+  width: min(92%, 480px);
+  max-height: 90vh;
+  margin: auto;
+  overflow-y: auto;
+  color: var(--text);
+  background: #0b2114;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 0;
+}
+
+.volunteer-modal::backdrop {
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+}
+
+.modal-content {
+  position: relative;
+  padding: 32px;
+}
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text);
+  font-size: 1.6rem;
+  cursor: pointer;
+}
+
+.modal-eyebrow {
+  margin-bottom: 8px;
+  color: var(--green);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.modal-content h2 {
+  margin-bottom: 12px;
+  font-size: 1.65rem;
+}
+
+.modal-description {
+  margin-bottom: 22px;
+  color: #86efac;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+#volunteer-form label {
+  display: block;
+  margin: 14px 0 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+#volunteer-form input,
+#volunteer-form select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #06180e;
+  color: var(--text);
+  font: inherit;
+}
+
+#volunteer-form input:focus-visible,
+#volunteer-form select:focus-visible,
+.volunteer-modal button:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 3px;
+}
+
+.volunteer-submit {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.volunteer-success {
+  padding: 18px 0 4px;
+  text-align: center;
+}
+
+.success-badge {
+  display: grid;
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 20px;
+  place-items: center;
+  border: 1px solid var(--green);
+  border-radius: 50%;
+  background: rgba(34, 197, 94, 0.15);
+  color: var(--green);
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.volunteer-success p {
+  margin: 12px 0;
+  color: #86efac;
+  line-height: 1.6;
+}
+
+.volunteer-success .demo-notice {
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+.volunteer-success .donate-btn {
+  margin-top: 12px;
+}
+
+@media (max-width: 480px) {
+  .modal-content {
+    padding: 28px 20px;
+  }
+
+  .volunteer-btn {
+    margin-left: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gauge-fill {
+    transition: none;
+  }
+}

@@ -1,6 +1,74 @@
 function openDonateModal() {
-  alert('TerraInitia Reforestation Donation Modal Triggered!');
+  alert('Donation checkout is not connected in this demo.');
 }
+
+/*Volunteer signup modal */
+(function () {
+  if (typeof document === 'undefined') return;
+
+  var modal = document.getElementById('volunteer-modal');
+  var openBtn = document.getElementById('open-volunteer-modal');
+  var closeBtn = document.getElementById('close-volunteer-modal');
+  var form = document.getElementById('volunteer-form');
+  var formView = document.getElementById('volunteer-form-view');
+  var successView = document.getElementById('volunteer-success');
+  var errorBox = document.getElementById('volunteer-error');
+  var thankYou = document.getElementById('volunteer-thank-you');
+  var finishBtn = document.getElementById('finish-volunteer');
+
+  if (!modal || !openBtn || !closeBtn || !form) return;
+
+  function closeModal() {
+    modal.close();
+  }
+
+  openBtn.addEventListener('click', function () {
+    form.reset();
+    errorBox.hidden = true;
+    formView.hidden = false;
+    successView.hidden = true;
+    modal.showModal();
+    document.getElementById('volunteer-name').focus();
+  });
+
+  closeBtn.addEventListener('click', closeModal);
+  finishBtn.addEventListener('click', closeModal);
+
+  // Close when the user clicks the backdrop, not the modal content.
+  modal.addEventListener('click', function (event) {
+    if (event.target === modal) closeModal();
+  });
+
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
+    errorBox.hidden = true;
+
+    var name = document.getElementById('volunteer-name').value.trim();
+    var email = document.getElementById('volunteer-email').value.trim();
+    var causeSelect = document.getElementById('volunteer-cause');
+    var cause = causeSelect.options[causeSelect.selectedIndex].text;
+
+    if (!name || !email || !causeSelect.value) {
+      errorBox.textContent = 'Please complete all fields.';
+      errorBox.hidden = false;
+      return;
+    }
+
+    if (name.length > 100 || email.length > 254 ||
+        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      errorBox.textContent = 'Please enter a valid name and email address.';
+      errorBox.hidden = false;
+      return;
+    }
+
+    thankYou.textContent =
+      'Thank you, ' + name + '! Your chosen cause is ' + cause + '.';
+
+    formView.hidden = true;
+    successView.hidden = false;
+    finishBtn.focus();
+  });
+})();
 
 /* ---------- Carbon footprint calculator ---------- */
 
