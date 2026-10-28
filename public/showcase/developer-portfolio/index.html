@@ -17,6 +17,9 @@
         <span class="dot yellow"></span>
         <span class="dot green"></span>
         <span class="terminal-title">dev@kernel-box ~ % whoami</span>
+        <button type="button" class="shortcuts-trigger-btn" id="shortcutsBtn" aria-haspopup="dialog" aria-controls="shortcutsModal">
+          <span>Press</span> <kbd>?</kbd> <span>for Shortcuts</span>
+        </button>
       </div>
       <div class="terminal-body">
         <h1>Alex Vance</h1>
@@ -218,6 +221,121 @@
       </div>
     </section>
   </div>
+
+  <!-- Keyboard Shortcuts Cheat-Sheet Modal (Issue #59) -->
+  <div class="shortcuts-overlay" id="shortcutsOverlay" hidden></div>
+  <div class="shortcuts-dialog" id="shortcutsModal" role="dialog" aria-modal="true" aria-labelledby="shortcutsTitle" hidden>
+    <div class="terminal-header">
+      <span class="dot red"></span>
+      <span class="dot yellow"></span>
+      <span class="dot green"></span>
+      <span class="terminal-title">dev@kernel-box: hotkeys.conf</span>
+      <button type="button" class="shortcuts-close-btn" id="shortcutsClose" aria-label="Close shortcuts modal">&times;</button>
+    </div>
+    <div class="shortcuts-body">
+      <div class="shortcuts-intro">
+        <h2 id="shortcutsTitle">Keyboard Navigation Cheat-Sheet</h2>
+        <p>Master terminal and portfolio workflows with global hotkeys. Press <kbd class="inline-kbd">Esc</kbd> anytime to dismiss.</p>
+      </div>
+
+      <!-- Live Key Telemetry Indicator -->
+      <div class="shortcuts-live-bar">
+        <span class="live-label">LIVE KEY DETECTOR:</span>
+        <span class="live-key-display" id="liveKeyDisplay">Press any key to test...</span>
+      </div>
+
+      <div class="shortcuts-grid">
+        <!-- Group 1: Navigation -->
+        <div class="shortcuts-group">
+          <div class="group-title">// VIEWPORT NAVIGATION</div>
+          <ul class="shortcuts-list">
+            <li>
+              <div class="key-combo"><kbd>H</kbd></div>
+              <div class="key-desc">
+                <strong>Home / Header</strong>
+                <small>Smooth scroll to bio &amp; kernel box</small>
+              </div>
+              <button type="button" class="try-shortcut-btn" data-key="h">Test</button>
+            </li>
+            <li>
+              <div class="key-combo"><kbd>S</kbd></div>
+              <div class="key-desc">
+                <strong>Skills Matrix</strong>
+                <small>Jump directly to technical skills</small>
+              </div>
+              <button type="button" class="try-shortcut-btn" data-key="s">Test</button>
+            </li>
+            <li>
+              <div class="key-combo"><kbd>P</kbd></div>
+              <div class="key-desc">
+                <strong>Projects Section</strong>
+                <small>Browse open source repositories</small>
+              </div>
+              <button type="button" class="try-shortcut-btn" data-key="p">Test</button>
+            </li>
+            <li>
+              <div class="key-combo"><kbd>I</kbd></div>
+              <div class="key-desc">
+                <strong>Interactive Shell</strong>
+                <small>Jump and focus terminal input prompt</small>
+              </div>
+              <button type="button" class="try-shortcut-btn" data-key="i">Test</button>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Group 2: Terminal & Theme Controls -->
+        <div class="shortcuts-group">
+          <div class="group-title">// TERMINAL &amp; ENVIRONMENT</div>
+          <ul class="shortcuts-list">
+            <li>
+              <div class="key-combo"><kbd>T</kbd></div>
+              <div class="key-desc">
+                <strong>Toggle Theme</strong>
+                <small>Switch shell between Dark &amp; Light modes</small>
+              </div>
+              <button type="button" class="try-shortcut-btn" data-key="t">Test</button>
+            </li>
+            <li>
+              <div class="key-combo"><kbd>C</kbd></div>
+              <div class="key-desc">
+                <strong>Clear Terminal</strong>
+                <small>Wipe output screen buffer</small>
+              </div>
+              <button type="button" class="try-shortcut-btn" data-key="c">Test</button>
+            </li>
+            <li>
+              <div class="key-combo"><kbd>Ctrl</kbd> + <kbd>L</kbd></div>
+              <div class="key-desc">
+                <strong>Fast Screen Wipe</strong>
+                <small>Standard UNIX terminal clear sequence</small>
+              </div>
+              <button type="button" class="try-shortcut-btn" data-key="ctrl-l">Test</button>
+            </li>
+            <li>
+              <div class="key-combo"><kbd>?</kbd> <span class="or-txt">or</span> <kbd>/</kbd></div>
+              <div class="key-desc">
+                <strong>Toggle Cheat-Sheet</strong>
+                <small>Show or hide this keyboard reference</small>
+              </div>
+              <button type="button" class="try-shortcut-btn" data-key="?">Test</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="shortcuts-footer">
+        <div class="footer-tip">
+          💡 <em>Tip: Single-letter shortcuts are automatically suppressed while actively typing inside the terminal prompt.</em>
+        </div>
+        <button type="button" class="shortcuts-dismiss-btn" id="shortcutsDismiss">Close Cheat-Sheet (Esc)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Toast Feedback for Shortcuts -->
+  <div class="shortcut-toast" id="shortcutToast" aria-live="polite" hidden></div>
+
   <script src="script.js"></script>
 </body>
 </html>
