@@ -1,80 +1,213 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const filterButtons = document.querySelectorAll(".filter-btn");
-  const skillCards = document.querySelectorAll(".skill-card");
-  const progressBars = document.querySelectorAll(".progress-fill");
-  const emptyMessage = document.querySelector(".skills-empty");
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('Developer Portfolio initialized');
+  initTerminal();
+});
 
-  filterButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const selectedCategory = button.dataset.filter;
+// Virtual file system: objects are directories, strings are files.
+// Files whose name is listed in EXECUTABLES are shown in green and can be run as ./name.
+const FS = {
+  'bio.txt': 'Alex Vance - Senior Distributed Systems & Rust Kernel Developer.\nI build high-throughput microservice mesh routers, eBPF network monitors\nand WebAssembly runtimes. Based on the internet, mostly.',
+  'skills.txt': 'Languages : Rust, Go, C, TypeScript\nPlatforms : Kubernetes, eBPF, WebAssembly, Linux\nInterests : packet processing, schedulers, observability',
+  'contact.txt': 'email  : alex@example.dev\ngithub : github.com/alexvance\nnote   : placeholder details for this demo portfolio',
+  projects: {
+    'README.md': '# Projects\nTwo open source projects live here. Try: cat hyper-mesh-router.md',
+    'hyper-mesh-router.md': '# hyper-mesh-router  (Rust, 4.8k stars)\nZero-allocation HTTP/3 load balancer compiled to eBPF byte-code.',
+    'wasm-container-daemon.md': '# wasm-container-daemon  (Go, 2.3k stars)\nUltra-lightweight OCI compliant container runtime running WASM binaries in under 5ms.'
+  },
+  blog: {
+    'ebpf-notes.md': '# Notes on eBPF verifier limits\nBounded loops, stack size and why your program gets rejected at load time.'
+  },
+  bin: {
+    'hello.sh': 'Hello from the virtual file system. Nothing here touches your real machine.'
+  }
+};
+const EXECUTABLES = ['hello.sh'];
 
-      filterButtons.forEach((filterButton) => {
-        const isActive = filterButton === button;
+const HELP_LINES = [
+  ['help', 'show this list'],
+  ['ls [path]', 'list directory contents'],
+  ['cd [path]', 'change directory (supports .., ~ and absolute paths)'],
+  ['pwd', 'print the working directory'],
+  ['cat <file>', 'print a file'],
+  ['echo <text>', 'print text'],
+  ['theme dark|light', 'switch the terminal theme'],
+  ['history', 'show previous commands'],
+  ['clear', 'clear the screen']
+];
 
-        filterButton.classList.toggle("active", isActive);
-        filterButton.setAttribute("aria-pressed", String(isActive));
-      });
-
-      let visibleCount = 0;
-
-      skillCards.forEach((card) => {
-        const shouldShow =
-          selectedCategory === "all" ||
-          card.dataset.category === selectedCategory;
-
-        card.hidden = !shouldShow;
-
-        if (shouldShow) {
-          visibleCount += 1;
-        }
-      });
-
-      if (emptyMessage) {
-        emptyMessage.hidden = visibleCount > 0;
-      }
-
-      progressBars.forEach((bar) => {
-        const card = bar.closest(".skill-card");
-
-        if (card && !card.hidden) {
-          bar.style.width = "0";
-
-          requestAnimationFrame(() => {
-            bar.style.width = `${bar.dataset.level}%`;
-          });
-        }
-      });
-    });
+// Turn a path (relative to cwd parts) into a normalised array of segments.
+function resolvePath(cwdParts, input) {
+  let parts = input.startsWith('/') || input === '~' || input.startsWith('~/') ? [] : cwdParts.slice();
+  input.replace(/^~/, '').split('/').forEach((seg) => {
+    if (seg === '' || seg === '.') return;
+    if (seg === '..') parts.pop();
+    else parts.push(seg);
   });
+  return parts;
+}
 
-  const skillsSection = document.querySelector(".skills-section");
+// Walk the tree. Returns the directory/file node, or null if any segment is missing.
+function lookup(parts) {
+  let node = FS;
+  for (const seg of parts) {
+    if (typeof node !== 'object' || !Object.prototype.hasOwnProperty.call(node, seg)) return null;
+    node = node[seg];
+  }
+  return node;
+}
 
-  if ("IntersectionObserver" in window && skillsSection) {
-    const observer = new IntersectionObserver(
-      (entries, currentObserver) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            progressBars.forEach((bar) => {
-              const card = bar.closest(".skill-card");
+const isDir = (node) => typeof node === 'object' && node !== null;
+const toPathString = (parts) => '/' + parts.join('/');
 
-              if (card && !card.hidden) {
-                bar.style.width = `${bar.dataset.level}%`;
-              }
-            });
+function initTerminal() {
+  const screen = document.getElementById('vterm-screen');
+  const form = document.getElementById('vterm-form');
+  const input = document.getElementById('vterm-input');
+  const promptEl = document.getElementById('vterm-prompt');
+  const term = document.getElementById('vterm');
+  if (!screen || !form || !input) return;
 
-            currentObserver.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.2 },
-    );
+  let cwd = [];
+  const history = [];
+  let historyIndex = 0;
+  let draft = '';
 
-    observer.observe(skillsSection);
-  } else {
-    progressBars.forEach((bar) => {
-      bar.style.width = `${bar.dataset.level}%`;
-    });
+  function line(text, cls) {
+    const div = document.createElement('div');
+    div.className = 'vterm-line' + (cls ? ' ' + cls : '');
+    div.textContent = text;
+    screen.appendChild(div);
+    return div;
   }
 
-  console.log("Developer Portfolio initialized");
-});
+  function lines(text, cls) {
+    text.split('\n').forEach((t) => line(t, cls));
+  }
+
+  function updatePrompt() {
+    promptEl.textContent = 'dev@kernel-box:' + toPathString(cwd) + '$';
+  }
+
+  function printLs(node) {
+    const row = document.createElement('div');
+    row.className = 'vterm-line vterm-ls';
+    Object.keys(node).sort().forEach((name) => {
+      const span = document.createElement('span');
+      if (isDir(node[name])) { span.className = 'vterm-dir'; span.textContent = name + '/'; }
+      else if (EXECUTABLES.includes(name)) { span.className = 'vterm-exe'; span.textContent = name + '*'; }
+      else { span.className = 'vterm-file'; span.textContent = name; }
+      row.appendChild(span);
+    });
+    if (!row.childNodes.length) row.textContent = '(empty)';
+    screen.appendChild(row);
+  }
+
+  const commands = {
+    help() {
+      HELP_LINES.forEach(([cmd, desc]) => {
+        const row = document.createElement('div');
+        row.className = 'vterm-line';
+        const c = document.createElement('span');
+        c.className = 'vterm-cmd';
+        c.textContent = cmd.padEnd(18, ' ');
+        const d = document.createElement('span');
+        d.textContent = desc;
+        row.append(c, d);
+        screen.appendChild(row);
+      });
+    },
+    pwd() { line(toPathString(cwd)); },
+    ls(args) {
+      const target = args[0] ? resolvePath(cwd, args[0]) : cwd;
+      const node = lookup(target);
+      if (node === null) return line('ls: cannot access \'' + args[0] + '\': No such file or directory', 'vterm-err');
+      if (!isDir(node)) return line(args[0]);
+      printLs(node);
+    },
+    cd(args) {
+      if (!args[0]) { cwd = []; return; }
+      const target = resolvePath(cwd, args[0]);
+      const node = lookup(target);
+      if (node === null) return line('cd: no such file or directory: ' + args[0], 'vterm-err');
+      if (!isDir(node)) return line('cd: not a directory: ' + args[0], 'vterm-err');
+      cwd = target;
+    },
+    cat(args) {
+      if (!args.length) return line('cat: missing file operand', 'vterm-err');
+      args.forEach((arg) => {
+        const node = lookup(resolvePath(cwd, arg));
+        if (node === null) line('cat: ' + arg + ': No such file or directory', 'vterm-err');
+        else if (isDir(node)) line('cat: ' + arg + ': Is a directory', 'vterm-err');
+        else lines(node);
+      });
+    },
+    echo(args) { line(args.join(' ')); },
+    theme(args) {
+      const mode = args[0];
+      if (mode !== 'dark' && mode !== 'light') return line('usage: theme dark|light', 'vterm-err');
+      term.setAttribute('data-theme', mode);
+      line('theme set to ' + mode);
+    },
+    history() {
+      if (!history.length) return line('(no history yet)');
+      history.forEach((h, i) => line(String(i + 1).padStart(3, ' ') + '  ' + h));
+    },
+    clear() { screen.textContent = ''; }
+  };
+
+  function run(raw) {
+    const text = raw.trim();
+    const echoed = line('', 'vterm-echo');
+    const p = document.createElement('span');
+    p.className = 'vterm-cmd';
+    p.textContent = promptEl.textContent + ' ';
+    echoed.append(p, document.createTextNode(raw));
+    if (!text) return;
+
+    history.push(text);
+    const [name, ...args] = text.split(/\s+/);
+
+    if (Object.prototype.hasOwnProperty.call(commands, name)) {
+      commands[name](args);
+    } else if (name.startsWith('./') && EXECUTABLES.includes(name.slice(2)) && lookup(resolvePath(cwd, name)) !== null) {
+      lines(lookup(resolvePath(cwd, name)));
+    } else {
+      line(name + ': command not found. Type \'help\' for the list of commands.', 'vterm-err');
+    }
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const raw = input.value;
+    run(raw);
+    input.value = '';
+    historyIndex = history.length;
+    draft = '';
+    updatePrompt();
+    screen.scrollTop = screen.scrollHeight;
+  });
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (historyIndex === history.length) draft = input.value;
+      if (historyIndex > 0) historyIndex--;
+      if (history.length) input.value = history[historyIndex];
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (historyIndex < history.length) historyIndex++;
+      input.value = historyIndex === history.length ? draft : history[historyIndex];
+    } else if (e.key === 'l' && e.ctrlKey) {
+      e.preventDefault();
+      commands.clear();
+    }
+  });
+
+  // Clicking the screen focuses the prompt, unless the visitor is selecting text.
+  term.addEventListener('click', () => {
+    if (!window.getSelection().toString()) input.focus();
+  });
+
+  line('Welcome to the DevCraft virtual shell. Type \'help\' to get started.');
+  updatePrompt();
+}

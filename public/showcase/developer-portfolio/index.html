@@ -199,6 +199,24 @@
         </div>
       </div>
     </section>
+
+    <section class="shell" aria-labelledby="shell-title">
+      <h2 id="shell-title">Interactive Terminal</h2>
+      <p class="shell-hint">Poke around my virtual file system. Type <code>help</code> to see the commands.</p>
+      <div class="terminal-card vterm" id="vterm" data-theme="dark">
+        <div class="terminal-header">
+          <span class="dot red"></span>
+          <span class="dot yellow"></span>
+          <span class="dot green"></span>
+          <span class="terminal-title">dev@kernel-box: interactive shell</span>
+        </div>
+        <div class="vterm-screen" id="vterm-screen" role="log" aria-live="polite" aria-label="Terminal output"></div>
+        <form class="vterm-form" id="vterm-form" autocomplete="off">
+          <label class="vterm-prompt" for="vterm-input" id="vterm-prompt">dev@kernel-box:/$</label>
+          <input class="vterm-input" id="vterm-input" type="text" spellcheck="false" autocapitalize="off" autocorrect="off" aria-label="Terminal command" />
+        </form>
+      </div>
+    </section>
   </div>
   <script src="script.js"></script>
 </body>
