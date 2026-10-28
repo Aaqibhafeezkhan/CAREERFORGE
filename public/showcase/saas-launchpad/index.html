@@ -202,6 +202,107 @@
     </div>
   </section>
 
+  <!-- Subscription Pricing Section -->
+  <section class="pricing-section" id="pricing">
+    <div class="pricing-container">
+      <div class="pricing-header">
+        <div class="pill">// SIMPLE, TRANSPARENT PRICING</div>
+        <h2>Plans that scale with your AI workloads</h2>
+        <p>Start small and scale your observability as your infrastructure grows.</p>
+
+        <div class="billing-toggle-wrapper">
+          <span id="monthly-label" class="billing-label active">Monthly</span>
+
+          <button
+            type="button"
+            class="billing-switch"
+            id="billing-toggle"
+            role="switch"
+            aria-checked="false"
+            aria-label="Switch to annual billing"
+          >
+            <span class="billing-switch-thumb"></span>
+          </button>
+
+          <span id="annual-label" class="billing-label">Annual</span>
+          <span class="savings-badge">Save 20%</span>
+        </div>
+        <p class="billing-note" id="billing-note">Billed monthly. Switch to annual to save 20%.</p>
+      </div>
+
+      <div class="pricing-grid">
+        <!-- Starter Plan -->
+        <article class="pricing-card">
+          <h3>Starter</h3>
+          <p class="plan-description">For developers exploring AI observability.</p>
+
+          <div class="plan-price">
+            <span class="price-amount" data-monthly="19" data-annual="15.20">$19</span>
+            <span class="price-period">/ user / month</span>
+          </div>
+
+          <p class="plan-billing">Billed monthly</p>
+
+          <ul class="plan-features">
+            <li>✓ Core telemetry dashboard</li>
+            <li>✓ Basic token usage analytics</li>
+            <li>✓ 7-day data retention</li>
+            <li>✓ Community support</li>
+          </ul>
+
+          <a href="#roi-calculator" class="btn btn-secondary plan-btn">Get Started</a>
+        </article>
+
+        <!-- Growth Plan -->
+        <article class="pricing-card pricing-card-featured">
+          <span class="popular-badge">MOST POPULAR</span>
+          <h3>Growth</h3>
+          <p class="plan-description">For teams scaling AI applications.</p>
+
+          <div class="plan-price">
+            <span class="price-amount" data-monthly="49" data-annual="39.20">$49</span>
+            <span class="price-period">/ user / month</span>
+          </div>
+
+          <p class="plan-billing">Billed monthly</p>
+
+          <ul class="plan-features">
+            <li>✓ Everything in Starter</li>
+            <li>✓ Advanced cost monitoring</li>
+            <li>✓ 30-day data retention</li>
+            <li>✓ Custom alerts</li>
+            <li>✓ Priority support</li>
+          </ul>
+
+          <a href="#roi-calculator" class="btn btn-primary plan-btn">Start Free Trial</a>
+        </article>
+
+        <!-- Enterprise Plan -->
+        <article class="pricing-card">
+          <h3>Enterprise</h3>
+          <p class="plan-description">For organizations with advanced needs.</p>
+
+          <div class="plan-price">
+            <span class="price-amount" data-monthly="99" data-annual="79.20">$99</span>
+            <span class="price-period">/ user / month</span>
+          </div>
+
+          <p class="plan-billing">Billed monthly</p>
+
+          <ul class="plan-features">
+            <li>✓ Everything in Growth</li>
+            <li>✓ 90-day data retention</li>
+            <li>✓ Advanced access controls</li>
+            <li>✓ Dedicated support</li>
+            <li>✓ Custom integrations</li>
+          </ul>
+
+          <a href="#roi-calculator" class="btn btn-secondary plan-btn">Contact Sales</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
   <!-- Social Proof & Customer Testimonial Slider Section -->
   <section class="testimonials-section" id="testimonials" aria-roledescription="carousel" aria-label="Customer Testimonials">
     <div class="section-header">
@@ -564,6 +665,34 @@
             <span class="timer-progress-fill" id="timerProgressFill"></span>
           </span>
         </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq-section" aria-labelledby="faq-heading">
+    <h2 id="faq-heading">Frequently asked questions</h2>
+    <div class="faq-item">
+      <h3><button type="button" class="faq-question" id="faq-question-1" aria-expanded="false" aria-controls="faq-answer-1">What can I explore on this page?<span class="faq-chevron" aria-hidden="true">⌄</span></button></h3>
+      <div class="faq-answer" id="faq-answer-1" role="region" aria-labelledby="faq-question-1" aria-hidden="true" inert>
+        <div><p>Explore CloudPulse’s observability overview, try the ROI calculator, and browse the featured customer stories.</p></div>
+      </div>
+    </div>
+    <div class="faq-item">
+      <h3><button type="button" class="faq-question" id="faq-question-2" aria-expanded="false" aria-controls="faq-answer-2">How is the time-savings estimate calculated?<span class="faq-chevron" aria-hidden="true">⌄</span></button></h3>
+      <div class="faq-answer" id="faq-answer-2" role="region" aria-labelledby="faq-question-2" aria-hidden="true" inert>
+        <div><p>The calculator assumes four hours saved per engineer each week across 50 working weeks. It multiplies those hours by your team size and hourly rate. These are estimates, not guaranteed savings.</p></div>
+      </div>
+    </div>
+    <div class="faq-item">
+      <h3><button type="button" class="faq-question" id="faq-question-3" aria-expanded="false" aria-controls="faq-answer-3">Can I change the calculator’s assumptions?<span class="faq-chevron" aria-hidden="true">⌄</span></button></h3>
+      <div class="faq-answer" id="faq-answer-3" role="region" aria-labelledby="faq-question-3" aria-hidden="true" inert>
+        <div><p>You can adjust the team-size slider and hourly-rate input, or select a team-size preset. The savings and ROI figures update as you change those inputs.</p></div>
+      </div>
+    </div>
+    <div class="faq-item">
+      <h3><button type="button" class="faq-question" id="faq-question-4" aria-expanded="false" aria-controls="faq-answer-4">How do I pause the customer stories?<span class="faq-chevron" aria-hidden="true">⌄</span></button></h3>
+      <div class="faq-answer" id="faq-answer-4" role="region" aria-labelledby="faq-question-4" aria-hidden="true" inert>
+        <div><p>Use the auto-rotate control to pause the carousel. You can still browse with the previous and next buttons or select a story using its indicator dot.</p></div>
       </div>
     </div>
   </section>

@@ -130,12 +130,44 @@ body {
 .location { color: #a1a1aa; font-size: 0.85rem; margin-bottom: 16px; }
 
 .specs {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
   border-top: 1px solid var(--border);
   padding-top: 16px;
-  font-size: 0.85rem;
-  color: #d4d4d8;
   margin-bottom: 18px;
 }
+
+.spec-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #d4d4d8;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.spec-item:hover {
+  border-color: rgba(234, 179, 8, 0.35);
+  background: rgba(234, 179, 8, 0.06);
+}
+
+.spec-item svg {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 
 .calc-estate-btn {
   background: rgba(234, 179, 8, 0.1);
@@ -774,5 +806,21 @@ body {
   }
   .breakdown-wrap {
     flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .specs {
+    gap: 8px;
+  }
+
+  .spec-item {
+    padding: 7px 9px;
+    font-size: 0.78rem;
+  }
+
+  .spec-item svg {
+    width: 15px;
+    height: 15px;
   }
 }
