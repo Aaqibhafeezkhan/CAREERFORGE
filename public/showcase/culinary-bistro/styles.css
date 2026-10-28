@@ -289,3 +289,537 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .cart-panel { animation: none; }
 }
+
+/* ===== BEGIN issue #101: Digital Sommelier Wine Pairing Finder ===== */
+.sommelier-section {
+  max-width: 1040px;
+  margin: 70px auto 90px;
+  padding: 0 24px;
+}
+
+.sommelier-header {
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto 36px;
+}
+
+.sommelier-kicker {
+  font-family: 'Playfair Display', serif;
+  letter-spacing: 3.5px;
+  color: var(--accent);
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.sommelier-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  margin-bottom: 14px;
+  background: linear-gradient(135deg, #fff 40%, #fbbf24 85%, #b91c1c 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.sommelier-header p {
+  color: #a8a29e;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* Step 1: Entrée Selection */
+.entree-picker {
+  margin-bottom: 28px;
+}
+
+.picker-label {
+  display: block;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--accent);
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.entree-tabs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.entree-tab {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(217, 119, 6, 0.25);
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: left;
+  color: var(--text);
+}
+
+.entree-tab:hover {
+  background: rgba(217, 119, 6, 0.08);
+  border-color: rgba(245, 158, 11, 0.5);
+  transform: translateY(-2px);
+}
+
+.entree-tab.active {
+  background: radial-gradient(circle at 10% 20%, rgba(120, 15, 30, 0.45) 0%, rgba(20, 12, 14, 0.85) 100%);
+  border-color: var(--accent);
+  box-shadow: 0 8px 24px rgba(114, 47, 55, 0.35), 0 0 16px rgba(245, 158, 11, 0.2);
+}
+
+.tab-emoji {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.tab-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.tab-text strong {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.05rem;
+  color: #fff;
+}
+
+.tab-text small {
+  color: #a8a29e;
+  font-size: 0.76rem;
+  margin-top: 2px;
+}
+
+/* Entrée Profile Summary Card */
+.entree-profile-card {
+  background: linear-gradient(135deg, rgba(74, 14, 23, 0.25) 0%, rgba(18, 14, 18, 0.6) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 16px;
+  padding: 20px 24px;
+  margin-bottom: 36px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.profile-main {
+  flex: 1;
+  min-width: 260px;
+}
+
+.profile-badge {
+  font-size: 0.72rem;
+  letter-spacing: 1.5px;
+  color: var(--accent);
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  display: inline-block;
+}
+
+.profile-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.35rem;
+  color: #fff;
+  margin-bottom: 6px;
+}
+
+.profile-desc {
+  font-size: 0.88rem;
+  color: #d6d3d1;
+  line-height: 1.5;
+}
+
+.profile-attributes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.attr-chip {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 6px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.attr-chip span {
+  font-size: 0.68rem;
+  color: #a8a29e;
+  text-transform: uppercase;
+}
+
+.attr-chip strong {
+  font-size: 0.82rem;
+  color: #fde68a;
+}
+
+/* Results Section */
+.sommelier-results-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.results-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(217, 119, 6, 0.2);
+}
+
+.results-heading-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.results-badge {
+  background: rgba(185, 28, 28, 0.2);
+  border: 1px solid rgba(185, 28, 28, 0.4);
+  color: #fca5a5;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.results-heading-group h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.35rem;
+  color: #fff;
+}
+
+.wine-style-filter {
+  display: flex;
+  gap: 8px;
+}
+
+.style-filter-btn {
+  background: transparent;
+  color: #a8a29e;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.style-filter-btn:hover {
+  color: #fff;
+  border-color: rgba(245, 158, 11, 0.4);
+}
+
+.style-filter-btn.active {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* Wine Cards Grid */
+.wine-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  gap: 24px;
+}
+
+/* Individual Wine Card */
+.wine-card {
+  background: radial-gradient(circle at 15% 10%, rgba(90, 18, 30, 0.22) 0%, rgba(14, 11, 13, 0.95) 75%);
+  border: 1px solid rgba(217, 119, 6, 0.28);
+  border-radius: 18px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s, box-shadow 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.wine-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(245, 158, 11, 0.6);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6), 0 0 24px rgba(114, 47, 55, 0.25);
+}
+
+.wine-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.wine-vintage-pill {
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  color: #fef3c7;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.wine-type-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #a8a29e;
+}
+
+.wine-type-badge.red { color: #f87171; }
+.wine-type-badge.white { color: #fde047; }
+
+.wine-card-title h4 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.45rem;
+  color: #fff;
+  line-height: 1.25;
+  margin-bottom: 6px;
+}
+
+.wine-appellation {
+  color: var(--accent);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.wine-varietal-pill {
+  color: #d6d3d1;
+  font-size: 0.82rem;
+  margin-top: 4px;
+}
+
+/* Sensory Metrics & Intensity Bar */
+.wine-sensory-row {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 12px 16px;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
+.intensity-box {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.intensity-label {
+  font-size: 0.72rem;
+  color: #a8a29e;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.intensity-meter {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.intensity-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.2s ease;
+}
+
+.intensity-dot.filled {
+  background: #dc2626;
+  border-color: #f87171;
+  box-shadow: 0 0 8px rgba(220, 38, 38, 0.6);
+}
+
+.intensity-dot.filled.gold {
+  background: #f59e0b;
+  border-color: #fbbf24;
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
+}
+
+.intensity-text {
+  font-size: 0.8rem;
+  color: #fff;
+  font-weight: 700;
+}
+
+.wine-temp-box {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  padding-left: 12px;
+}
+
+.temp-label {
+  font-size: 0.7rem;
+  color: #a8a29e;
+  text-transform: uppercase;
+}
+
+.temp-val {
+  font-size: 0.82rem;
+  color: #fef3c7;
+  font-weight: 600;
+}
+
+/* Aroma Tag Chips */
+.aroma-chips-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.aroma-label {
+  font-size: 0.75rem;
+  color: #a8a29e;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.aroma-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.aroma-chip {
+  background: rgba(114, 47, 55, 0.25);
+  border: 1px solid rgba(185, 28, 28, 0.35);
+  color: #fecdd3;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.aroma-chip:hover {
+  background: rgba(185, 28, 28, 0.45);
+  border-color: #f87171;
+  color: #fff;
+  transform: scale(1.05);
+}
+
+/* Sommelier Pairing Notes Box */
+.wine-pairing-notes {
+  background: rgba(255, 255, 255, 0.02);
+  border-left: 3px solid var(--accent);
+  padding: 10px 14px;
+  border-radius: 0 8px 8px 0;
+}
+
+.notes-heading {
+  font-size: 0.75rem;
+  color: var(--accent);
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.notes-body {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 0.88rem;
+  color: #d6d3d1;
+  line-height: 1.5;
+}
+
+/* Wine Card Footer & Order Action */
+.wine-card-footer {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.wine-price-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.wine-price-label {
+  font-size: 0.72rem;
+  color: #a8a29e;
+}
+
+.wine-price-val {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.35rem;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.wine-order-btn {
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.84rem;
+  font-weight: 700;
+  padding: 9px 18px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+
+.wine-order-btn:hover {
+  background: var(--accent);
+  color: #000;
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.35);
+}
+
+.wine-order-btn.added {
+  background: #15803d;
+  color: #fff;
+  border-color: #22c55e;
+}
+
+@media (max-width: 640px) {
+  .wine-cards-grid {
+    grid-template-columns: 1fr;
+  }
+  .wine-sensory-row {
+    grid-template-columns: 1fr;
+  }
+  .wine-temp-box {
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-left: 0;
+    padding-top: 8px;
+  }
+}
+/* ===== END issue #101 ===== */
+
