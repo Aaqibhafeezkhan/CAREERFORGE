@@ -1172,3 +1172,278 @@ body {
     font-size: 28px;
   }
 }
+
+/*Hydration Tracker*/
+
+.hydration-section {
+  max-width: 900px;
+  margin: 0 auto 80px;
+  padding: 0 24px;
+}
+
+.hydration-card {
+  padding: 30px;
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(20, 184, 166, 0.13),
+      transparent 55%
+    ),
+    rgba(255, 255, 255, 0.035);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+}
+
+.hydration-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.hydration-eyebrow {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--teal);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.hydration-header h2 {
+  margin-bottom: 8px;
+  color: var(--text);
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.hydration-header p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.hydration-icon {
+  display: grid;
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  place-items: center;
+  background: rgba(20, 184, 166, 0.12);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  font-size: 2rem;
+}
+
+.hydration-summary {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.hydration-summary > div {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+#water-count {
+  color: var(--teal);
+  font-size: 2.7rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.hydration-summary > div span {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+#water-status {
+  color: #a7f3d0;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.hydration-progress-track {
+  height: 12px;
+  margin-bottom: 26px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 999px;
+}
+
+.hydration-progress-fill {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--teal), var(--emerald));
+  border-radius: inherit;
+  box-shadow: 0 0 12px var(--teal-glow);
+  transition: width 0.3s ease;
+}
+
+.water-glasses {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.water-glass {
+  display: grid;
+  min-height: 58px;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  filter: grayscale(1);
+  opacity: 0.35;
+  transform: scale(0.96);
+  transition:
+    opacity 0.25s ease,
+    filter 0.25s ease,
+    transform 0.25s ease,
+    background 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.water-glass.filled {
+  background: rgba(20, 184, 166, 0.12);
+  border-color: rgba(20, 184, 166, 0.45);
+  filter: none;
+  opacity: 1;
+  transform: scale(1);
+}
+
+.hydration-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+}
+
+.water-btn {
+  display: grid;
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  place-items: center;
+  border-radius: 13px;
+  font-family: inherit;
+  font-size: 1.7rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.water-btn:active:not(:disabled) {
+  transform: scale(0.94);
+}
+
+.water-btn:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 3px;
+}
+
+.water-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.water-btn-minus {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.water-btn-minus:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.water-btn-plus {
+  color: #042f2e;
+  background: var(--teal);
+  border: 1px solid var(--teal);
+  box-shadow: 0 4px 14px var(--teal-glow);
+}
+
+.water-btn-plus:hover:not(:disabled) {
+  background: #2dd4bf;
+  transform: translateY(-2px);
+}
+
+.hydration-control-label {
+  color: var(--text);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.hydration-note {
+  margin-top: 18px;
+  color: #99f6e4;
+  font-size: 0.82rem;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .hydration-section {
+    margin-bottom: 55px;
+    padding: 0 16px;
+  }
+
+  .hydration-card {
+    padding: 22px 16px;
+    border-radius: 18px;
+  }
+
+  .hydration-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 1.6rem;
+  }
+
+  .water-glasses {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .water-glass {
+    min-height: 52px;
+  }
+
+  .hydration-controls {
+    gap: 8px;
+    padding: 12px 8px;
+  }
+
+  .water-btn {
+    width: 42px;
+    height: 42px;
+  }
+
+  .hydration-control-label {
+    font-size: 0.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hydration-progress-fill,
+  .water-glass,
+  .water-btn {
+    transition: none;
+  }
+}
