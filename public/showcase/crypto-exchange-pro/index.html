@@ -25,89 +25,68 @@
     <div className="ticker-grid">
       <div className="ticker-card">
         <span className="pair">BTC-PERP</span>
-        <span className="price">$94,250.00</span>
-        <span className="change green">+4.82%</span>
+        <span className="price" id="tick-btc-price">$94,250.00</span>
+        <span className="change green" id="tick-btc-change">+4.82%</span>
       </div>
       <div className="ticker-card">
         <span className="pair">ETH-PERP</span>
-        <span className="price">$3,840.50</span>
-        <span className="change green">+6.15%</span>
+        <span className="price" id="tick-eth-price">$3,840.50</span>
+        <span className="change green" id="tick-eth-change">+6.15%</span>
       </div>
       <div className="ticker-card">
         <span className="pair">SOL-PERP</span>
-        <span className="price">$214.80</span>
-        <span className="change green">+12.40%</span>
+        <span className="price" id="tick-sol-price">$214.80</span>
+        <span className="change green" id="tick-sol-change">+12.40%</span>
       </div>
     </div>
   </main>
-  <!-- ===== BEGIN issue #98: DeFi staking / yield farming simulator ===== -->
-  <section class="yf" id="yield-farm" aria-labelledby="yf-title">
-    <div class="yf-head">
-      <span class="yf-tag">LIQUIDITY MINING</span>
-      <h2 id="yf-title">Yield Farming &amp; Staking Simulator</h2>
-    </div>
-    <p class="yf-disclaimer" role="note"><strong>SIMULATION ONLY.</strong> No wallet, no deposit, no real tokens and no real rewards. The pool rates below are made-up demo numbers, not an offer or financial advice.</p>
 
-    <div class="yf-layout">
-      <form class="yf-form" id="yf-form" novalidate autocomplete="off">
-        <fieldset class="yf-field">
-          <legend>Liquidity pool</legend>
-          <div class="yf-choices">
-            <label class="yf-choice"><input type="radio" name="yf-pool" value="eth-usdc" checked /><span>ETH / USDC<small>12.00% base APR</small></span></label>
-            <label class="yf-choice"><input type="radio" name="yf-pool" value="sol-usdt" /><span>SOL / USDT<small>18.00% base APR</small></span></label>
-          </div>
-        </fieldset>
-
-        <div class="yf-field">
-          <label for="yf-amount">Deposit amount (USD value of LP tokens)</label>
-          <input id="yf-amount" name="amount" type="number" inputmode="decimal" min="1" max="1000000000" step="any" value="10000" aria-describedby="yf-amount-msg" />
-          <p class="yf-msg" id="yf-amount-msg" role="alert"></p>
-        </div>
-
-        <fieldset class="yf-field">
-          <legend>Lockup period</legend>
-          <div class="yf-choices">
-            <label class="yf-choice"><input type="radio" name="yf-lock" value="30" checked /><span>30 days<small>+0.00% bonus</small></span></label>
-            <label class="yf-choice"><input type="radio" name="yf-lock" value="90" /><span>90 days<small>+2.50% bonus</small></span></label>
-            <label class="yf-choice"><input type="radio" name="yf-lock" value="365" /><span>365 days<small>+6.00% bonus</small></span></label>
-          </div>
-        </fieldset>
-
-        <fieldset class="yf-field">
-          <legend>Reward mode</legend>
-          <div class="yf-choices">
-            <label class="yf-choice"><input type="radio" name="yf-mode" value="compound" checked /><span>Compounding<small>rewards re-staked daily</small></span></label>
-            <label class="yf-choice"><input type="radio" name="yf-mode" value="simple" /><span>Simple<small>rewards paid out, not re-staked</small></span></label>
-          </div>
-        </fieldset>
-      </form>
-
-      <div class="yf-output" id="yf-output" role="status" aria-live="polite" aria-atomic="true">
-        <div class="yf-apy">
-          <span class="yf-apy-label">Estimated APY</span>
-          <span class="yf-apy-pill" id="yf-apy">--</span>
-          <span class="yf-apr" id="yf-apr">APR --</span>
-        </div>
-        <dl class="yf-stats">
-          <div><dt>Daily reward</dt><dd id="yf-daily">--</dd></div>
-          <div><dt>Monthly reward (30 days)</dt><dd id="yf-monthly">--</dd></div>
-          <div><dt id="yf-total-label">Total reward over lockup</dt><dd id="yf-total">--</dd></div>
-          <div><dt>Balance at unlock</dt><dd id="yf-end">--</dd></div>
-        </dl>
-        <p class="yf-note" id="yf-note"></p>
+  <section class="market" aria-labelledby="market-title">
+    <div class="market-head">
+      <h2 id="market-title">Live Market</h2>
+      <div class="toggle-group" role="group" aria-label="Trading pair" id="pair-group">
+        <button type="button" class="toggle" data-pair="btc" aria-pressed="true">BTC-PERP</button>
+        <button type="button" class="toggle" data-pair="eth" aria-pressed="false">ETH-PERP</button>
+        <button type="button" class="toggle" data-pair="sol" aria-pressed="false">SOL-PERP</button>
+      </div>
+      <div class="toggle-group" role="group" aria-label="Chart interval" id="interval-group">
+        <button type="button" class="toggle" data-interval="1H" aria-pressed="false">1H</button>
+        <button type="button" class="toggle" data-interval="24H" aria-pressed="true">24H</button>
+        <button type="button" class="toggle" data-interval="1W" aria-pressed="false">1W</button>
+        <button type="button" class="toggle" data-interval="1M" aria-pressed="false">1M</button>
       </div>
     </div>
 
-    <h3 class="yf-sub">Compare lockups for this pool</h3>
-    <div class="yf-table-wrap">
-      <table class="yf-table">
-        <caption class="yf-sr">Rates and total reward for each lockup period, using the selected pool, amount and reward mode</caption>
-        <thead><tr><th scope="col">Lockup</th><th scope="col">APR</th><th scope="col">APY</th><th scope="col">Total reward</th></tr></thead>
-        <tbody id="yf-compare"></tbody>
-      </table>
+    <dl class="market-stats">
+      <div><dt>Last price</dt><dd id="stat-last">--</dd></div>
+      <div><dt>24h change</dt><dd id="stat-change">--</dd></div>
+      <div><dt>Period high</dt><dd id="stat-high">--</dd></div>
+      <div><dt>Period low</dt><dd id="stat-low">--</dd></div>
+    </dl>
+
+    <div class="market-body">
+      <div class="chart-wrap" id="chart-wrap">
+        <svg id="chart" viewBox="0 0 800 380" tabindex="0" role="img" aria-label="Candlestick price chart. Use left and right arrow keys to inspect candles."></svg>
+        <div class="chart-tip" id="chart-tip" role="status" hidden></div>
+        <p class="chart-legend"><span class="lg-ma7">MA 7</span> <span class="lg-ma25">MA 25</span> <span class="lg-note">Simulated data, nothing here is a real market.</span></p>
+      </div>
+
+      <div class="orderbook" aria-label="Order book">
+        <h3>Order book</h3>
+        <table class="ob-table" id="ob-asks">
+          <caption class="sr-only">Asks (sell orders)</caption>
+          <thead><tr><th scope="col">Price</th><th scope="col">Size</th><th scope="col">Total</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <div class="ob-mid" id="ob-mid">--</div>
+        <table class="ob-table" id="ob-bids">
+          <caption class="sr-only">Bids (buy orders)</caption>
+          <tbody></tbody>
+        </table>
+      </div>
     </div>
+    <p class="sr-only" id="chart-status" aria-live="polite"></p>
   </section>
-  <!-- ===== END issue #98 ===== -->
 
   <script src="script.js"></script>
 </body>
