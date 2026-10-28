@@ -1,5 +1,5 @@
-function reserveTable() {
-  alert('Table reservation system requested for Lumière Bistro!');
+function reserveTable(opener) {
+  openReservationModal(opener || byId('reserveBtn'));
 }
 
 // ---------------------------------------------------------------
@@ -321,388 +321,430 @@ function openCart(opener) {
   renderOrder();
 })();
 
-/* ===== BEGIN issue #101: Digital Sommelier Wine Pairing Recommendation Finder ===== */
-(function () {
-  'use strict';
+// ---------------------------------------------------------------
+// Interactive Multi-step Table Reservation Wizard & Voucher Logic
+// ---------------------------------------------------------------
+const SEATING_NAMES = {
+  main: 'Main Dining Room',
+  counter: "Chef's Tasting Counter",
+  terrace: 'Glass Garden Terrace',
+  vault: 'Private Wine Vault'
+};
 
-  var sommelierEl = document.getElementById('sommelier');
-  if (!sommelierEl) return;
+const reservationState = {
+  step: 1,
+  party: 2,
+  partyLabel: '2 Pair',
+  dateIso: '',
+  dateFormatted: '',
+  area: 'main',
+  time: '',
+  guest: {
+    name: '',
+    phone: '',
+    email: '',
+    occasion: 'Romantic Date Night',
+    dietary: [],
+    notes: ''
+  },
+  code: ''
+};
 
-  var SOMMELIER_PAIRS = {
-    'steak-frites': {
-      id: 'steak-frites',
-      name: 'Charred Wagyu Steak Frites',
-      sauce: 'Bone Marrow Bordelaise & Pommes Frites',
-      emoji: '🥩',
-      profile: 'Prime Cut Marbling • High Umami • Charred Peppercorn Crust',
-      target: 'Requires robust, structured tannins to cut through intramuscular beef fat and dark stone fruit to echo charred crust notes.',
-      wines: [
-        {
-          id: 'margaux-2015',
-          name: 'Château Margaux Premier Grand Cru Classé',
-          vintage: '2015',
-          tier: 'Premier Grand Cru',
-          type: 'red',
-          appellation: 'Margaux AOC, Bordeaux, France',
-          varietal: '87% Cabernet Sauvignon, 10% Merlot, 3% Petit Verdot',
-          intensity: 5,
-          intensityLabel: '5 / 5 • Full-Bodied & Tannic',
-          temp: '17°C (63°F)',
-          aromas: ['#Blackberry', '#Cassis', '#FrenchOak', '#TobaccoLeaf', '#Graphite'],
-          notes: 'Dense, architectural tannins effortlessly melt through the rich marbling of the prime ribeye, while fragrant cedar and dark cassis aromas harmonize with the smoky char.',
-          price: 14500
-        },
-        {
-          id: 'vieux-telegraphe-2018',
-          name: 'Domaine du Vieux Télégraphe Châteauneuf-du-Pape',
-          vintage: '2018',
-          tier: 'Artisanal Terroir Discovery',
-          type: 'red',
-          appellation: 'La Crau, Southern Rhône AOC, France',
-          varietal: '65% Grenache, 15% Syrah, 15% Mourvèdre, 5% Cinsault',
-          intensity: 4,
-          intensityLabel: '4.5 / 5 • Rich & Spiced',
-          temp: '16°C (61°F)',
-          aromas: ['#BlackCherry', '#HerbesDeProvence', '#Leather', '#CrackedPepper', '#Plum'],
-          notes: 'Pungent garrigue wild lavender and crushed black pepper in this old-vine blend weave seamlessly into the peppercorn crust and savory bone marrow bordelaise.',
-          price: 9800
-        }
-      ]
-    },
-    'duck-confit': {
-      id: 'duck-confit',
-      name: 'Crispy Duck Confit à l\'Orange',
-      sauce: 'Blood Orange Gastrique & Braised Red Cabbage',
-      emoji: '🍗',
-      profile: 'Crisp Duck Skin • Sweet-Tart Citrus Glaze • Rich Savory Poultry',
-      target: 'Requires bright red-berry acidity to lift duck richness or exotic spiced stone fruit whites that echo the blood orange gastrique.',
-      wines: [
-        {
-          id: 'dujac-2019',
-          name: 'Domaine Dujac Morey-Saint-Denis Pinot Noir',
-          vintage: '2019',
-          tier: 'Premier Grand Cru',
-          type: 'red',
-          appellation: 'Côte de Nuits, Burgundy AOC, France',
-          varietal: '100% Pinot Noir',
-          intensity: 3,
-          intensityLabel: '3.5 / 5 • Silky & Earthy',
-          temp: '15°C (59°F)',
-          aromas: ['#WildRaspberry', '#ForestFloor', '#Truffle', '#Violets', '#Clove'],
-          notes: 'The vibrant wild strawberry acidity and velvet tannins of Côte de Nuits Pinot Noir pierce the rendered duck fat, elevating the caramelized citrus gastrique.',
-          price: 12000
-        },
-        {
-          id: 'weinbach-2020',
-          name: 'Domaine Weinbach Grand Cru Gewürztraminer',
-          vintage: '2020',
-          tier: 'Artisanal Terroir Discovery',
-          type: 'white',
-          appellation: 'Altenbourg, Alsace Grand Cru AOC, France',
-          varietal: '100% Gewürztraminer',
-          intensity: 3,
-          intensityLabel: '3 / 5 • Aromatic & Exotic',
-          temp: '12°C (54°F)',
-          aromas: ['#Lychee', '#BloodOrange', '#RosePetal', '#Ginger', '#HoneyedApricot'],
-          notes: 'An inspired pairing where the spiced candied orange peel and exotic lychee aromatics mirror the orange reduction while preserving exhilarating palate tension.',
-          price: 7800
-        }
-      ]
-    },
-    'truffle-risotto': {
-      id: 'truffle-risotto',
-      name: 'Aged Carnaroli Black Truffle Risotto',
-      sauce: 'Winter Black Truffles, 36-Mo Parmigiano & Cultured Butter',
-      emoji: '🍚',
-      profile: 'Earthy Périgord Truffles • Creamy Carnaroli Starch • Salty Parmigiano Umami',
-      target: 'Needs an earthy, tertiary-aroma red such as Piedmont Nebbiolo or an opulent, toasted-hazelnut Burgundy Chardonnay.',
-      wines: [
-        {
-          id: 'conterno-2016',
-          name: 'Giacomo Conterno Barolo Cascina Francia',
-          vintage: '2016',
-          tier: 'Premier Grand Cru',
-          type: 'red',
-          appellation: 'Serralunga d\'Alba, Barolo DOCG, Italy',
-          varietal: '100% Nebbiolo',
-          intensity: 5,
-          intensityLabel: '4.5 / 5 • Intense & Complex',
-          temp: '18°C (64°F)',
-          aromas: ['#WhiteTruffle', '#DriedRose', '#Tar', '#Anise', '#DriedCranberry'],
-          notes: 'Nebbiolo\'s hallmark autumn forest floor aromatics, firm tannins, and chalky minerality produce an ethereal resonance with shaved black winter truffles.',
-          price: 16000
-        },
-        {
-          id: 'comtes-lafon-2020',
-          name: 'Domaine des Comtes Lafon Meursault Premier Cru',
-          vintage: '2020',
-          tier: 'Artisanal Terroir Discovery',
-          type: 'white',
-          appellation: 'Charmes, Côte de Beaune, Burgundy AOC, France',
-          varietal: '100% Chardonnay',
-          intensity: 4,
-          intensityLabel: '4 / 5 • Opulent & Mineral',
-          temp: '13°C (55°F)',
-          aromas: ['#ToastedBrioche', '#Hazelnut', '#FlintStone', '#MeyerLemon', '#BrownButter'],
-          notes: 'Toasted brioche and brown butter nuances melt seamlessly into the creamy risotto, refreshed by vibrant limestone minerality.',
-          price: 13500
-        }
-      ]
-    },
-    'salmon': {
-      id: 'salmon',
-      name: 'Pan-Seared Wild Atlantic Salmon',
-      sauce: 'Dill Beurre Blanc & Oscietra Caviar',
-      emoji: '🐟',
-      profile: 'Crisp Pan-Seared Skin • Rich Omega Salmon Fats • Fresh Dill Emulsion',
-      target: 'Demands laser-chiseled acidity and flint minerality to cut through rich beurre blanc without bruising delicate salmon flakes.',
-      wines: [
-        {
-          id: 'cotat-2021',
-          name: 'Domaine François Cotat Sancerre Les Monts Damnés',
-          vintage: '2021',
-          tier: 'Premier Grand Cru',
-          type: 'white',
-          appellation: 'Chavignol, Loire Valley AOC, France',
-          varietal: '100% Sauvignon Blanc',
-          intensity: 2,
-          intensityLabel: '2.5 / 5 • Chiseled & Crisp',
-          temp: '10°C (50°F)',
-          aromas: ['#FlintMinerality', '#Chalk', '#Grapefruit', '#WhitePeach', '#FreshChervil'],
-          notes: 'Steep Kimmeridgian chalk slopes yield an electric flint spine that slices through creamy dill beurre blanc, honoring the sea sweetness of the fish.',
-          price: 7400
-        },
-        {
-          id: 'drouhin-2021',
-          name: 'Domaine Drouhin Roserock Pinot Noir',
-          vintage: '2021',
-          tier: 'Artisanal Terroir Discovery',
-          type: 'red',
-          appellation: 'Eola-Amity Hills, Willamette / French Heritage',
-          varietal: '100% Pinot Noir',
-          intensity: 3,
-          intensityLabel: '3 / 5 • Refined & Vibrant',
-          temp: '14°C (57°F)',
-          aromas: ['#Pomegranate', '#WildStrawberry', '#RedCurrant', '#TeaLeaf', '#Spice'],
-          notes: 'A celebrated culinary harmony: soft feather-weight tannins and bright red currants highlight the smoky crisp salmon skin without metal bitterness.',
-          price: 6500
-        }
-      ]
+function formatDateIso(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+function formatDisplayDate(isoStr) {
+  if (!isoStr) return '';
+  const parts = isoStr.split('-').map(Number);
+  const dt = new Date(parts[0], parts[1] - 1, parts[2]);
+  return dt.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function openReservationModal(opener) {
+  const modal = byId('reservationModal');
+  if (!reservationState.dateIso) {
+    const today = new Date();
+    reservationState.dateIso = formatDateIso(today);
+    reservationState.dateFormatted = formatDisplayDate(reservationState.dateIso);
+    const dateInput = byId('resDate');
+    if (dateInput) {
+      dateInput.value = reservationState.dateIso;
+      dateInput.min = reservationState.dateIso;
     }
-  };
-
-  var somState = {
-    selectedEntree: 'steak-frites',
-    filterType: 'all' // 'all', 'red', 'white'
-  };
-
-  var entreeTabs = document.querySelectorAll('.entree-tab');
-  var profileCard = document.getElementById('entreeProfileCard');
-  var wineGrid = document.getElementById('wineCardsGrid');
-  var filterBtns = document.querySelectorAll('.style-filter-btn');
-
-  function renderProfile() {
-    var item = SOMMELIER_PAIRS[somState.selectedEntree];
-    if (!item) return;
-
-    profileCard.innerHTML = '' +
-      '<div class="profile-main">' +
-      '  <span class="profile-badge">Dish Flavor Architecture</span>' +
-      '  <h3 class="profile-title">' + item.emoji + ' ' + item.name + '</h3>' +
-      '  <p class="profile-desc">' + item.target + '</p>' +
-      '</div>' +
-      '<div class="profile-attributes">' +
-      '  <div class="attr-chip"><span>Sauce Reduction</span><strong>' + item.sauce.split(' & ')[0] + '</strong></div>' +
-      '  <div class="attr-chip"><span>Primary Notes</span><strong>' + item.profile.split(' • ')[0] + '</strong></div>' +
-      '  <div class="attr-chip"><span>Pairing Tier</span><strong>Grand Cru &amp; Terroir</strong></div>' +
-      '</div>';
   }
+  showDialog(modal, opener || byId('reserveBtn'));
+  setWizardStep(reservationState.step || 1);
+}
 
-  function renderIntensityDots(intensity) {
-    var dots = '';
-    for (var i = 1; i <= 5; i++) {
-      var isFilled = i <= intensity;
-      dots += '<span class="intensity-dot' + (isFilled ? ' filled' : '') + '"></span>';
-    }
-    return dots;
-  }
+function setWizardStep(targetStep) {
+  reservationState.step = targetStep;
 
-  function renderWines() {
-    wineGrid.textContent = '';
-    var entree = SOMMELIER_PAIRS[somState.selectedEntree];
-    if (!entree) return;
-
-    var filtered = entree.wines.filter(function (w) {
-      if (somState.filterType === 'all') return true;
-      return w.type === somState.filterType;
-    });
-
-    if (filtered.length === 0) {
-      var emptyMsg = document.createElement('p');
-      emptyMsg.style.color = '#a8a29e';
-      emptyMsg.style.padding = '20px';
-      emptyMsg.textContent = 'No ' + somState.filterType + ' pairings currently in cellar for this dish. Try selecting "All Cellar".';
-      wineGrid.appendChild(emptyMsg);
-      return;
-    }
-
-    filtered.forEach(function (wine) {
-      var card = document.createElement('article');
-      card.className = 'wine-card';
-
-      // Top row
-      var topRow = document.createElement('div');
-      topRow.className = 'wine-card-top';
-      topRow.innerHTML = '' +
-        '<div class="wine-vintage-pill"><span>🍷</span> ' + wine.tier + ' • ' + wine.vintage + '</div>' +
-        '<span class="wine-type-badge ' + wine.type + '">' + (wine.type === 'red' ? 'Rouge • Red' : 'Blanc • White') + '</span>';
-
-      // Title & varietal
-      var titleWrap = document.createElement('div');
-      titleWrap.className = 'wine-card-title';
-      titleWrap.innerHTML = '' +
-        '<h4>' + wine.name + '</h4>' +
-        '<div class="wine-appellation">' + wine.appellation + '</div>' +
-        '<div class="wine-varietal-pill">🍇 ' + wine.varietal + '</div>';
-
-      // Sensory row
-      var sensoryRow = document.createElement('div');
-      sensoryRow.className = 'wine-sensory-row';
-      sensoryRow.innerHTML = '' +
-        '<div class="intensity-box">' +
-        '  <span class="intensity-label">Tasting Intensity Rating</span>' +
-        '  <div class="intensity-meter">' +
-        renderIntensityDots(wine.intensity) +
-        '    <span class="intensity-text">' + wine.intensityLabel + '</span>' +
-        '  </div>' +
-        '</div>' +
-        '<div class="wine-temp-box">' +
-        '  <span class="temp-label">Ideal Serving</span>' +
-        '  <span class="temp-val">' + wine.temp + '</span>' +
-        '</div>';
-
-      // Aroma tags
-      var aromaWrap = document.createElement('div');
-      aromaWrap.className = 'aroma-chips-wrap';
-      var aromaLabel = document.createElement('span');
-      aromaLabel.className = 'aroma-label';
-      aromaLabel.textContent = 'Sommelier Aroma Bouquet';
-      aromaWrap.appendChild(aromaLabel);
-
-      var chips = document.createElement('div');
-      chips.className = 'aroma-chips';
-      wine.aromas.forEach(function (aroma) {
-        var chip = document.createElement('span');
-        chip.className = 'aroma-chip';
-        chip.textContent = aroma;
-        chips.appendChild(chip);
-      });
-      aromaWrap.appendChild(chips);
-
-      // Tasting notes
-      var notesBox = document.createElement('div');
-      notesBox.className = 'wine-pairing-notes';
-      notesBox.innerHTML = '' +
-        '<div class="notes-heading">Sommelier Pairing Rationale</div>' +
-        '<p class="notes-body">"' + wine.notes + '"</p>';
-
-      // Footer with price and order button
-      var footer = document.createElement('div');
-      footer.className = 'wine-card-footer';
-
-      var priceWrap = document.createElement('div');
-      priceWrap.className = 'wine-price-wrap';
-      priceWrap.innerHTML = '<span class="wine-price-label">Cellar Bottle</span><span class="wine-price-val">€' + (wine.price / 100).toFixed(2) + '</span>';
-
-      var orderBtn = document.createElement('button');
-      orderBtn.type = 'button';
-      orderBtn.className = 'wine-order-btn';
-      orderBtn.textContent = 'Add Bottle to Order +';
-      orderBtn.setAttribute('aria-label', 'Add ' + wine.name + ' to takeout order');
-
-      orderBtn.addEventListener('click', function () {
-        // Integrate seamlessly with Lumière cart
-        if (typeof window.addWineBottleToCart === 'function') {
-          window.addWineBottleToCart(wine, entree);
-        }
-        orderBtn.textContent = '✓ Bottle Added';
-        orderBtn.classList.add('added');
-        setTimeout(function () {
-          orderBtn.textContent = 'Add Bottle to Order +';
-          orderBtn.classList.remove('added');
-        }, 2000);
-      });
-
-      footer.appendChild(priceWrap);
-      footer.appendChild(orderBtn);
-
-      card.appendChild(topRow);
-      card.appendChild(titleWrap);
-      card.appendChild(sensoryRow);
-      card.appendChild(aromaWrap);
-      card.appendChild(notesBox);
-      card.appendChild(footer);
-
-      wineGrid.appendChild(card);
-    });
-  }
-
-  // Hook into Bistro cart
-  window.addWineBottleToCart = function (wine, entree) {
-    if (typeof order !== 'undefined' && Array.isArray(order.lines)) {
-      var key = JSON.stringify(['wine-' + wine.id, wine.vintage, entree.id]);
-      var existing = order.lines.find(function (l) { return l.key === key; });
-      if (existing) {
-        existing.qty = Math.min(20, existing.qty + 1);
-      } else {
-        order.lines.push({
-          key: key,
-          name: wine.name + ' (' + wine.vintage + ')',
-          picks: ['Sommelier pairing for ' + entree.name],
-          sideLabels: [wine.tier, wine.appellation],
-          note: 'Sommelier cellar bottle selection',
-          unit: wine.price,
-          qty: 1
-        });
-      }
-      order.placed = false;
-      if (typeof renderOrder === 'function') {
-        renderOrder();
-      }
-    }
-  };
-
-  // Event handlers
-  entreeTabs.forEach(function (tab) {
-    tab.addEventListener('click', function () {
-      entreeTabs.forEach(function (t) {
-        t.classList.remove('active');
-        t.setAttribute('aria-selected', 'false');
-      });
-      tab.classList.add('active');
-      tab.setAttribute('aria-selected', 'true');
-      somState.selectedEntree = tab.getAttribute('data-entree');
-      renderProfile();
-      renderWines();
-    });
+  // Toggle step panels
+  const s1 = byId('wizardStep1');
+  const s2 = byId('wizardStep2');
+  const s3 = byId('wizardStep3');
+  const sc = byId('wizardStepConfirm');
+  [s1, s2, s3, sc].forEach((st) => {
+    if (st) st.hidden = true;
   });
 
-  filterBtns.forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      filterBtns.forEach(function (b) {
-        b.classList.remove('active');
-        b.setAttribute('aria-checked', 'false');
-      });
+  if (targetStep === 1 && s1) s1.hidden = false;
+  else if (targetStep === 2 && s2) s2.hidden = false;
+  else if (targetStep === 3 && s3) s3.hidden = false;
+  else if (targetStep === 'confirm' && sc) sc.hidden = false;
+
+  // Update Stepper indicators
+  const ind1 = byId('stepIndicator1');
+  const ind2 = byId('stepIndicator2');
+  const ind3 = byId('stepIndicator3');
+  const line1 = byId('stepLine1');
+  const line2 = byId('stepLine2');
+
+  [ind1, ind2, ind3].forEach((ind) => {
+    if (ind) ind.classList.remove('active', 'completed');
+  });
+  if (line1) line1.classList.remove('completed');
+  if (line2) line2.classList.remove('completed');
+
+  if (targetStep === 1) {
+    if (ind1) ind1.classList.add('active');
+  } else if (targetStep === 2) {
+    if (ind1) ind1.classList.add('completed');
+    if (line1) line1.classList.add('completed');
+    if (ind2) ind2.classList.add('active');
+  } else if (targetStep === 3) {
+    if (ind1) ind1.classList.add('completed');
+    if (line1) line1.classList.add('completed');
+    if (ind2) ind2.classList.add('completed');
+    if (line2) line2.classList.add('completed');
+    if (ind3) ind3.classList.add('active');
+  } else if (targetStep === 'confirm') {
+    if (ind1) ind1.classList.add('completed');
+    if (line1) line1.classList.add('completed');
+    if (ind2) ind2.classList.add('completed');
+    if (line2) line2.classList.add('completed');
+    if (ind3) ind3.classList.add('completed');
+  }
+
+  updateRecapBars();
+}
+
+function updateRecapBars() {
+  const partyStr = `👥 ${reservationState.partyLabel || `${reservationState.party} Guests`}`;
+  const dateStr = reservationState.dateFormatted || reservationState.dateIso;
+  const areaStr = SEATING_NAMES[reservationState.area] || 'Main Dining Room';
+
+  const recapPartyDate = byId('recapPartyDate');
+  if (recapPartyDate) recapPartyDate.textContent = `${partyStr} • ${dateStr}`;
+
+  const recapArea = byId('recapArea');
+  if (recapArea) recapArea.textContent = areaStr;
+
+  const recapFull = byId('recapFullSelection');
+  if (recapFull) {
+    const timeStr = reservationState.time ? ` • ${reservationState.time}` : '';
+    recapFull.textContent = `${partyStr} • ${dateStr}${timeStr}`;
+  }
+
+  const recapArea3 = byId('recapAreaStep3');
+  if (recapArea3) recapArea3.textContent = areaStr;
+}
+
+function generateBookingVoucher() {
+  const randNum = Math.floor(10000 + Math.random() * 90000);
+  const code = `LUM-${randNum}`;
+  reservationState.code = code;
+
+  byId('voucherCode').textContent = code;
+  byId('vName').textContent = reservationState.guest.name;
+  byId('vDate').textContent = reservationState.dateFormatted;
+  byId('vTime').textContent = reservationState.time;
+  byId('vParty').textContent = `${reservationState.partyLabel || `${reservationState.party} Guests`}`;
+  byId('vArea').textContent = SEATING_NAMES[reservationState.area] || 'Main Dining Room';
+  byId('vOccasion').textContent = reservationState.guest.occasion;
+
+  const dietaryWrap = byId('vDietaryWrap');
+  const dietaryText = byId('vDietary');
+  const details = [];
+  if (reservationState.guest.dietary && reservationState.guest.dietary.length) {
+    details.push(reservationState.guest.dietary.join(', '));
+  }
+  if (reservationState.guest.notes) {
+    details.push(`"${reservationState.guest.notes}"`);
+  }
+
+  if (details.length) {
+    dietaryWrap.hidden = false;
+    dietaryText.textContent = details.join(' — ');
+  } else {
+    dietaryWrap.hidden = true;
+  }
+}
+
+function downloadCalendarEvent() {
+  const code = reservationState.code || 'LUM-RESERVATION';
+  const name = reservationState.guest.name || 'Valued Guest';
+  const party = reservationState.partyLabel || `${reservationState.party} Guests`;
+  const area = SEATING_NAMES[reservationState.area] || 'Main Dining Room';
+  const dateClean = (reservationState.dateIso || '').replace(/-/g, '');
+  const timeClean = (reservationState.time || '19:30').replace(':', '') + '00';
+
+  const icsData = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Lumière Bistro Paris//Table Reservation//EN',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH',
+    'BEGIN:VEVENT',
+    `UID:res-${code}@lumierebistro.paris`,
+    `DTSTAMP:${dateClean}T120000Z`,
+    `DTSTART:${dateClean}T${timeClean}`,
+    `SUMMARY:Table Reservation - Lumière Artisanal Bistro (${code})`,
+    `DESCRIPTION:Tasting Table Reservation for ${name} (${party}). Seating Area: ${area}. Reference: ${code}. Address: 42 Rue de la Paix, 75002 Paris.`,
+    'LOCATION:42 Rue de la Paix, 75002 Paris, France',
+    'STATUS:CONFIRMED',
+    'END:VEVENT',
+    'END:VCALENDAR'
+  ].join('\r\n');
+
+  const blob = new Blob([icsData], { type: 'text/calendar;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `Lumiere_Reservation_${code}.ics`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function resetReservation() {
+  reservationState.step = 1;
+  reservationState.time = '';
+  reservationState.guest = {
+    name: '',
+    phone: '',
+    email: '',
+    occasion: 'Romantic Date Night',
+    dietary: [],
+    notes: ''
+  };
+
+  const form = byId('resGuestForm');
+  if (form) form.reset();
+
+  const slotBtns = document.querySelectorAll('.time-slot-btn');
+  slotBtns.forEach(btn => btn.classList.remove('active'));
+
+  const toStep3Btn = byId('toStep3');
+  if (toStep3Btn) toStep3Btn.disabled = true;
+
+  setWizardStep(1);
+}
+
+function initReservationWizard() {
+  const today = new Date();
+  reservationState.dateIso = formatDateIso(today);
+  reservationState.dateFormatted = formatDisplayDate(reservationState.dateIso);
+
+  const dateInput = byId('resDate');
+  if (dateInput) {
+    dateInput.value = reservationState.dateIso;
+    dateInput.min = reservationState.dateIso;
+    dateInput.addEventListener('change', () => {
+      if (dateInput.value) {
+        reservationState.dateIso = dateInput.value;
+        reservationState.dateFormatted = formatDisplayDate(dateInput.value);
+        document.querySelectorAll('.quick-date-btn').forEach(b => b.classList.remove('active'));
+        updateRecapBars();
+      }
+    });
+  }
+
+  // Quick Dates
+  const quickDateBtns = document.querySelectorAll('.quick-date-btn');
+  quickDateBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      quickDateBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      btn.setAttribute('aria-checked', 'true');
-      somState.filterType = btn.getAttribute('data-filter');
-      renderWines();
+
+      const target = new Date();
+      if (btn.dataset.offset !== undefined) {
+        target.setDate(target.getDate() + Number(btn.dataset.offset));
+      } else if (btn.dataset.preset === 'friday') {
+        const day = target.getDay();
+        const diff = (5 - day + 7) % 7 || 7;
+        target.setDate(target.getDate() + diff);
+      } else if (btn.dataset.preset === 'saturday') {
+        const day = target.getDay();
+        const diff = (6 - day + 7) % 7 || 7;
+        target.setDate(target.getDate() + diff);
+      }
+
+      const iso = formatDateIso(target);
+      reservationState.dateIso = iso;
+      reservationState.dateFormatted = formatDisplayDate(iso);
+      if (dateInput) dateInput.value = iso;
+      updateRecapBars();
     });
   });
 
-  // Initial render
-  renderProfile();
-  renderWines();
-})();
-/* ===== END issue #101 ===== */
+  // Party Size Pills
+  const partyPills = document.querySelectorAll('.party-pill');
+  partyPills.forEach((pill) => {
+    pill.addEventListener('click', () => {
+      partyPills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      reservationState.party = Number(pill.dataset.guests);
+      reservationState.partyLabel = pill.textContent.trim().replace(/^👤|👥|✨/, '').trim();
+      updateRecapBars();
+    });
+  });
 
+  // Seating Area Radio Cards
+  const seatingCards = document.querySelectorAll('.seating-card');
+  seatingCards.forEach((card) => {
+    const radio = card.querySelector('input[type="radio"]');
+    if (radio) {
+      radio.addEventListener('change', () => {
+        seatingCards.forEach(c => c.classList.remove('active'));
+        if (radio.checked) {
+          card.classList.add('active');
+          reservationState.area = radio.value;
+          updateRecapBars();
+        }
+      });
+    }
+  });
+
+  // Step 1 -> Step 2
+  const toStep2Btn = byId('toStep2');
+  if (toStep2Btn) {
+    toStep2Btn.addEventListener('click', () => {
+      if (!reservationState.dateIso) {
+        if (dateInput) dateInput.focus();
+        return;
+      }
+      setWizardStep(2);
+    });
+  }
+
+  // Step 2 Time Slot Buttons
+  const slotBtns = document.querySelectorAll('.time-slot-btn');
+  const toStep3Btn = byId('toStep3');
+  slotBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      slotBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      reservationState.time = btn.dataset.time;
+      if (toStep3Btn) toStep3Btn.disabled = false;
+      updateRecapBars();
+    });
+  });
+
+  // Step 2 Navigation
+  const backToStep1Btn = byId('backToStep1');
+  if (backToStep1Btn) {
+    backToStep1Btn.addEventListener('click', () => setWizardStep(1));
+  }
+  if (toStep3Btn) {
+    toStep3Btn.addEventListener('click', () => {
+      if (!reservationState.time) return;
+      setWizardStep(3);
+    });
+  }
+
+  // Step 3 Navigation
+  const backToStep2Btn = byId('backToStep2');
+  if (backToStep2Btn) {
+    backToStep2Btn.addEventListener('click', () => setWizardStep(2));
+  }
+
+  // Step 3 Confirmation & Validation
+  const confirmBtn = byId('confirmReservation');
+  if (confirmBtn) {
+    confirmBtn.addEventListener('click', () => {
+      const nameInput = byId('resName');
+      const phoneInput = byId('resPhone');
+      const emailInput = byId('resEmail');
+      const errName = byId('errName');
+      const errPhone = byId('errPhone');
+      const errEmail = byId('errEmail');
+
+      let valid = true;
+
+      // Validate Name
+      if (!nameInput.value.trim() || nameInput.value.trim().length < 2) {
+        errName.hidden = false;
+        valid = false;
+      } else {
+        errName.hidden = true;
+      }
+
+      // Validate Phone
+      if (!phoneInput.value.trim() || phoneInput.value.trim().length < 5) {
+        errPhone.hidden = false;
+        valid = false;
+      } else {
+        errPhone.hidden = true;
+      }
+
+      // Validate Email
+      const emailVal = emailInput.value.trim();
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailVal || !emailRegex.test(emailVal)) {
+        errEmail.hidden = false;
+        valid = false;
+      } else {
+        errEmail.hidden = true;
+      }
+
+      if (!valid) return;
+
+      // Collect guest details
+      reservationState.guest.name = nameInput.value.trim();
+      reservationState.guest.phone = phoneInput.value.trim();
+      reservationState.guest.email = emailVal;
+      reservationState.guest.occasion = byId('resOccasion').value;
+      reservationState.guest.notes = byId('resSpecialNotes').value.trim();
+
+      // Collect dietary tags
+      const checkedDiets = document.querySelectorAll('#dietaryTags input[type="checkbox"]:checked');
+      reservationState.guest.dietary = Array.from(checkedDiets).map(c => c.value);
+
+      // Generate voucher & show confirmation
+      generateBookingVoucher();
+      setWizardStep('confirm');
+    });
+  }
+
+  // Voucher Action Buttons
+  const vCalBtn = byId('vCalBtn');
+  if (vCalBtn) vCalBtn.addEventListener('click', downloadCalendarEvent);
+
+  const vPrintBtn = byId('vPrintBtn');
+  if (vPrintBtn) vPrintBtn.addEventListener('click', () => window.print());
+
+  const vNewBtn = byId('vNewBtn');
+  if (vNewBtn) vNewBtn.addEventListener('click', resetReservation);
+
+  // Close Button
+  const closeBtn = byId('reservationClose');
+  if (closeBtn) closeBtn.addEventListener('click', () => hideDialog(byId('reservationModal')));
+
+  // Reserve Table Hero Button
+  const reserveBtn = byId('reserveBtn');
+  if (reserveBtn) {
+    reserveBtn.addEventListener('click', () => openReservationModal(reserveBtn));
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initReservationWizard);
+} else {
+  initReservationWizard();
+}
