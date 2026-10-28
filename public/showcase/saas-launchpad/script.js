@@ -3,7 +3,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
   initTestimonialsCarousel();
   initRoiCalculator();
+  initFaqAccordion();
+  initBillingToggle();
 });
+
+function initFaqAccordion() {
+  const items = document.querySelectorAll('.faq-section .faq-item');
+  items.forEach(item => {
+    const question = item.querySelector('.faq-question');
+    if (!question) return;
+    question.addEventListener('click', () => {
+      const shouldOpen = question.getAttribute('aria-expanded') !== 'true';
+      items.forEach(current => {
+        const button = current.querySelector('.faq-question');
+        const answer = current.querySelector('.faq-answer');
+        if (!button || !answer) return;
+        const open = current === item && shouldOpen;
+        current.classList.toggle('is-open', open);
+        button.setAttribute('aria-expanded', String(open));
+        answer.setAttribute('aria-hidden', String(!open));
+        answer.toggleAttribute('inert', !open);
+      });
+    });
+  });
+}
 
 /* ==========================================================
    Customer Testimonials Carousel Module
@@ -432,4 +455,56 @@ function initRoiCalculator() {
   // Initial render (without animation delay)
   updateCalculator(false);
   console.log('CloudPulse SaaS Launchpad ROI Calculator ready');
+}
+
+/* Subscription Billing Toggle Module*/
+function initBillingToggle() {
+  const toggle = document.getElementById('billing-toggle');
+  const monthlyLabel = document.getElementById('monthly-label');
+  const annualLabel = document.getElementById('annual-label');
+  const billingNote = document.getElementById('billing-note');
+  const prices = document.querySelectorAll('.price-amount');
+  const billingLabels = document.querySelectorAll('.plan-billing');
+
+  if (!toggle || prices.length === 0) return;
+
+  function updateBilling(isAnnual) {
+    toggle.setAttribute('aria-checked', String(isAnnual));
+    toggle.setAttribute(
+      'aria-label',
+      isAnnual ? 'Switch to monthly billing' : 'Switch to annual billing'
+    );
+
+    monthlyLabel?.classList.toggle('active', !isAnnual);
+    annualLabel?.classList.toggle('active', isAnnual);
+
+    prices.forEach(price => {
+      const amount = Number(
+        isAnnual ? price.dataset.annual : price.dataset.monthly
+      );
+
+      if (!Number.isFinite(amount)) return;
+
+      price.textContent = `$${Number.isInteger(amount) ? amount : amount.toFixed(2)}`;
+    });
+
+    billingLabels.forEach(label => {
+      label.textContent = isAnnual
+        ? 'Billed annually'
+        : 'Billed monthly';
+    });
+
+    if (billingNote) {
+      billingNote.textContent = isAnnual
+        ? 'Annual billing selected — save 20% compared with monthly billing.'
+        : 'Billed monthly. Switch to annual to save 20%.';
+    }
+  }
+
+  toggle.addEventListener('click', () => {
+    const isAnnual = toggle.getAttribute('aria-checked') !== 'true';
+    updateBilling(isAnnual);
+  });
+
+  updateBilling(false);
 }

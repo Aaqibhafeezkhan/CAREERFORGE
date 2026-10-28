@@ -280,6 +280,7 @@ function resetDefaults() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  initDestinationFilters();
   // Initialize ring circle stroke properties
   const circleEl = document.getElementById('progress-circle');
   if (circleEl) {
@@ -352,3 +353,32 @@ document.addEventListener('DOMContentLoaded', () => {
   const resetDefaultBtn = document.getElementById('reset-default-btn');
   if (resetDefaultBtn) resetDefaultBtn.addEventListener('click', resetDefaults);
 });
+
+function initDestinationFilters() {
+  const destinations = document.querySelector('.destinations');
+  if (!destinations) return;
+  const buttons = destinations.querySelectorAll('[data-region-filter]');
+  const cards = destinations.querySelectorAll('.card[data-region]');
+  const status = document.getElementById('destination-filter-status');
+
+  function selectRegion(selected) {
+    const region = selected.dataset.regionFilter;
+    let visibleCount = 0;
+    cards.forEach(card => {
+      card.hidden = region !== 'all' && card.dataset.region !== region;
+      if (!card.hidden) visibleCount += 1;
+    });
+    buttons.forEach(button => {
+      const active = button === selected;
+      button.classList.toggle('active', active);
+      button.setAttribute('aria-pressed', String(active));
+    });
+    if (status) {
+      status.textContent = visibleCount === 0
+        ? 'No voyages available in this region yet.'
+        : `Showing ${region === 'all' ? 'all ' : ''}${visibleCount} ${visibleCount === 1 ? 'voyage' : 'voyages'}.`;
+    }
+  }
+
+  buttons.forEach(button => button.addEventListener('click', () => selectRegion(button)));
+}
