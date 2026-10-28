@@ -105,14 +105,24 @@
 
   <main class="destinations">
     <h2>FEATURED VOYAGES</h2>
+    <div class="destination-filters" role="group" aria-label="Filter voyages by region">
+      <button type="button" class="destination-filter active" data-region-filter="all" aria-pressed="true">All</button>
+      <button type="button" class="destination-filter" data-region-filter="europe" aria-pressed="false">Europe</button>
+      <button type="button" class="destination-filter" data-region-filter="asia" aria-pressed="false">Asia</button>
+      <button type="button" class="destination-filter" data-region-filter="americas" aria-pressed="false">Americas</button>
+      <button type="button" class="destination-filter" data-region-filter="polar" aria-pressed="false">Polar Expeditions</button>
+    </div>
+    <p id="destination-filter-status" class="destination-filter-status" role="status">Showing all 2 voyages.</p>
     <div class="grid">
-      <div class="card">
+      <div class="card" data-region="europe">
         <div class="card-img">🏔️</div>
+        <span class="difficulty-badge badge-moderate">Moderate</span>
         <h3>Reykjavik Aurora Glaciers</h3>
         <p>7 Days • Iceland Heli-Hiking</p>
       </div>
-      <div class="card">
+      <div class="card" data-region="asia">
         <div class="card-img">🏯</div>
+        <span class="difficulty-badge badge-easy">Easy</span>
         <h3>Kyoto Bamboo Sanctuary</h3>
         <p>10 Days • Private Tea Masters</p>
       </div>

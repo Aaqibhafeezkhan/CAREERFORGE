@@ -55,3 +55,78 @@ body {
 .pair { color: #94a3b8; font-size: 0.85rem; }
 .price { font-size: 1.6rem; font-weight: 800; color: #fff; }
 .green { color: #10b981; font-weight: 700; font-size: 0.9rem; }
+
+/* ===== BEGIN issue #98: DeFi staking / yield farming simulator ===== */
+.yf { max-width: 1000px; margin: 0 auto 80px; padding: 0 24px; }
+.yf-head { text-align: left; margin-bottom: 12px; }
+.yf-tag { display: inline-block; font-size: 0.75rem; color: #38bdf8; letter-spacing: 1px; margin-bottom: 8px; }
+.yf h2 { font-size: 1.8rem; color: #fff; }
+.yf h3.yf-sub { font-size: 1rem; color: #94a3b8; margin: 28px 0 12px; font-weight: 700; }
+.yf-disclaimer {
+  font-family: 'Inter', sans-serif; font-size: 0.9rem; color: #fcd34d;
+  background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.35);
+  border-radius: 8px; padding: 10px 14px; margin-bottom: 20px;
+}
+.yf-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+.yf-form, .yf-output {
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(56,189,248,0.25);
+  border-radius: 12px; padding: 20px; min-width: 0;
+  box-shadow: 0 0 18px rgba(56,189,248,0.08);
+}
+.yf-output { border-color: rgba(16,185,129,0.35); box-shadow: 0 0 22px rgba(16,185,129,0.12); }
+.yf-field { border: 0; margin: 0 0 18px; padding: 0; min-width: 0; }
+.yf-field:last-child { margin-bottom: 0; }
+.yf-field > label, .yf-field > legend { display: block; font-size: 0.8rem; color: #94a3b8; margin-bottom: 8px; padding: 0; }
+.yf-field input[type="number"] {
+  width: 100%; background: #0b1220; color: #f3f4f6; border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 8px; padding: 10px 12px; font: 700 1rem 'JetBrains Mono', monospace;
+}
+.yf-field input[type="number"]:focus-visible, .yf-choice input:focus-visible + span {
+  outline: 2px solid #38bdf8; outline-offset: 2px;
+}
+.yf-field input[aria-invalid="true"] { border-color: #f87171; }
+.yf-msg { min-height: 1.2em; margin-top: 6px; font-size: 0.78rem; color: #f87171; }
+.yf-choices { display: flex; flex-wrap: wrap; gap: 8px; }
+.yf-choice { flex: 1 1 120px; cursor: pointer; display: block; }
+.yf-choice input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.yf-choice span {
+  display: block; padding: 10px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 700;
+  border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.02); color: #e2e8f0;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+.yf-choice small { display: block; font-weight: 500; font-size: 0.7rem; color: #94a3b8; margin-top: 2px; }
+.yf-choice:hover span { border-color: rgba(56,189,248,0.5); }
+.yf-choice input:checked + span {
+  border-color: #38bdf8; background: rgba(56,189,248,0.12); box-shadow: 0 0 12px rgba(56,189,248,0.3);
+}
+.yf-apy { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-bottom: 18px; }
+.yf-apy-label { font-size: 0.8rem; color: #94a3b8; }
+.yf-apy-pill {
+  background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.5);
+  border-radius: 999px; padding: 4px 14px; font-weight: 800; font-size: 1.3rem;
+}
+.yf-apr { font-size: 0.8rem; color: #94a3b8; }
+.yf-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.yf-stats div { min-width: 0; }
+.yf-stats dt { font-size: 0.72rem; color: #94a3b8; margin-bottom: 4px; }
+.yf-stats dd { font-size: 1.05rem; font-weight: 800; color: #fff; overflow-wrap: anywhere; }
+.yf-note { font-family: 'Inter', sans-serif; font-size: 0.8rem; color: #94a3b8; margin-top: 16px; }
+.yf-table-wrap { overflow-x: auto; }
+.yf-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; text-align: left; }
+.yf-table th, .yf-table td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.08); white-space: nowrap; }
+.yf-table th { color: #94a3b8; font-weight: 600; font-size: 0.75rem; }
+.yf-table tr.yf-active td { color: #34d399; font-weight: 700; }
+.yf-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@keyframes yf-glow { 0%, 100% { box-shadow: 0 0 14px rgba(16,185,129,0.1); } 50% { box-shadow: 0 0 28px rgba(16,185,129,0.3); } }
+@media (prefers-reduced-motion: no-preference) {
+  .yf-output { animation: yf-glow 4s ease-in-out infinite; }
+}
+@media (max-width: 760px) {
+  .yf-layout { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 420px) {
+  .yf { padding: 0 16px; }
+  .yf h2 { font-size: 1.4rem; }
+  .yf-stats { grid-template-columns: 1fr; }
+}
+/* ===== END issue #98 ===== */

@@ -29,6 +29,46 @@
       <p>Intercontinental Flight • Custom Interiors</p>
     </div>
   </main>
+  <!-- ===== BEGIN issue #76: travel curator and printable itinerary ===== -->
+  <section class="lr" id="curator" aria-labelledby="lr-title">
+    <div class="lr-intro lr-noprint">
+      <div class="lr-kicker">THE CURATOR</div>
+      <h2 id="lr-title">Build Your Itinerary</h2>
+      <p>Add the destinations you like, choose how long to stay and layer on a yacht or private jet. The package cost updates as you go. Rates are illustrative demo prices and nothing is booked.</p>
+    </div>
+
+    <div class="lr-layout">
+      <div class="lr-cards lr-noprint" id="lr-cards" role="group" aria-label="Destinations"></div>
+
+      <aside class="lr-summary" id="lr-summary" aria-labelledby="lr-summary-title">
+        <div class="lr-print-head" aria-hidden="true">
+          <div class="lr-print-brand">AURA REALMS</div>
+          <div class="lr-print-sub">Private Itinerary &amp; Estimate</div>
+        </div>
+        <h3 id="lr-summary-title">Your package</h3>
+        <div class="lr-guest lr-noprint">
+          <label for="lr-guest">Prepared for (optional)</label>
+          <input id="lr-guest" type="text" maxlength="60" autocomplete="off" placeholder="Guest name" />
+        </div>
+        <p class="lr-guest-print" id="lr-guest-print" hidden></p>
+        <p class="lr-date" id="lr-date"></p>
+        <p class="lr-empty" id="lr-empty">No destinations yet. Use "Add to itinerary" on a card to start.</p>
+        <table class="lr-lines" id="lr-lines" hidden>
+          <caption class="lr-sr">Itemised package cost</caption>
+          <thead><tr><th scope="col">Item</th><th scope="col" class="lr-num">Amount</th></tr></thead>
+          <tbody id="lr-lines-body"></tbody>
+        </table>
+        <div class="lr-total" role="status" aria-live="polite" aria-atomic="true">
+          <span>Package total</span>
+          <strong id="lr-total">$0</strong>
+        </div>
+        <p class="lr-fine">Demo pricing for illustration. Nothing is booked or charged.</p>
+        <button type="button" class="lr-print-btn lr-noprint" id="lr-print" disabled>Print Itinerary</button>
+      </aside>
+    </div>
+  </section>
+  <!-- ===== END issue #76 ===== -->
+
   <script src="script.js"></script>
 </body>
 </html>

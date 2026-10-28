@@ -21,6 +21,53 @@
       <button className="sample-btn" onclick="playVoiceSample()">Play Voice Sample 🔊</button>
     </div>
   </header>
+
+  <main class="studio" id="studio" aria-labelledby="studio-title">
+    <h2 id="studio-title">Text-to-Speech Studio</h2>
+    <p class="studio-intro">Type something, pick a voice from your browser and hear it spoken. This uses the built-in Web Speech API, so everything runs on your device.</p>
+
+    <p class="studio-unsupported" id="tts-unsupported" role="alert" hidden>
+      Speech synthesis is not supported in this browser, so the studio is disabled. Try a recent version of Chrome, Edge, Safari or Firefox.
+    </p>
+
+    <form class="studio-card" id="tts-form" novalidate>
+      <div class="field">
+        <label for="tts-text">Text to speak</label>
+        <textarea id="tts-text" rows="5" maxlength="2000" placeholder="Type or paste some text here...">Hello! This is Sonora, speaking straight from your browser.</textarea>
+        <span class="char-count" id="tts-count" aria-live="off">0 / 2000</span>
+      </div>
+
+      <div class="field">
+        <label for="tts-voice">Voice</label>
+        <select id="tts-voice"></select>
+        <span class="field-note" id="tts-voice-note"></span>
+      </div>
+
+      <div class="sliders">
+        <div class="field">
+          <label for="tts-rate">Rate <output id="tts-rate-out" for="tts-rate">1.0x</output></label>
+          <input type="range" id="tts-rate" min="0.5" max="2" step="0.1" value="1" />
+        </div>
+        <div class="field">
+          <label for="tts-pitch">Pitch <output id="tts-pitch-out" for="tts-pitch">1.0</output></label>
+          <input type="range" id="tts-pitch" min="0" max="2" step="0.1" value="1" />
+        </div>
+      </div>
+
+      <div class="eq" id="tts-eq" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+
+      <div class="controls">
+        <button type="button" class="ctl ctl-play" id="tts-play">Play</button>
+        <button type="button" class="ctl" id="tts-pause" disabled>Pause</button>
+        <button type="button" class="ctl" id="tts-stop" disabled>Stop</button>
+      </div>
+
+      <p class="tts-status" id="tts-status" role="status" aria-live="polite">Ready.</p>
+    </form>
+  </main>
+
   <script src="script.js"></script>
 </body>
 </html>
