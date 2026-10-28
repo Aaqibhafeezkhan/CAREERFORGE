@@ -333,3 +333,128 @@ document.addEventListener('DOMContentLoaded', () => {
   updateWizardStep(1);
   console.log('VitalityAI Biological Age Assessment Wizard ready');
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("nutrition-form");
+
+  if (!form) return;
+
+  const errorMessage = document.getElementById("nutrition-error");
+
+  const output = {
+    calories: document.getElementById("nutrition-calories"),
+    protein: document.getElementById("nutrition-protein"),
+    carbs: document.getElementById("nutrition-carbs"),
+    fats: document.getElementById("nutrition-fats"),
+    bmr: document.getElementById("nutrition-bmr"),
+    maintenance: document.getElementById("nutrition-maintenance"),
+    proteinCalories: document.getElementById("protein-calories"),
+    carbsCalories: document.getElementById("carbs-calories"),
+    fatsCalories: document.getElementById("fats-calories"),
+    proteinProgress: document.getElementById("protein-progress"),
+    carbsProgress: document.getElementById("carbs-progress"),
+    fatsProgress: document.getElementById("fats-progress"),
+  };
+
+  const formatNumber = (number) =>
+    Math.round(number).toLocaleString("en-US");
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    errorMessage.hidden = true;
+    errorMessage.textContent = "";
+
+    const age = Number(document.getElementById("nutrition-age").value);
+    const weight = Number(
+      document.getElementById("nutrition-weight").value
+    );
+    const height = Number(
+      document.getElementById("nutrition-height").value
+    );
+    const sex = document.getElementById("nutrition-sex").value;
+    const activity = Number(
+      document.getElementById("nutrition-activity").value
+    );
+    const goal = form.querySelector(
+      'input[name="nutrition-goal"]:checked'
+    )?.value;
+
+    if (
+      !Number.isFinite(age) ||
+      !Number.isFinite(weight) ||
+      !Number.isFinite(height) ||
+      age < 18 ||
+      age > 100 ||
+      weight < 20 ||
+      weight > 350 ||
+      height < 100 ||
+      height > 250 ||
+      !Number.isFinite(activity) ||
+      !goal
+    ) {
+      errorMessage.textContent =
+        "Please enter valid profile details and select a goal.";
+      errorMessage.hidden = false;
+      return;
+    }
+
+    // Mifflin-St Jeor equation
+    const bmr =
+      10 * weight +
+      6.25 * height -
+      5 * age +
+      (sex === "male" ? 5 : -161);
+
+    const maintenance = bmr * activity;
+
+    const goalAdjustments = {
+      loss: -300,
+      maintain: 0,
+      gain: 250,
+    };
+
+    const calories = Math.max(
+      1200,
+      Math.round(maintenance + goalAdjustments[goal])
+    );
+
+    const macroRatios = {
+      loss: { protein: 0.30, carbs: 0.40, fats: 0.30 },
+      maintain: { protein: 0.25, carbs: 0.45, fats: 0.30 },
+      gain: { protein: 0.25, carbs: 0.50, fats: 0.25 },
+    };
+
+    const ratios = macroRatios[goal];
+
+    const proteinCalories = calories * ratios.protein;
+    const carbsCalories = calories * ratios.carbs;
+    const fatsCalories = calories * ratios.fats;
+
+    const protein = proteinCalories / 4;
+    const carbs = carbsCalories / 4;
+    const fats = fatsCalories / 9;
+
+    output.calories.textContent = formatNumber(calories);
+    output.protein.textContent = formatNumber(protein);
+    output.carbs.textContent = formatNumber(carbs);
+    output.fats.textContent = formatNumber(fats);
+
+    output.bmr.textContent = `${formatNumber(bmr)} kcal`;
+    output.maintenance.textContent = `${formatNumber(maintenance)} kcal`;
+
+    output.proteinCalories.textContent =
+      `${formatNumber(proteinCalories)} kcal`;
+    output.carbsCalories.textContent =
+      `${formatNumber(carbsCalories)} kcal`;
+    output.fatsCalories.textContent =
+      `${formatNumber(fatsCalories)} kcal`;
+
+    output.proteinProgress.style.width = `${ratios.protein * 100}%`;
+    output.carbsProgress.style.width = `${ratios.carbs * 100}%`;
+    output.fatsProgress.style.width = `${ratios.fats * 100}%`;
+
+    document.querySelector(
+      ".nutrition-results-heading p"
+    ).textContent = "Your estimated daily targets are ready.";
+  });
+});
