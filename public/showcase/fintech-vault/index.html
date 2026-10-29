@@ -341,6 +341,49 @@
     </div>
   </section>
 
+  <!-- Transaction Ledger -->
+  <section class="engine-section ledger-section" id="transaction-ledger" aria-labelledby="ledgerTitle">
+    <div class="engine-container">
+      <div class="section-header">
+        <h2 id="ledgerTitle">Transaction History</h2>
+        <p>Search by merchant, filter by category and date range, and sort by date or amount. Sample data for demonstration.</p>
+      </div>
+      <div class="ledger-controls">
+        <div class="ledger-field ledger-search">
+          <label for="ledgerSearch">Search merchant</label>
+          <input type="search" id="ledgerSearch" class="num-input" placeholder="e.g. Harbor" autocomplete="off" />
+        </div>
+        <div class="ledger-field">
+          <label for="ledgerFrom">From</label>
+          <input type="date" id="ledgerFrom" class="num-input" />
+        </div>
+        <div class="ledger-field">
+          <label for="ledgerTo">To</label>
+          <input type="date" id="ledgerTo" class="num-input" />
+        </div>
+        <button type="button" id="ledgerClear" class="reset-btn">Clear filters</button>
+      </div>
+      <p id="ledgerRangeError" class="ledger-error" role="alert" hidden>The start date must be on or before the end date.</p>
+      <div id="ledgerPills" class="ledger-pills" role="group" aria-label="Filter by category"></div>
+      <p id="ledgerStatus" class="ledger-status" role="status" aria-live="polite"></p>
+      <div class="milestone-table-container ledger-table-wrap" id="ledgerTableWrap">
+        <table class="milestone-table" id="ledgerTable">
+          <caption class="sr-only">Transaction history</caption>
+          <thead>
+            <tr>
+              <th scope="col" aria-sort="descending"><button type="button" class="ledger-sort" data-sort="date">Date <span class="sort-arrow" aria-hidden="true"></span></button></th>
+              <th scope="col">Merchant</th>
+              <th scope="col">Category</th>
+              <th scope="col" class="ledger-amount" aria-sort="none"><button type="button" class="ledger-sort" data-sort="amount">Amount <span class="sort-arrow" aria-hidden="true"></span></button></th>
+            </tr>
+          </thead>
+          <tbody id="ledgerBody"></tbody>
+        </table>
+      </div>
+      <p id="ledgerEmpty" class="ledger-empty" hidden>No transactions match these filters. Try a different search, category or date range.</p>
+    </div>
+  </section>
+
   <!-- Deposit Modal -->
   <div class="modal-backdrop" id="depositModal" style="display: none;">
     <div class="modal-card">
@@ -378,6 +421,7 @@
     </div>
   </footer>
 
+  <script src="ledger.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
