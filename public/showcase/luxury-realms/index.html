@@ -17,16 +17,45 @@
     <button className="book-btn" onclick="inquireConcierge()">Private Inquiry ↗</button>
   </header>
 
-  <main className="destinations">
-    <div className="card">
-      <div className="icon">🏝️</div>
+  <main class="destinations" aria-label="Featured luxury stays and experiences">
+    <article class="card">
+      <div class="icon" aria-hidden="true">🏝️</div>
       <h3>The Azure Atoll Sanctuary</h3>
       <p>Private Island • Maldives • Max 12 Guests</p>
-    </div>
-    <div className="card">
-      <div className="icon">🛩️</div>
+      <ul class="amenity-badges" aria-label="Island amenities">
+        <li class="amenity-badge">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 20h18M6 20V9l6-5 6 5v11M9 20v-6h6v6M4 9h16"/></svg>
+          <span>Helipad</span>
+        </li>
+        <li class="amenity-badge">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 17h18l-2 3H6l-3-3ZM5 14l7-8 7 8M12 6V3M8 14h8"/></svg>
+          <span>Private Dock</span>
+        </li>
+        <li class="amenity-badge">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 20h16M6 20v-7h12v7M8 13V7h8v6M10 7V4h4v3M9 10h6"/></svg>
+          <span>Michelin Chef</span>
+        </li>
+        <li class="amenity-badge">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 8h18l-2 11H5L3 8ZM7 8V5h10v3M8 12h8M10 15h4"/></svg>
+          <span>Infinity Pool</span>
+        </li>
+        <li class="amenity-badge">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 3h8v4l-2 2v4l3 3v5H7v-5l3-3V9L8 7V3ZM8 17h8M10 6h4"/></svg>
+          <span>Wine Cellar</span>
+        </li>
+      </ul>
+    </article>
+    <article class="card">
+      <div class="icon" aria-hidden="true">🛩️</div>
       <h3>Global Express 7500 Jet</h3>
       <p>Intercontinental Flight • Custom Interiors</p>
+      <ul class="amenity-badges" aria-label="Private jet amenities">
+        <li class="amenity-badge"><span class="amenity-glyph" aria-hidden="true">✦</span><span>Private Hangar</span></li>
+        <li class="amenity-badge"><span class="amenity-glyph" aria-hidden="true">♨</span><span>Onboard Chef</span></li>
+        <li class="amenity-badge"><span class="amenity-glyph" aria-hidden="true">◇</span><span>Executive Suite</span></li>
+        <li class="amenity-badge"><span class="amenity-glyph" aria-hidden="true">⌁</span><span>Premium Wi-Fi</span></li>
+      </ul>
+    </article>
   </main>
 
   <!-- ===== BEGIN issue #103: Private Aviation Fleet Explorer & Cabin Interior Walkthrough ===== -->
