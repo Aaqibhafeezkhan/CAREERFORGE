@@ -1,7 +1,48 @@
 document.addEventListener('DOMContentLoaded', () => {
   console.log('Pulse Wave Festival Hub loaded');
+  initFestivalCountdown();
   initTicketCalculator();
 });
+
+// ---------------------------------------------------------------
+// Live Event Countdown Timer (Issue #27)
+// ---------------------------------------------------------------
+function initFestivalCountdown() {
+  const daysEl = document.getElementById('days');
+  const hoursEl = document.getElementById('hours');
+  const minsEl = document.getElementById('mins');
+  const secsEl = document.getElementById('secs');
+
+  if (!daysEl || !hoursEl || !minsEl || !secsEl) return;
+
+  // Compute festival target timestamp (stored in session to keep ticking consistently)
+  const STORAGE_KEY = 'pulsewave_festival_target_ts';
+  let targetTs = parseInt(sessionStorage.getItem(STORAGE_KEY), 10);
+
+  if (!targetTs || isNaN(targetTs) || targetTs <= Date.now()) {
+    // 42 days, 18 hours, 35 minutes, 20 seconds from first load
+    targetTs = Date.now() + (42 * 86400 + 18 * 3600 + 35 * 60 + 20) * 1000;
+    sessionStorage.setItem(STORAGE_KEY, String(targetTs));
+  }
+
+  function updateCountdown() {
+    const now = Date.now();
+    const diff = Math.max(0, targetTs - now);
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const mins = Math.floor((diff % (1000 * 60)) / (1000 * 60));
+    const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+    daysEl.textContent = String(days).padStart(2, '0');
+    hoursEl.textContent = String(hours).padStart(2, '0');
+    minsEl.textContent = String(mins).padStart(2, '0');
+    secsEl.textContent = String(secs).padStart(2, '0');
+  }
+
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+}
 
 // All money is handled in cents so the totals never pick up float rounding errors.
 const TIERS = {
