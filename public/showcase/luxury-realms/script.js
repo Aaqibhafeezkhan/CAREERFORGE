@@ -1,6 +1,29 @@
 function inquireConcierge() {
-  alert('Aura Realms VIP Concierge Booking desk notified!');
+  var modal = document.getElementById('conciergeModal');
+  if (!modal) return;
+  modal.hidden = false;
+  var contact = document.getElementById('conciergeContact');
+  if (contact) contact.focus();
 }
+
+function closeConcierge() {
+  var modal = document.getElementById('conciergeModal');
+  if (modal) modal.hidden = true;
+}
+
+(function () {
+  var form = document.getElementById('conciergeForm');
+  if (!form) return;
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
+    if (!form.reportValidity()) return;
+    var data = new FormData(form);
+    var confirmation = document.getElementById('conciergeConfirmation');
+    confirmation.textContent = 'Your ' + data.get('conciergeMethod') + ' briefing request is confirmed. Our private desk will be in touch shortly.';
+    confirmation.hidden = false;
+    form.hidden = true;
+  });
+})();
 
 /* ===== BEGIN issue #76: travel curator and printable itinerary ===== */
 (function () {

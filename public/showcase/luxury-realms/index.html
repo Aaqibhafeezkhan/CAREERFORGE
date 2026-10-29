@@ -14,7 +14,7 @@
     <div className="brand">AURA REALMS</div>
     <h1>Exclusive Private Island Charters &amp; Aviation</h1>
     <p>Tailored ultra-high-net-worth concierge experiences across Seychelles, St. Barts, and the Swiss Alps.</p>
-    <button className="book-btn" onclick="inquireConcierge()">Private Inquiry ↗</button>
+    <button type="button" class="book-btn" onclick="inquireConcierge()">Request Briefing ↗</button>
   </header>
 
   <main className="destinations">
@@ -226,6 +226,27 @@
     </div>
   </section>
   <!-- ===== END issue #76 ===== -->
+
+  <div class="concierge-overlay" id="conciergeModal" role="dialog" aria-modal="true" aria-labelledby="conciergeTitle" hidden>
+    <section class="concierge-card">
+      <button type="button" class="concierge-close" aria-label="Close inquiry" onclick="closeConcierge()">&times;</button>
+      <p class="concierge-kicker">AURA REALMS · PRIVATE DESK</p>
+      <h2 id="conciergeTitle">Request a Private Briefing</h2>
+      <p class="concierge-intro">Choose your preferred channel and our concierge will arrange a discreet callback.</p>
+      <form id="conciergeForm" class="concierge-form">
+        <fieldset>
+          <legend>Preferred contact method</legend>
+          <label><input type="radio" name="conciergeMethod" value="Signal" checked> Signal</label>
+          <label><input type="radio" name="conciergeMethod" value="WhatsApp VIP"> WhatsApp VIP</label>
+          <label><input type="radio" name="conciergeMethod" value="Private Phone"> Private Phone</label>
+        </fieldset>
+        <label for="conciergeContact">Contact details</label>
+        <input id="conciergeContact" name="contact" type="text" autocomplete="off" required maxlength="120" placeholder="Phone number or account name">
+        <button class="concierge-submit" type="submit">Arrange my briefing</button>
+      </form>
+      <div class="concierge-confirmation" id="conciergeConfirmation" role="status" hidden></div>
+    </section>
+  </div>
 
   <script src="script.js"></script>
 </body>
