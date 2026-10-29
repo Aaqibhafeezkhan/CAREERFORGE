@@ -1,23 +1,38 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#07111f" />
+  <meta
+    name="description"
+    content="Discover curated expedition travel, prepare your gear, and explore interactive day-by-day itineraries."
+  />
   <title>Odyssey — Curated Expedition Travel</title>
+
   <link rel="stylesheet" href="styles.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
 </head>
+
 <body>
   <header class="hero">
     <div class="brand">ODYSSEY EXPEDITIONS</div>
     <h1>Uncharted Journeys to the Outer Edges of Earth</h1>
     <p>Hand-crafted luxury eco-tours in Iceland, Patagonia, and Kyoto.</p>
-    
+
     <div class="search-bar">
-      <input type="text" placeholder="Where do you want to explore?" />
-      <button class="search-btn">Explore Voyages ↗</button>
+      <input
+        type="text"
+        placeholder="Where do you want to explore?"
+        aria-label="Search destinations"
+      />
+      <button type="button" class="search-btn">Explore Voyages ↗</button>
     </div>
   </header>
 
@@ -28,91 +43,237 @@
         <div class="checklist-header-text">
           <div class="section-tag">🎒 EXPEDITION PREPARATION</div>
           <h2>Interactive Packing Checklist</h2>
-          <p>Organize, track, and customize your extreme climate gear for mission-ready exploration.</p>
+          <p>
+            Organize, track, and customize your extreme climate gear
+            for mission-ready exploration.
+          </p>
         </div>
-        
+
         <!-- Animated Circular Readiness Progress Tracker -->
         <div class="readiness-card">
           <div class="circular-progress-wrap">
-            <svg class="progress-ring" width="104" height="104" viewBox="0 0 104 104">
-              <circle class="progress-ring-bg" cx="52" cy="52" r="42" />
-              <circle class="progress-ring-circle" id="progress-circle" cx="52" cy="52" r="42" />
+            <svg
+              class="progress-ring"
+              width="104"
+              height="104"
+              viewBox="0 0 104 104"
+              aria-label="Packing readiness progress"
+              role="img"
+            >
+              <circle
+                class="progress-ring-bg"
+                cx="52"
+                cy="52"
+                r="42"
+              />
+              <circle
+                class="progress-ring-circle"
+                id="progress-circle"
+                cx="52"
+                cy="52"
+                r="42"
+              />
             </svg>
+
             <div class="progress-value">
               <span id="readiness-percent">0%</span>
               <span class="progress-sub">READY</span>
             </div>
           </div>
+
           <div class="readiness-meta">
-            <div class="readiness-status" id="readiness-status">Preparation Needed</div>
-            <div class="readiness-count" id="readiness-count">0 of 0 items packed</div>
+            <div class="readiness-status" id="readiness-status">
+              Preparation Needed
+            </div>
+            <div class="readiness-count" id="readiness-count">
+              0 of 0 items packed
+            </div>
           </div>
         </div>
       </div>
 
       <!-- Category Filter Tabs -->
       <div class="category-tabs" id="category-tabs" role="tablist">
-        <button class="cat-tab active" data-category="all" role="tab" aria-selected="true">
+        <button
+          type="button"
+          class="cat-tab active"
+          data-category="all"
+          role="tab"
+          aria-selected="true"
+        >
           All Gear <span class="tab-badge" id="badge-all">0</span>
         </button>
-        <button class="cat-tab" data-category="Clothing" role="tab" aria-selected="false">
+
+        <button
+          type="button"
+          class="cat-tab"
+          data-category="Clothing"
+          role="tab"
+          aria-selected="false"
+        >
           🧥 Clothing <span class="tab-badge" id="badge-clothing">0</span>
         </button>
-        <button class="cat-tab" data-category="Navigation Gear" role="tab" aria-selected="false">
-          🧭 Navigation Gear <span class="tab-badge" id="badge-navigation">0</span>
+
+        <button
+          type="button"
+          class="cat-tab"
+          data-category="Navigation Gear"
+          role="tab"
+          aria-selected="false"
+        >
+          🧭 Navigation Gear
+          <span class="tab-badge" id="badge-navigation">0</span>
         </button>
-        <button class="cat-tab" data-category="First Aid" role="tab" aria-selected="false">
-          🩹 First Aid <span class="tab-badge" id="badge-firstaid">0</span>
+
+        <button
+          type="button"
+          class="cat-tab"
+          data-category="First Aid"
+          role="tab"
+          aria-selected="false"
+        >
+          🩹 First Aid
+          <span class="tab-badge" id="badge-firstaid">0</span>
         </button>
-        <button class="cat-tab" data-category="Photography Equipment" role="tab" aria-selected="false">
-          📷 Photography Equipment <span class="tab-badge" id="badge-photo">0</span>
+
+        <button
+          type="button"
+          class="cat-tab"
+          data-category="Photography Equipment"
+          role="tab"
+          aria-selected="false"
+        >
+          📷 Photography Equipment
+          <span class="tab-badge" id="badge-photo">0</span>
         </button>
       </div>
 
       <!-- Add Custom Gear Form -->
       <form class="add-gear-form" id="add-gear-form">
-        <input type="text" id="gear-name-input" placeholder="Add custom gear item (e.g. Crampons, Thermal Flask)..." required autocomplete="off" />
-        <select id="gear-category-select" required aria-label="Gear category">
+        <input
+          type="text"
+          id="gear-name-input"
+          placeholder="Add custom gear item (e.g. Crampons, Thermal Flask)..."
+          required
+          autocomplete="off"
+        />
+
+        <select
+          id="gear-category-select"
+          required
+          aria-label="Gear category"
+        >
           <option value="Clothing">🧥 Clothing</option>
           <option value="Navigation Gear">🧭 Navigation Gear</option>
           <option value="First Aid">🩹 First Aid</option>
-          <option value="Photography Equipment">📷 Photography Equipment</option>
+          <option value="Photography Equipment">
+            📷 Photography Equipment
+          </option>
         </select>
+
         <button type="submit" class="add-gear-btn">+ Add Gear</button>
       </form>
 
       <!-- Checklist Items Container -->
       <div class="checklist-items-wrap">
         <div class="checklist-actions">
-          <span class="list-heading" id="current-filter-heading">All Gear Items</span>
+          <span class="list-heading" id="current-filter-heading">
+            All Gear Items
+          </span>
+
           <div class="action-buttons">
-            <button type="button" class="action-btn" id="check-all-btn">Check All</button>
+            <button type="button" class="action-btn" id="check-all-btn">
+              Check All
+            </button>
             <span class="action-sep">•</span>
-            <button type="button" class="action-btn" id="uncheck-all-btn">Uncheck All</button>
+
+            <button type="button" class="action-btn" id="uncheck-all-btn">
+              Uncheck All
+            </button>
             <span class="action-sep">•</span>
-            <button type="button" class="action-btn" id="reset-default-btn">Reset Defaults</button>
+
+            <button type="button" class="action-btn" id="reset-default-btn">
+              Reset Defaults
+            </button>
           </div>
         </div>
+
         <ul class="checklist-items" id="checklist-items">
           <!-- Dynamically populated via script.js -->
         </ul>
+
         <div class="empty-state" id="empty-state" style="display: none;">
-          <p>No gear items found in this category. Add one above to get started!</p>
+          <p>
+            No gear items found in this category. Add one above to get started!
+          </p>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- Featured Voyages -->
   <main class="destinations">
     <h2>FEATURED VOYAGES</h2>
-    <div class="destination-filters" role="group" aria-label="Filter voyages by region">
-      <button type="button" class="destination-filter active" data-region-filter="all" aria-pressed="true">All</button>
-      <button type="button" class="destination-filter" data-region-filter="europe" aria-pressed="false">Europe</button>
-      <button type="button" class="destination-filter" data-region-filter="asia" aria-pressed="false">Asia</button>
-      <button type="button" class="destination-filter" data-region-filter="americas" aria-pressed="false">Americas</button>
-      <button type="button" class="destination-filter" data-region-filter="polar" aria-pressed="false">Polar Expeditions</button>
+
+    <div
+      class="destination-filters"
+      role="group"
+      aria-label="Filter voyages by region"
+    >
+      <button
+        type="button"
+        class="destination-filter active"
+        data-region-filter="all"
+        aria-pressed="true"
+      >
+        All
+      </button>
+
+      <button
+        type="button"
+        class="destination-filter"
+        data-region-filter="europe"
+        aria-pressed="false"
+      >
+        Europe
+      </button>
+
+      <button
+        type="button"
+        class="destination-filter"
+        data-region-filter="asia"
+        aria-pressed="false"
+      >
+        Asia
+      </button>
+
+      <button
+        type="button"
+        class="destination-filter"
+        data-region-filter="americas"
+        aria-pressed="false"
+      >
+        Americas
+      </button>
+
+      <button
+        type="button"
+        class="destination-filter"
+        data-region-filter="polar"
+        aria-pressed="false"
+      >
+        Polar Expeditions
+      </button>
     </div>
-    <p id="destination-filter-status" class="destination-filter-status" role="status">Showing all 2 voyages.</p>
+
+    <p
+      id="destination-filter-status"
+      class="destination-filter-status"
+      role="status"
+    >
+      Showing all 2 voyages.
+    </p>
+
     <div class="grid">
       <div class="card" data-region="europe">
         <div class="card-img">🏔️</div>
@@ -120,6 +281,7 @@
         <h3>Reykjavik Aurora Glaciers</h3>
         <p>7 Days • Iceland Heli-Hiking</p>
       </div>
+
       <div class="card" data-region="asia">
         <div class="card-img">🏯</div>
         <span class="difficulty-badge badge-easy">Easy</span>
@@ -128,6 +290,82 @@
       </div>
     </div>
   </main>
+
+  <!-- Interactive Expedition Timeline - NSoC Issue #85 -->
+  <section
+    class="expedition-timeline-section"
+    id="expedition-timeline"
+    aria-labelledby="timeline-title"
+  >
+    <div class="timeline-container">
+      <div class="timeline-heading">
+        <span class="section-tag">EXPEDITION FIELD JOURNAL</span>
+
+        <h2 id="timeline-title">Every Day Is a New Frontier</h2>
+
+        <p>
+          Follow your expedition day by day. Explore waypoints, discover
+          activities, check coordinates, and track elevation changes.
+        </p>
+      </div>
+
+      <!-- Expedition Selector -->
+      <div class="expedition-selector">
+        <label for="expedition-select">Choose your expedition</label>
+
+        <select id="expedition-select">
+          <option value="antarctic">Antarctic Crossing</option>
+          <option value="silk-road">Silk Road Odyssey</option>
+        </select>
+      </div>
+
+      <!-- Expedition Summary -->
+      <div
+        class="timeline-summary"
+        id="timeline-summary"
+        aria-live="polite"
+      >
+        <div class="summary-item">
+          <span class="summary-label">EXPEDITION</span>
+          <strong id="expedition-name">Antarctic Crossing</strong>
+        </div>
+
+        <div class="summary-item">
+          <span class="summary-label">DURATION</span>
+          <strong id="expedition-duration">10 days</strong>
+        </div>
+
+        <div class="summary-item">
+          <span class="summary-label">ACTIVE WAYPOINT</span>
+          <strong id="active-day-status">Day 1 · Ready to depart</strong>
+        </div>
+      </div>
+
+      <!-- JavaScript renders the ten collapsible day cards here. -->
+      <div
+        class="expedition-timeline"
+        id="expedition-timeline-list"
+        aria-label="Expedition itinerary"
+      >
+        <p class="timeline-loading">
+          Preparing your expedition itinerary…
+        </p>
+      </div>
+
+      <p
+        class="timeline-feedback"
+        id="timeline-feedback"
+        role="status"
+        aria-live="polite"
+      ></p>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <p>© Odyssey Expeditions · Travel thoughtfully. Explore boldly.</p>
+  </footer>
+
+  <!-- Keep the existing script path so checklist and filter features continue working. -->
   <script src="script.js"></script>
 </body>
 </html>
