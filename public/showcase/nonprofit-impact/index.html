@@ -15,6 +15,7 @@
     <h1>Restoring 10 Million Acres of Rainforest by 2030</h1>
     <p>Open-source satellite tracking &amp; verified community reforestation grants.</p>
     <button class="donate-btn" onclick="openDonateModal()">Plant 10 Trees ($15) ↗</button>
+    <button type="button" class="volunteer-btn" id="open-volunteer-modal">Join the Movement</button>
   </header>
 
   <main class="impact">
@@ -201,6 +202,66 @@
     </div>
     <p class="sources">Estimates only. Factors: car 0.17 kg CO2e/km and transit 0.07 kg/passenger-km (UK DEFRA conversion factors, rounded); flights about 100 kg per hour (approximate economy average, DEFRA); diet from Scarborough et al. 2014 (Climatic Change); electricity 0.44 kg/kWh (IEA world average grid) and gas 0.18 kg/kWh (DEFRA); benchmarks from Global Carbon Project; the $20/t offset price and 22 kg per tree per year are assumptions.</p>
   </section>
+  <dialog class="volunteer-modal" id="volunteer-modal"
+        aria-labelledby="volunteer-title">
+    <div class="modal-content">
+      <button type="button" class="modal-close"
+              id="close-volunteer-modal"
+              aria-label="Close volunteer form">
+        &times;
+      </button>
+
+      <div id="volunteer-form-view">
+        <p class="modal-eyebrow">MAKE A DIFFERENCE</p>
+        <h2 id="volunteer-title">Join the Movement</h2>
+        <p class="modal-description">
+          Choose a cause and take the first step toward a greener future.
+        </p>
+
+        <form id="volunteer-form">
+          <label for="volunteer-name">Full name</label>
+          <input type="text" id="volunteer-name" name="name"
+                placeholder="Your name" autocomplete="name"
+                required maxlength="100" />
+
+          <label for="volunteer-email">Email address</label>
+          <input type="email" id="volunteer-email" name="email"
+                placeholder="you@example.com" autocomplete="email"
+                required maxlength="254" />
+
+          <label for="volunteer-cause">Preferred cause</label>
+          <select id="volunteer-cause" name="cause" required>
+            <option value="">Select a cause</option>
+            <option value="reforestation">Rainforest reforestation</option>
+            <option value="ocean">Ocean conservation</option>
+            <option value="wildlife">Wildlife protection</option>
+            <option value="community">Community climate education</option>
+          </select>
+
+          <p id="volunteer-error" class="form-error"
+            role="alert" hidden></p>
+
+          <button type="submit" class="donate-btn volunteer-submit">
+            Sign me up
+          </button>
+        </form>
+      </div>
+
+      <section id="volunteer-success" class="volunteer-success"
+              aria-live="polite" hidden>
+        <div class="success-badge" aria-hidden="true">✓</div>
+        <h2>You're part of the movement!</h2>
+        <p id="volunteer-thank-you"></p>
+        <p class="demo-notice">
+          This is a demo. Your information has not been sent or saved.
+        </p>
+        <button type="button" class="donate-btn"
+                id="finish-volunteer">
+          Done
+        </button>
+      </section>
+    </div>
+  </dialog>
   <script src="script.js"></script>
 </body>
 </html>
