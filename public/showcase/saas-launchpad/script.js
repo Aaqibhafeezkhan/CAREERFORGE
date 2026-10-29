@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initRoiCalculator();
   initFaqAccordion();
   initBillingToggle();
+  initIntegrationFilters();
 });
 
 function initFaqAccordion() {
@@ -507,4 +508,50 @@ function initBillingToggle() {
   });
 
   updateBilling(false);
+}
+
+function initIntegrationFilters() {
+  const search = document.getElementById('integration-search');
+  const list = document.getElementById('integration-list');
+  const count = document.getElementById('integration-count');
+  const empty = document.getElementById('integration-empty');
+  if (!search || !list || !count || !empty) return;
+  const cards = Array.from(list.querySelectorAll('[data-integration-name]'));
+  const buttons = document.querySelectorAll('button[data-integration-category]');
+  let category = 'all';
+  function update() {
+    const query = search.value.trim().toLocaleLowerCase();
+    let visible = 0;
+    cards.forEach(card => {
+      const name = card.dataset.integrationName;
+      const group = card.dataset.integrationCategory;
+      const matches = (category === 'all' || category === group) &&
+        `${name} ${group}`.toLocaleLowerCase().includes(query);
+      card.hidden = !matches;
+      if (matches) visible++;
+    });
+    count.textContent = `${visible} ${visible === 1 ? 'integration' : 'integrations'}`;
+    empty.hidden = visible !== 0;
+  }
+  search.disabled = false;
+  search.addEventListener('input', update);
+  search.addEventListener('keydown', event => {
+    if (event.key === 'Escape') { search.value = ''; update(); }
+  });
+  buttons.forEach(button => {
+    button.disabled = false;
+    button.addEventListener('click', () => {
+      category = button.dataset.integrationCategory;
+      buttons.forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+      update();
+    });
+  });
+  document.addEventListener('keydown', event => {
+    if (event.key !== '/' || event.ctrlKey || event.metaKey || event.altKey || event.shiftKey || event.defaultPrevented) return;
+    const target = event.target;
+    if (target instanceof Element && (target.closest('input, textarea, select') || target.isContentEditable)) return;
+    event.preventDefault();
+    search.focus();
+  });
+  update();
 }
