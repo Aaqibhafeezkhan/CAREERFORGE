@@ -109,6 +109,71 @@ function initVoiceStudioTuner() {
   let currentModelId = 'aria';
   let currentEmotion = 'neutral';
   let isPlayingAudio = false;
+  let activeSampleButton = null;
+  let activeSampleUtterance = null;
+
+  function resetSampleButton(button) {
+    if (!button) return;
+    button.classList.remove('playing');
+    button.querySelector('.sample-play-icon').textContent = '▶';
+    button.querySelector('.sample-play-label').textContent = 'Play sample';
+    const modelName = VOICE_MODELS[button.dataset.playSample]?.name || 'voice';
+    button.title = 'Play ' + modelName + ' voice sample';
+    button.setAttribute('aria-label', 'Play ' + modelName + ' voice sample');
+  }
+
+  function stopActiveSample() {
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+    resetSampleButton(activeSampleButton);
+    activeSampleButton = null;
+    activeSampleUtterance = null;
+  }
+
+  function playModelSample(button) {
+    const model = VOICE_MODELS[button.dataset.playSample];
+    if (!model) return;
+
+    if (activeSampleButton === button && activeSampleButton.classList.contains('playing')) {
+      stopActiveSample();
+      feedbackEl.textContent = model.name + ' sample stopped.';
+      return;
+    }
+
+    stopActiveSample();
+    if (!window.speechSynthesis || !window.SpeechSynthesisUtterance) {
+      feedbackEl.textContent = 'Voice sample playback is not supported in this browser.';
+      return;
+    }
+
+    const synth = window.speechSynthesis;
+    const utterance = new SpeechSynthesisUtterance(model.sampleText);
+    const voices = synth.getVoices();
+    const voice = voices.find((candidate) => candidate.lang.startsWith(model.lang.slice(0, 2))) || voices[0];
+    if (voice) utterance.voice = voice;
+    utterance.lang = model.lang;
+    utterance.pitch = model.basePitch;
+    utterance.rate = model.baseSpeed;
+
+    activeSampleButton = button;
+    activeSampleUtterance = utterance;
+    button.classList.add('playing');
+    button.querySelector('.sample-play-icon').textContent = '■';
+    button.querySelector('.sample-play-label').textContent = 'Playing…';
+    button.title = 'Stop ' + model.name + ' voice sample';
+    button.setAttribute('aria-label', 'Stop ' + model.name + ' voice sample');
+    feedbackEl.textContent = 'Playing ' + model.name + ' voice sample…';
+
+    const finish = () => {
+      if (activeSampleUtterance !== utterance) return;
+      resetSampleButton(activeSampleButton);
+      activeSampleButton = null;
+      activeSampleUtterance = null;
+      feedbackEl.textContent = model.name + ' sample playback finished.';
+    };
+    utterance.onend = finish;
+    utterance.onerror = finish;
+    synth.speak(utterance);
+  }
 
   // Update slider fill and telemetry readouts
   function updateSliderDisplay() {
@@ -194,6 +259,14 @@ function initVoiceStudioTuner() {
         if (modelId) selectModel(modelId);
       });
     }
+  });
+
+  // Voice sample previews: only one sample may play at a time.
+  document.querySelectorAll('.sample-play-btn').forEach((button) => {
+    button.addEventListener('click', (event) => {
+      event.stopPropagation();
+      playModelSample(button);
+    });
   });
 
   // Sliders Input Listeners
