@@ -365,6 +365,142 @@ body {
   background: rgba(255, 255, 255, 0.05);
 }
 
+/* ==========================================================
+   Currency Selector Toggle Component (USD, EUR, GBP)
+   ========================================================== */
+.currency-selector-card {
+  background: rgba(16, 185, 129, 0.03);
+  border: 1px solid rgba(16, 185, 129, 0.22);
+  border-radius: 16px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.currency-selector-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.currency-selector-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #e5e7eb;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.currency-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--emerald-light);
+}
+
+.currency-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+}
+
+.currency-toggle-group {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 4px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.currency-toggle-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  padding: 9px 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  color: #9ca3af;
+  position: relative;
+  user-select: none;
+}
+
+.currency-btn-sym {
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.currency-btn-code {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.currency-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* HIGH CONTRAST ACTIVE STATE */
+.currency-toggle-btn.active {
+  background: #10b981 !important;
+  color: #021a10 !important;
+  border-color: #34d399 !important;
+  font-weight: 800;
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.5), 0 2px 6px rgba(0, 0, 0, 0.4);
+  transform: translateY(-1px);
+}
+
+.currency-toggle-btn.active .currency-btn-sym {
+  color: #021a10 !important;
+  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.3));
+}
+
+.currency-toggle-btn.active .currency-btn-code {
+  color: #021a10 !important;
+  font-weight: 800;
+}
+
+.currency-toggle-btn:focus-visible {
+  outline: 2px solid #34d399;
+  outline-offset: 2px;
+}
+
+.currency-footer-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.7rem;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-muted);
+  padding: 0 2px;
+}
+
+.currency-mode-tag {
+  color: var(--emerald-light);
+  font-weight: 600;
+}
+
 .input-group {
   display: flex;
   flex-direction: column;
@@ -1082,4 +1218,105 @@ body {
   .navbar { flex-wrap: wrap; gap: 12px; }
   .nav-actions { flex-wrap: wrap; gap: 8px; }
   .balance-badge { display: inline-flex; align-items: center; flex-wrap: wrap; padding: 6px 10px; }
+}
+
+/* ==========================================================
+   Transaction Ledger
+   ========================================================== */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.ledger-section { margin-top: 0; }
+
+.ledger-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.ledger-field { display: flex; flex-direction: column; gap: 6px; min-width: 160px; }
+.ledger-field.ledger-search { flex: 1 1 240px; }
+
+.ledger-field label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+
+.ledger-field .num-input { padding-left: 12px; color-scheme: dark; }
+.ledger-controls .reset-btn { padding: 10px 14px; }
+
+.ledger-pills { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+
+.ledger-pill {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  color: #e5e7eb;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ledger-pill:hover { border-color: rgba(16, 185, 129, 0.4); color: var(--emerald-light); }
+
+.ledger-pill[aria-pressed="true"] {
+  background: rgba(16, 185, 129, 0.16);
+  border-color: var(--emerald);
+  color: var(--emerald-light);
+}
+
+.ledger-pill:focus-visible,
+.ledger-sort:focus-visible,
+.ledger-controls .reset-btn:focus-visible {
+  outline: 2px solid var(--emerald-light);
+  outline-offset: 2px;
+}
+
+.ledger-status { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 12px; }
+.ledger-error { color: #fca5a5; font-size: 0.88rem; font-weight: 600; margin-bottom: 12px; }
+.ledger-empty { color: var(--text-muted); text-align: center; padding: 28px 12px; border-top: 1px solid var(--border); }
+
+.ledger-sort {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+}
+
+.ledger-sort:hover { color: var(--emerald-light); }
+.ledger-table-wrap table { min-width: 560px; }
+.ledger-amount { text-align: right; font-weight: 700; white-space: nowrap; }
+.ledger-in { color: var(--emerald-light); }
+.ledger-out { color: #fff; }
+
+.ledger-badge {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+@media (max-width: 520px) {
+  .ledger-field { min-width: 0; flex: 1 1 140px; }
 }

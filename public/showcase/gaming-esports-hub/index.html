@@ -149,6 +149,23 @@
   </section>
   <!-- ===== Fantasy Esports Roster Builder (Issue #102) END ===== -->
 
+  <!-- ===== Tournament Bracket (Issue #71) START ===== -->
+  <section class="bracket" id="tournament-bracket" aria-labelledby="bracket-title">
+    <h2 id="bracket-title">TOURNAMENT BRACKET</h2>
+    <p class="bracket-intro">Select any match to see each player's kills, deaths, assists and KDA. Teams and stats are made-up demo data.</p>
+    <div class="bracket-rounds" id="bracket-rounds"></div>
+    <p class="bracket-champion">Champion: <strong id="br-champion"></strong></p>
+    <dialog class="br-modal" id="br-modal" aria-labelledby="br-modal-title">
+      <div class="br-modal-head">
+        <h3 id="br-modal-title">Match stats</h3>
+        <button type="button" class="br-close" aria-label="Close match stats">&times;</button>
+      </div>
+      <div id="br-modal-body"></div>
+      <p class="br-modal-note">KDA = (kills + assists) / deaths.</p>
+    </dialog>
+  </section>
+  <!-- ===== Tournament Bracket (Issue #71) END ===== -->
+
   <main class="matches" id="tournament-matches" aria-labelledby="matches-title">
     <div class="matches-header">
       <div class="matches-tag">// CHAMPIONSHIP FIXTURES</div>
@@ -477,5 +494,6 @@
   <div id="fr-toast-container" class="fr-toast-container" aria-live="polite"></div>
 
   <script src="script.js"></script>
+  <script src="bracket.js"></script>
 </body>
 </html>
