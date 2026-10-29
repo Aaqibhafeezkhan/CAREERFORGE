@@ -169,9 +169,10 @@
 
         <div class="match-teams-row">
           <div class="team-side team-left">
-            <div class="team-avatar team-cyber" aria-hidden="true">⚡</div>
+            <div class="team-avatar team-cyber" aria-hidden="true" title="Team Cyber — Hover to inspect">⚡</div>
             <div class="team-meta">
               <span class="team-name">TEAM CYBER</span>
+              <span class="winloss-chip win-elite" title="Win/Loss Record: 14 Wins, 2 Losses (87.5% Win Rate)">14W - 2L | 88%</span>
               <span class="team-seed">Seed #1 • Cyber District</span>
             </div>
           </div>
@@ -189,9 +190,10 @@
           <div class="team-side team-right">
             <div class="team-meta text-right">
               <span class="team-name">PHANTOM SQUAD</span>
+              <span class="winloss-chip win-high" title="Win/Loss Record: 11 Wins, 4 Losses (73.3% Win Rate)">11W - 4L | 73%</span>
               <span class="team-seed">Seed #3 • Shadow Realm</span>
             </div>
-            <div class="team-avatar team-phantom" aria-hidden="true">👻</div>
+            <div class="team-avatar team-phantom" aria-hidden="true" title="Phantom Squad — Hover to inspect">👻</div>
           </div>
         </div>
 
@@ -218,9 +220,10 @@
 
         <div class="match-teams-row">
           <div class="team-side team-left">
-            <div class="team-avatar team-neon" aria-hidden="true">💠</div>
+            <div class="team-avatar team-neon" aria-hidden="true" title="Neon Riders — Hover to inspect">💠</div>
             <div class="team-meta">
               <span class="team-name">NEON RIDERS</span>
+              <span class="winloss-chip win-elite" title="Win/Loss Record: 13 Wins, 3 Losses (81.3% Win Rate)">13W - 3L | 81%</span>
               <span class="team-seed">Seed #2 • Neo Tokyo</span>
             </div>
           </div>
@@ -233,9 +236,10 @@
           <div class="team-side team-right">
             <div class="team-meta text-right">
               <span class="team-name">APEX TITANS</span>
+              <span class="winloss-chip win-mid" title="Win/Loss Record: 10 Wins, 6 Losses (62.5% Win Rate)">10W - 6L | 63%</span>
               <span class="team-seed">Seed #4 • Olympus Sector</span>
             </div>
-            <div class="team-avatar team-apex" aria-hidden="true">🔱</div>
+            <div class="team-avatar team-apex" aria-hidden="true" title="Apex Titans — Hover to inspect">🔱</div>
           </div>
         </div>
 
@@ -262,9 +266,10 @@
 
         <div class="match-teams-row">
           <div class="team-side team-left">
-            <div class="team-avatar team-vortex" aria-hidden="true">🌀</div>
+            <div class="team-avatar team-vortex" aria-hidden="true" title="Vortex Prime — Hover to inspect">🌀</div>
             <div class="team-meta">
               <span class="team-name">VORTEX PRIME</span>
+              <span class="winloss-chip win-mid" title="Win/Loss Record: 8 Wins, 7 Losses (53.3% Win Rate)">8W - 7L | 53%</span>
               <span class="team-seed">Seed #5 • Core Citadel</span>
             </div>
           </div>
@@ -277,9 +282,10 @@
           <div class="team-side team-right">
             <div class="team-meta text-right">
               <span class="team-name">PHANTOM SQUAD</span>
+              <span class="winloss-chip win-high" title="Win/Loss Record: 11 Wins, 4 Losses (73.3% Win Rate)">11W - 4L | 73%</span>
               <span class="team-seed">Seed #3 • Shadow Realm</span>
             </div>
-            <div class="team-avatar team-phantom" aria-hidden="true">👻</div>
+            <div class="team-avatar team-phantom" aria-hidden="true" title="Phantom Squad — Hover to inspect">👻</div>
           </div>
         </div>
 
@@ -306,9 +312,10 @@
 
         <div class="match-teams-row">
           <div class="team-side team-left">
-            <div class="team-avatar team-apex" aria-hidden="true">🔱</div>
+            <div class="team-avatar team-apex" aria-hidden="true" title="Apex Titans — Hover to inspect">🔱</div>
             <div class="team-meta">
               <span class="team-name">APEX TITANS</span>
+              <span class="winloss-chip win-mid" title="Win/Loss Record: 10 Wins, 6 Losses (62.5% Win Rate)">10W - 6L | 63%</span>
               <span class="team-seed">Seed #4 • Olympus Sector</span>
             </div>
           </div>
@@ -321,9 +328,10 @@
           <div class="team-side team-right">
             <div class="team-meta text-right">
               <span class="team-name">NEON RIDERS</span>
+              <span class="winloss-chip win-elite" title="Win/Loss Record: 13 Wins, 3 Losses (81.3% Win Rate)">13W - 3L | 81%</span>
               <span class="team-seed">Seed #2 • Neo Tokyo</span>
             </div>
-            <div class="team-avatar team-neon" aria-hidden="true">💠</div>
+            <div class="team-avatar team-neon" aria-hidden="true" title="Neon Riders — Hover to inspect">💠</div>
           </div>
         </div>
 
@@ -337,6 +345,89 @@
           </button>
         </div>
       </article>
+    </div>
+
+    <!-- ===== Team Standings & Win/Loss Summary Cards (Issue #32) ===== -->
+    <div class="team-standings-container" aria-label="Official Team Standings & Records">
+      <div class="standings-header">
+        <div class="standings-title-col">
+          <span class="standings-badge">POWER RANKINGS</span>
+          <h3 class="standings-title">SEASON 4 PRO TEAM RECORDS</h3>
+        </div>
+        <span class="standings-note">Win/Loss ratios calculated across all championship brackets</span>
+      </div>
+
+      <div class="team-summary-grid">
+        <!-- Team 1: Team Cyber -->
+        <div class="team-summary-card rank-1" role="region" aria-label="Team Cyber Standings">
+          <div class="tsc-rank">#1</div>
+          <div class="team-avatar team-cyber" aria-hidden="true" title="Team Cyber">⚡</div>
+          <div class="tsc-info">
+            <div class="tsc-name-row">
+              <span class="tsc-name">TEAM CYBER</span>
+              <span class="tsc-streak streak-w">W5</span>
+            </div>
+            <span class="winloss-chip win-elite">14W - 2L | 88%</span>
+            <span class="tsc-diff">+112 RD • 87.5% WR</span>
+          </div>
+        </div>
+
+        <!-- Team 2: Neon Riders -->
+        <div class="team-summary-card rank-2" role="region" aria-label="Neon Riders Standings">
+          <div class="tsc-rank">#2</div>
+          <div class="team-avatar team-neon" aria-hidden="true" title="Neon Riders">💠</div>
+          <div class="tsc-info">
+            <div class="tsc-name-row">
+              <span class="tsc-name">NEON RIDERS</span>
+              <span class="tsc-streak streak-w">W3</span>
+            </div>
+            <span class="winloss-chip win-elite">13W - 3L | 81%</span>
+            <span class="tsc-diff">+89 RD • 81.3% WR</span>
+          </div>
+        </div>
+
+        <!-- Team 3: Phantom Squad -->
+        <div class="team-summary-card rank-3" role="region" aria-label="Phantom Squad Standings">
+          <div class="tsc-rank">#3</div>
+          <div class="team-avatar team-phantom" aria-hidden="true" title="Phantom Squad">👻</div>
+          <div class="tsc-info">
+            <div class="tsc-name-row">
+              <span class="tsc-name">PHANTOM SQUAD</span>
+              <span class="tsc-streak streak-w">W2</span>
+            </div>
+            <span class="winloss-chip win-high">11W - 4L | 73%</span>
+            <span class="tsc-diff">+64 RD • 73.3% WR</span>
+          </div>
+        </div>
+
+        <!-- Team 4: Apex Titans -->
+        <div class="team-summary-card rank-4" role="region" aria-label="Apex Titans Standings">
+          <div class="tsc-rank">#4</div>
+          <div class="team-avatar team-apex" aria-hidden="true" title="Apex Titans">🔱</div>
+          <div class="tsc-info">
+            <div class="tsc-name-row">
+              <span class="tsc-name">APEX TITANS</span>
+              <span class="tsc-streak streak-l">L1</span>
+            </div>
+            <span class="winloss-chip win-mid">10W - 6L | 63%</span>
+            <span class="tsc-diff">+32 RD • 62.5% WR</span>
+          </div>
+        </div>
+
+        <!-- Team 5: Vortex Prime -->
+        <div class="team-summary-card rank-5" role="region" aria-label="Vortex Prime Standings">
+          <div class="tsc-rank">#5</div>
+          <div class="team-avatar team-vortex" aria-hidden="true" title="Vortex Prime">🌀</div>
+          <div class="tsc-info">
+            <div class="tsc-name-row">
+              <span class="tsc-name">VORTEX PRIME</span>
+              <span class="tsc-streak streak-w">W1</span>
+            </div>
+            <span class="winloss-chip win-mid">8W - 7L | 53%</span>
+            <span class="tsc-diff">+14 RD • 53.3% WR</span>
+          </div>
+        </div>
+      </div>
     </div>
   </main>
 
