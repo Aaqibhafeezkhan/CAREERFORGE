@@ -458,3 +458,79 @@ document.addEventListener("DOMContentLoaded", () => {
     ).textContent = "Your estimated daily targets are ready.";
   });
 });
+
+//Hydration Tracker
+document.addEventListener("DOMContentLoaded", () => {
+  const waterCount = document.getElementById("water-count");
+  const waterProgress = document.getElementById("water-progress");
+  const progressTrack = document.getElementById("water-progress-track");
+  const waterStatus = document.getElementById("water-status");
+  const waterMessage = document.getElementById("water-message");
+  const decreaseButton = document.getElementById("water-decrease");
+  const increaseButton = document.getElementById("water-increase");
+  const glasses = document.querySelectorAll(".water-glass");
+
+  // Stop safely if the tracker is not present on the page.
+  if (
+    !waterCount ||
+    !waterProgress ||
+    !progressTrack ||
+    !waterStatus ||
+    !waterMessage ||
+    !decreaseButton ||
+    !increaseButton ||
+    glasses.length === 0
+  ) {
+    return;
+  }
+
+  const DAILY_GOAL = glasses.length;
+  let count = 0;
+
+  function updateWaterTracker() {
+    const percentage = (count / DAILY_GOAL) * 100;
+
+    waterCount.textContent = count;
+    waterProgress.style.width = `${percentage}%`;
+
+    progressTrack.setAttribute("aria-valuenow", count);
+
+    decreaseButton.disabled = count === 0;
+    increaseButton.disabled = count === DAILY_GOAL;
+
+    glasses.forEach((glass, index) => {
+      glass.classList.toggle("filled", index < count);
+    });
+
+    if (count === 0) {
+      waterStatus.textContent = "Let's get started!";
+      waterMessage.textContent = "Every glass counts. 💚";
+    } else if (count === DAILY_GOAL) {
+      waterStatus.textContent = "Daily goal reached! 🎉";
+      waterMessage.textContent =
+        "Great job! You've reached your daily glass goal.";
+    } else {
+      waterStatus.textContent = `${Math.round(percentage)}% completed`;
+      waterMessage.textContent =
+        `${DAILY_GOAL - count} more ${
+          DAILY_GOAL - count === 1 ? "glass" : "glasses"
+        } to reach your goal.`;
+    }
+  }
+
+  increaseButton.addEventListener("click", () => {
+    if (count < DAILY_GOAL) {
+      count++;
+      updateWaterTracker();
+    }
+  });
+
+  decreaseButton.addEventListener("click", () => {
+    if (count > 0) {
+      count--;
+      updateWaterTracker();
+    }
+  });
+
+  updateWaterTracker();
+});
