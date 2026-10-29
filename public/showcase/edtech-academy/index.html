@@ -215,9 +215,41 @@
     </div>
   </section>
 
+  <section class="flashcards" id="flashcards" aria-labelledby="fcTitle">
+    <h2 id="fcTitle">CODING FLASHCARDS</h2>
+    <p class="fc-lead">Spaced repetition: cards you miss come back sooner, cards you know come back later. Progress is saved in this browser only.</p>
+    <p class="fc-stats" id="fcStats"></p>
+
+    <div class="fc-study" id="fcStudy">
+      <div class="fc-meta"><span id="fcTopic"></span><span id="fcBox"></span></div>
+      <div class="fc-card" id="fcCard">
+        <div class="fc-face fc-front" id="fcFront"><span class="fc-label">Question</span><p id="fcQ"></p></div>
+        <div class="fc-face fc-back" id="fcBack" aria-hidden="true"><span class="fc-label">Answer</span><p id="fcA"></p></div>
+      </div>
+      <p class="fc-counter" id="fcCounter"></p>
+      <button type="button" class="btn-secondary fc-flip" id="fcFlip" aria-pressed="false">Show answer</button>
+      <div class="fc-rate" id="fcRate" role="group" aria-label="How well did you know it?" hidden>
+        <button type="button" class="fc-btn fc-again" id="fcRate-again">Again <kbd>1</kbd></button>
+        <button type="button" class="fc-btn fc-good" id="fcRate-good">Good <kbd>2</kbd></button>
+        <button type="button" class="fc-btn fc-easy" id="fcRate-easy">Easy <kbd>3</kbd></button>
+      </div>
+      <p class="quiz-hint">Tip: after showing the answer, press 1, 2 or 3 to rate it.</p>
+    </div>
+
+    <div class="fc-done" id="fcDone" hidden>
+      <h3>Session complete</h3>
+      <p id="fcDoneText"></p>
+      <button type="button" class="btn-secondary" id="fcRestart">Check for due cards</button>
+    </div>
+
+    <button type="button" class="fc-reset" id="fcReset">Reset progress</button>
+    <div class="fc-sr" id="fcLive" role="status" aria-live="polite"></div>
+  </section>
+
   <!-- Notification Toast Container -->
   <div class="edtech-toast-container" id="edtechToastContainer" aria-live="polite"></div>
 
   <script src="script.js"></script>
+  <script src="flashcards.js"></script>
 </body>
 </html>
