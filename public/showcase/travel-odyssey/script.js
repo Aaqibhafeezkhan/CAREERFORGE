@@ -328,6 +328,7 @@ function resetDefaults() {
 
 document.addEventListener('DOMContentLoaded', () => {
   initDestinationFilters();
+  initFlightCalculator();
   initExpeditionTimeline();
 
   // Initialize ring circle stroke properties.
@@ -458,6 +459,148 @@ function initDestinationFilters() {
   buttons.forEach(button => {
     button.addEventListener('click', () => selectRegion(button));
   });
+}
+
+
+/* =========================================================
+   FLIGHT DURATION & TIME-ZONE CALCULATOR — Issue #210
+   ========================================================= */
+
+// Approximate flight durations in minutes, not live schedules.
+// Kyoto routes use Osaka Kansai (KIX) as the arrival-area reference.
+const FLIGHT_ROUTES = {
+  JFK: {
+    reykjavik: 345,
+    kyoto: 870
+  },
+  LHR: {
+    reykjavik: 190,
+    kyoto: 830
+  },
+  DEL: {
+    reykjavik: 630,
+    kyoto: 480
+  }
+};
+
+const AIRPORT_TIME_ZONES = {
+  JFK: 'America/New_York',
+  LHR: 'Europe/London',
+  DEL: 'Asia/Kolkata'
+};
+
+const DESTINATION_TIME_ZONES = {
+  reykjavik: 'Atlantic/Reykjavik',
+  kyoto: 'Asia/Tokyo'
+};
+
+function getTimeZoneOffsetMinutes(timeZone, date = new Date()) {
+  const parts = new Intl.DateTimeFormat('en-GB', {
+    timeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hourCycle: 'h23'
+  }).formatToParts(date);
+
+  const values = {};
+
+  parts.forEach(part => {
+    if (part.type !== 'literal') {
+      values[part.type] = Number(part.value);
+    }
+  });
+
+  const localTimeAsUtc = Date.UTC(
+    values.year,
+    values.month - 1,
+    values.day,
+    values.hour,
+    values.minute
+  );
+
+  const roundedTimestamp = Math.floor(date.getTime() / 60000) * 60000;
+
+  return (localTimeAsUtc - roundedTimestamp) / 60000;
+}
+
+function formatFlightDuration(minutes) {
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+
+  return remainingMinutes
+    ? `${hours}h ${remainingMinutes}m`
+    : `${hours}h`;
+}
+
+function formatTimeDifference(minutes) {
+  if (minutes === 0) return 'Same time';
+
+  const sign = minutes > 0 ? '+' : '−';
+  const absoluteMinutes = Math.abs(minutes);
+  const hours = Math.floor(absoluteMinutes / 60);
+  const remainingMinutes = absoluteMinutes % 60;
+
+  const duration = remainingMinutes
+    ? `${hours}h ${remainingMinutes}m`
+    : `${hours}h`;
+
+  return `${sign}${duration}`;
+}
+
+function initFlightCalculator() {
+  const airportSelect = document.getElementById('departure-airport');
+  const destinations = document.querySelector('.destinations');
+
+  if (!airportSelect || !destinations) return;
+
+  const cards = destinations.querySelectorAll('.card[data-destination]');
+
+  function updateFlightBadges() {
+    const airport = airportSelect.value;
+    const departureTimeZone = AIRPORT_TIME_ZONES[airport];
+    const now = new Date();
+
+    cards.forEach(card => {
+      const destination = card.dataset.destination;
+      const durationBadge = card.querySelector('[data-flight-duration]');
+      const differenceBadge = card.querySelector('[data-time-difference]');
+
+      const duration = FLIGHT_ROUTES[airport]?.[destination];
+      const destinationTimeZone = DESTINATION_TIME_ZONES[destination];
+
+      if (
+        !departureTimeZone ||
+        !destinationTimeZone ||
+        !Number.isFinite(duration)
+      ) {
+        if (durationBadge) durationBadge.textContent = '✈️ Duration unavailable';
+        if (differenceBadge) differenceBadge.textContent = '🌐 Difference unavailable';
+        return;
+      }
+
+      const difference =
+        getTimeZoneOffsetMinutes(destinationTimeZone, now) -
+        getTimeZoneOffsetMinutes(departureTimeZone, now);
+
+      if (durationBadge) {
+        durationBadge.textContent =
+          `✈️ ${formatFlightDuration(duration)} from ${airport}`;
+        durationBadge.title = 'Estimated flight duration; not a live flight schedule.';
+      }
+
+      if (differenceBadge) {
+        differenceBadge.textContent = `🌐 ${formatTimeDifference(difference)}`;
+        differenceBadge.title =
+          `${difference === 0 ? 'No time difference' : `${formatTimeDifference(difference)} at the destination`} compared with ${airport}, using current time-zone offsets.`;
+      }
+    });
+  }
+
+  airportSelect.addEventListener('change', updateFlightBadges);
+  updateFlightBadges();
 }
 
 /* =========================================================
