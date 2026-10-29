@@ -149,21 +149,194 @@
   </section>
   <!-- ===== Fantasy Esports Roster Builder (Issue #102) END ===== -->
 
-  <main class="matches">
-    <h2>UPCOMING MATCHES</h2>
-    <div class="grid">
-      <div class="match-card">
-        <div class="team">TEAM CYBER</div>
-        <div class="vs">VS</div>
-        <div class="team">PHANTOM SQUAD</div>
-        <div class="time">18:00 UTC</div>
-      </div>
-      <div class="match-card">
-        <div class="team">NEON RIDERS</div>
-        <div class="vs">VS</div>
-        <div class="team">APEX TITANS</div>
-        <div class="time">21:00 UTC</div>
-      </div>
+  <main class="matches" id="tournament-matches" aria-labelledby="matches-title">
+    <div class="matches-header">
+      <div class="matches-tag">// CHAMPIONSHIP FIXTURES</div>
+      <h2 id="matches-title">TOURNAMENT MATCHUPS</h2>
+      <p class="matches-desc">Real-time schedule, live stage status, and upcoming fixtures for Vortex Global Season 4</p>
+    </div>
+
+    <div class="matches-grid">
+      <!-- Match Card 1: LIVE NOW -->
+      <article class="match-card is-live" aria-label="Live Match: Team Cyber vs Phantom Squad">
+        <div class="match-card-top">
+          <span class="match-tier-pill">GRAND FINALS • BO5</span>
+          <span class="badge-status badge-live" aria-label="Status: Live Now">
+            <span class="pulse-dot" aria-hidden="true"></span>
+            LIVE NOW
+          </span>
+        </div>
+
+        <div class="match-teams-row">
+          <div class="team-side team-left">
+            <div class="team-avatar team-cyber" aria-hidden="true">⚡</div>
+            <div class="team-meta">
+              <span class="team-name">TEAM CYBER</span>
+              <span class="team-seed">Seed #1 • Cyber District</span>
+            </div>
+          </div>
+
+          <div class="match-center-intel">
+            <span class="vs-badge">VS</span>
+            <div class="live-score-pill" aria-label="Score: 2 to 1">
+              <span class="score-num leader">2</span>
+              <span class="score-divider">:</span>
+              <span class="score-num">1</span>
+            </div>
+            <span class="live-map-tag">MAP 3: ASCENT</span>
+          </div>
+
+          <div class="team-side team-right">
+            <div class="team-meta text-right">
+              <span class="team-name">PHANTOM SQUAD</span>
+              <span class="team-seed">Seed #3 • Shadow Realm</span>
+            </div>
+            <div class="team-avatar team-phantom" aria-hidden="true">👻</div>
+          </div>
+        </div>
+
+        <div class="match-card-footer">
+          <div class="match-time-info">
+            <span class="time-label">LIVE BROADCAST</span>
+            <span class="time-val live-time">🔴 STAGE A • IN PROGRESS (ROUND 25)</span>
+          </div>
+          <button type="button" class="btn-match-action btn-watch-live" onclick="watchStream()" aria-label="Watch live stream for Team Cyber vs Phantom Squad">
+            ▶ Watch Stream
+          </button>
+        </div>
+      </article>
+
+      <!-- Match Card 2: UPCOMING TODAY -->
+      <article class="match-card is-upcoming" aria-label="Upcoming Match: Neon Riders vs Apex Titans">
+        <div class="match-card-top">
+          <span class="match-tier-pill">UPPER BRACKET FINAL • BO3</span>
+          <span class="badge-status badge-upcoming" aria-label="Status: Upcoming">
+            <span class="clock-icon" aria-hidden="true">⏱</span>
+            UPCOMING
+          </span>
+        </div>
+
+        <div class="match-teams-row">
+          <div class="team-side team-left">
+            <div class="team-avatar team-neon" aria-hidden="true">💠</div>
+            <div class="team-meta">
+              <span class="team-name">NEON RIDERS</span>
+              <span class="team-seed">Seed #2 • Neo Tokyo</span>
+            </div>
+          </div>
+
+          <div class="match-center-intel">
+            <span class="vs-badge">VS</span>
+            <span class="match-format-chip">BEST OF 3</span>
+          </div>
+
+          <div class="team-side team-right">
+            <div class="team-meta text-right">
+              <span class="team-name">APEX TITANS</span>
+              <span class="team-seed">Seed #4 • Olympus Sector</span>
+            </div>
+            <div class="team-avatar team-apex" aria-hidden="true">🔱</div>
+          </div>
+        </div>
+
+        <div class="match-card-footer">
+          <div class="match-time-info">
+            <span class="time-label">SCHEDULED START</span>
+            <span class="time-val"><span class="sched-date">TODAY, OCT 29</span> • <strong class="sched-utc">21:00 UTC</strong> (IN ~2H)</span>
+          </div>
+          <button type="button" class="btn-match-action btn-notify" onclick="alert('Notification set for Neon Riders vs Apex Titans!')" aria-label="Set reminder for Neon Riders vs Apex Titans">
+            🔔 Remind Me
+          </button>
+        </div>
+      </article>
+
+      <!-- Match Card 3: UPCOMING TOMORROW -->
+      <article class="match-card is-upcoming" aria-label="Upcoming Match: Vortex Prime vs Phantom Squad">
+        <div class="match-card-top">
+          <span class="match-tier-pill">LOWER BRACKET SEMIS • BO3</span>
+          <span class="badge-status badge-upcoming" aria-label="Status: Upcoming">
+            <span class="clock-icon" aria-hidden="true">⏱</span>
+            UPCOMING
+          </span>
+        </div>
+
+        <div class="match-teams-row">
+          <div class="team-side team-left">
+            <div class="team-avatar team-vortex" aria-hidden="true">🌀</div>
+            <div class="team-meta">
+              <span class="team-name">VORTEX PRIME</span>
+              <span class="team-seed">Seed #5 • Core Citadel</span>
+            </div>
+          </div>
+
+          <div class="match-center-intel">
+            <span class="vs-badge">VS</span>
+            <span class="match-format-chip">BEST OF 3</span>
+          </div>
+
+          <div class="team-side team-right">
+            <div class="team-meta text-right">
+              <span class="team-name">PHANTOM SQUAD</span>
+              <span class="team-seed">Seed #3 • Shadow Realm</span>
+            </div>
+            <div class="team-avatar team-phantom" aria-hidden="true">👻</div>
+          </div>
+        </div>
+
+        <div class="match-card-footer">
+          <div class="match-time-info">
+            <span class="time-label">SCHEDULED START</span>
+            <span class="time-val"><span class="sched-date">TOMORROW, OCT 30</span> • <strong class="sched-utc">17:30 UTC</strong></span>
+          </div>
+          <button type="button" class="btn-match-action btn-notify" onclick="alert('Notification set for Vortex Prime vs Phantom Squad!')" aria-label="Set reminder for Vortex Prime vs Phantom Squad">
+            🔔 Remind Me
+          </button>
+        </div>
+      </article>
+
+      <!-- Match Card 4: UPCOMING FINALS -->
+      <article class="match-card is-upcoming" aria-label="Upcoming Match: Apex Titans vs Neon Riders">
+        <div class="match-card-top">
+          <span class="match-tier-pill">CONSOLATION FINAL • BO3</span>
+          <span class="badge-status badge-upcoming" aria-label="Status: Upcoming">
+            <span class="clock-icon" aria-hidden="true">⏱</span>
+            UPCOMING
+          </span>
+        </div>
+
+        <div class="match-teams-row">
+          <div class="team-side team-left">
+            <div class="team-avatar team-apex" aria-hidden="true">🔱</div>
+            <div class="team-meta">
+              <span class="team-name">APEX TITANS</span>
+              <span class="team-seed">Seed #4 • Olympus Sector</span>
+            </div>
+          </div>
+
+          <div class="match-center-intel">
+            <span class="vs-badge">VS</span>
+            <span class="match-format-chip">BEST OF 3</span>
+          </div>
+
+          <div class="team-side team-right">
+            <div class="team-meta text-right">
+              <span class="team-name">NEON RIDERS</span>
+              <span class="team-seed">Seed #2 • Neo Tokyo</span>
+            </div>
+            <div class="team-avatar team-neon" aria-hidden="true">💠</div>
+          </div>
+        </div>
+
+        <div class="match-card-footer">
+          <div class="match-time-info">
+            <span class="time-label">SCHEDULED START</span>
+            <span class="time-val"><span class="sched-date">OCT 31, 2026</span> • <strong class="sched-utc">19:00 UTC</strong></span>
+          </div>
+          <button type="button" class="btn-match-action btn-notify" onclick="alert('Notification set for Apex Titans vs Neon Riders!')" aria-label="Set reminder for Apex Titans vs Neon Riders">
+            🔔 Remind Me
+          </button>
+        </div>
+      </article>
     </div>
   </main>
 
