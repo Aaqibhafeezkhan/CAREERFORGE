@@ -20,17 +20,137 @@
   <main class="courses">
     <h2>POPULAR LEARNING PATHS</h2>
     <div class="grid">
-      <div class="card">
+      <div class="card" data-course-progress="68">
         <div class="badge">ADVANCED</div>
         <h3>LLM Inference Architecture</h3>
         <p>12 Weeks • vLLM, TensorRT, and Quantization</p>
+        <div class="card-progress-wrap">
+          <div class="card-progress-meta">
+            <span class="card-progress-lbl">Cohort Completion</span>
+            <span class="card-progress-val">68%</span>
+          </div>
+          <div class="card-progress-track">
+            <div class="card-progress-fill" style="width: 0%;" data-target-width="68%"></div>
+          </div>
+        </div>
       </div>
-      <div class="card">
+      <div class="card" data-course-progress="42">
         <div class="badge">INTERMEDIATE</div>
         <h3>Rust Kernel &amp; eBPF Deep Dive</h3>
         <p>8 Weeks • Zero-copy Packet Filtering</p>
+        <div class="card-progress-wrap">
+          <div class="card-progress-meta">
+            <span class="card-progress-lbl">Cohort Completion</span>
+            <span class="card-progress-val">42%</span>
+          </div>
+          <div class="card-progress-track">
+            <div class="card-progress-fill" style="width: 0%;" data-target-width="42%"></div>
+          </div>
+        </div>
       </div>
     </div>
+
+    <!-- Featured Course Completion Milestones Section (Issue #26) -->
+    <section class="milestones-section" id="courseMilestones" aria-labelledby="milestoneHeading">
+      <div class="milestone-card">
+        <div class="milestone-header">
+          <div class="milestone-title-grp">
+            <span class="milestone-badge">COHORT PROGRESSION TRACKER</span>
+            <h2 id="milestoneHeading">LLM Inference Architecture — Course Completion</h2>
+            <p class="milestone-sub">Track active milestone completion, live coding labs, and graduation requirements in real time.</p>
+          </div>
+          <div class="milestone-percentage-box">
+            <span class="percentage-number" id="milestonePercent">0%</span>
+            <span class="percentage-label">Completed</span>
+          </div>
+        </div>
+
+        <!-- Animated Progress Bar Component -->
+        <div class="progress-bar-container" role="progressbar" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100" aria-labelledby="milestoneHeading">
+          <div class="progress-track" id="milestoneTrack">
+            <div class="progress-fill" id="milestoneProgressFill" style="width: 0%;" data-target="68">
+              <span class="progress-glow"></span>
+              <span class="progress-pin-head"></span>
+            </div>
+            <!-- Milestone Tick Nodes -->
+            <div class="milestone-ticks" aria-hidden="true">
+              <div class="tick-node completed" style="left: 0%;" data-percent="0">
+                <span class="tick-dot">✓</span>
+                <span class="tick-label">Start (0%)</span>
+              </div>
+              <div class="tick-node completed" style="left: 25%;" data-percent="25">
+                <span class="tick-dot">✓</span>
+                <span class="tick-label">Foundations (25%)</span>
+              </div>
+              <div class="tick-node completed" style="left: 50%;" data-percent="50">
+                <span class="tick-dot">✓</span>
+                <span class="tick-label">PagedAttention (50%)</span>
+              </div>
+              <div class="tick-node in-progress" style="left: 75%;" data-percent="75">
+                <span class="tick-dot">⚡</span>
+                <span class="tick-label">Multi-GPU (75%)</span>
+              </div>
+              <div class="tick-node locked" style="left: 100%;" data-percent="100">
+                <span class="tick-dot">🔒</span>
+                <span class="tick-label">Capstone (100%)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Milestones Grid & Metrics -->
+        <div class="milestones-details-grid">
+          <div class="milestone-stat-item">
+            <span class="stat-icon">📚</span>
+            <div>
+              <span class="stat-value" id="statLectures">11 of 16 Lectures</span>
+              <span class="stat-title">Lectures Attended</span>
+            </div>
+          </div>
+          <div class="milestone-stat-item">
+            <span class="stat-icon">💻</span>
+            <div>
+              <span class="stat-value" id="statLabs">6 of 8 Labs</span>
+              <span class="stat-title">CUDA Kernels Passed</span>
+            </div>
+          </div>
+          <div class="milestone-stat-item">
+            <span class="stat-icon">🎓</span>
+            <div>
+              <span class="stat-value">Top 12% Cohort</span>
+              <span class="stat-title">Peer Benchmark</span>
+            </div>
+          </div>
+          <div class="milestone-stat-item">
+            <span class="stat-icon">⏱️</span>
+            <div>
+              <span class="stat-value" id="statGraduation">2 Weeks Left</span>
+              <span class="stat-title">Estimated Graduation</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Milestone Checkpoints Simulation -->
+        <div class="milestone-controls">
+          <span class="controls-label">Simulate Milestones:</span>
+          <button type="button" class="milestone-btn" data-target="25">
+            Module 1 (25%)
+          </button>
+          <button type="button" class="milestone-btn" data-target="50">
+            Midway (50%)
+          </button>
+          <button type="button" class="milestone-btn active" data-target="68">
+            Active Pace (68%)
+          </button>
+          <button type="button" class="milestone-btn" data-target="100">
+            Graduation (100%)
+          </button>
+          <button type="button" class="milestone-btn ghost" id="btnReplayProgress">
+            ↺ Replay Animation
+          </button>
+        </div>
+      </div>
+    </section>
   </main>
 
   <!-- ===== Course Syllabus Accordion Section (Issue #65) START ===== -->

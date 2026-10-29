@@ -1002,3 +1002,175 @@ function showCertificate(name) {
     if (n >= 1 && n <= QUESTIONS[quizState.index].options.length) chooseOption(n - 1);
   });
 })();
+
+// ===============================================================
+// Course Completion Milestones & Animated Progress Bar (Issue #26)
+// ===============================================================
+(function initCourseProgressTracker() {
+  'use strict';
+
+  const progressSection = document.getElementById('courseMilestones');
+  const progressFill = document.getElementById('milestoneProgressFill');
+  const percentText = document.getElementById('milestonePercent');
+  const tickNodes = document.querySelectorAll('.milestone-ticks .tick-node');
+  const simulationBtns = document.querySelectorAll('.milestone-controls .milestone-btn[data-target]');
+  const replayBtn = document.getElementById('btnReplayProgress');
+  const statLectures = document.getElementById('statLectures');
+  const statLabs = document.getElementById('statLabs');
+  const statGraduation = document.getElementById('statGraduation');
+  const cardFills = document.querySelectorAll('.card-progress-fill');
+
+  if (!progressSection || !progressFill || !percentText) return;
+
+  let currentTarget = 68;
+  let hasAnimatedOnce = false;
+  let counterAnimationId = null;
+
+  function countUp(from, to, duration = 1200) {
+    if (counterAnimationId) cancelAnimationFrame(counterAnimationId);
+
+    const startTime = performance.now();
+    function step(now) {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // easeOutCubic
+      const ease = 1 - Math.pow(1 - progress, 3);
+      const val = Math.round(from + (to - from) * ease);
+      percentText.textContent = `${val}%`;
+
+      if (progress < 1) {
+        counterAnimationId = requestAnimationFrame(step);
+      } else {
+        percentText.textContent = `${to}%`;
+      }
+    }
+    counterAnimationId = requestAnimationFrame(step);
+  }
+
+  function updateMilestoneTicks(percent) {
+    tickNodes.forEach((node) => {
+      const nodePercent = parseInt(node.getAttribute('data-percent'), 10);
+      const dot = node.querySelector('.tick-dot');
+
+      node.classList.remove('completed', 'in-progress', 'locked');
+
+      if (nodePercent < percent) {
+        node.classList.add('completed');
+        if (dot) dot.textContent = '✓';
+      } else if (nodePercent === percent) {
+        node.classList.add('completed');
+        if (dot) dot.textContent = '✓';
+      } else if (nodePercent > percent && nodePercent <= percent + 25) {
+        node.classList.add('in-progress');
+        if (dot) dot.textContent = '⚡';
+      } else {
+        node.classList.add('locked');
+        if (dot) dot.textContent = '🔒';
+      }
+    });
+  }
+
+  function updateDynamicStats(percent) {
+    if (!statLectures || !statLabs || !statGraduation) return;
+
+    if (percent <= 25) {
+      statLectures.textContent = '4 of 16 Lectures';
+      statLabs.textContent = '2 of 8 Labs';
+      statGraduation.textContent = '8 Weeks Left';
+    } else if (percent <= 50) {
+      statLectures.textContent = '8 of 16 Lectures';
+      statLabs.textContent = '4 of 8 Labs';
+      statGraduation.textContent = '5 Weeks Left';
+    } else if (percent < 100) {
+      statLectures.textContent = '11 of 16 Lectures';
+      statLabs.textContent = '6 of 8 Labs';
+      statGraduation.textContent = '2 Weeks Left';
+    } else {
+      statLectures.textContent = '16 of 16 Lectures 🎉';
+      statLabs.textContent = '8 of 8 Labs Passed';
+      statGraduation.textContent = 'Graduated with Honors!';
+    }
+  }
+
+  function setProgress(targetVal, animate = true) {
+    currentTarget = targetVal;
+    const fromVal = parseInt(percentText.textContent, 10) || 0;
+
+    progressFill.style.width = `${targetVal}%`;
+
+    if (animate) {
+      countUp(fromVal, targetVal);
+    } else {
+      percentText.textContent = `${targetVal}%`;
+    }
+
+    updateMilestoneTicks(targetVal);
+    updateDynamicStats(targetVal);
+
+    // Update active simulation button
+    simulationBtns.forEach((btn) => {
+      const btnTarget = parseInt(btn.getAttribute('data-target'), 10);
+      btn.classList.toggle('active', btnTarget === targetVal);
+    });
+  }
+
+  function animateMiniCardProgress() {
+    cardFills.forEach((fill) => {
+      const targetWidth = fill.getAttribute('data-target-width') || '50%';
+      fill.style.width = targetWidth;
+    });
+  }
+
+  // Simulation controls
+  simulationBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const val = parseInt(btn.getAttribute('data-target'), 10);
+      if (!isNaN(val)) {
+        setProgress(val, true);
+      }
+    });
+  });
+
+  if (replayBtn) {
+    replayBtn.addEventListener('click', () => {
+      progressFill.style.transition = 'none';
+      progressFill.style.width = '0%';
+      percentText.textContent = '0%';
+
+      // Reset card fills
+      cardFills.forEach((fill) => {
+        fill.style.transition = 'none';
+        fill.style.width = '0%';
+      });
+
+      setTimeout(() => {
+        progressFill.style.transition = 'width 1.4s cubic-bezier(0.16, 1, 0.3, 1)';
+        cardFills.forEach((fill) => {
+          fill.style.transition = 'width 1.2s cubic-bezier(0.16, 1, 0.3, 1)';
+        });
+        setProgress(currentTarget, true);
+        animateMiniCardProgress();
+      }, 50);
+    });
+  }
+
+  // Scroll into view animation via IntersectionObserver
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && !hasAnimatedOnce) {
+          hasAnimatedOnce = true;
+          setTimeout(() => {
+            setProgress(68, true);
+            animateMiniCardProgress();
+          }, 150);
+        }
+      });
+    }, { threshold: 0.25 });
+
+    observer.observe(progressSection);
+  } else {
+    setProgress(68, true);
+    animateMiniCardProgress();
+  }
+})();
