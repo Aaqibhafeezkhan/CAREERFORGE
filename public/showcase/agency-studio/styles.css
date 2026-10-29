@@ -236,3 +236,10 @@ body {
   .project-card { transition: none; }
   .project-card:hover { transform: none; }
 }
+
+/* Keep keyboard focus visible across navigation and estimator controls. */
+:where(a[href], button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 3px solid #f5d0fe;
+  outline-offset: 4px;
+}
+.nav-links a:focus-visible, .cta-btn:focus-visible { border-radius: 4px; }

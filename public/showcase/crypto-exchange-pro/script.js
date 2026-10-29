@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   console.log('VortexDEX Exchange Pro engine ready');
   initMarket();
+  initQuickSwap();
 });
 
 /* ------------------------------------------------------------------
@@ -424,3 +425,308 @@ function initMarket() {
 
   setInterval(() => { if (!document.hidden) tickEngines(); }, 1000);
 }
+
+/* ===============================================================
+   Quick Swap Order Execution Panel (Issue #53)
+   =============================================================== */
+function initQuickSwap() {
+  const swapCard = document.getElementById('swapCard');
+  if (!swapCard) return;
+
+  const TOKEN_CONFIG = {
+    ETH: { name: 'Ethereum', priceUsd: 3840.50, decimals: 4, symbol: 'ETH' },
+    BTC: { name: 'Bitcoin', priceUsd: 94250.00, decimals: 5, symbol: 'BTC' },
+    SOL: { name: 'Solana', priceUsd: 214.80, decimals: 2, symbol: 'SOL' },
+    USDC: { name: 'USD Coin', priceUsd: 1.00, decimals: 2, symbol: 'USDC' },
+    USDT: { name: 'Tether USD', priceUsd: 1.00, decimals: 2, symbol: 'USDT' },
+    VORTEX: { name: 'Vortex Token', priceUsd: 8.45, decimals: 2, symbol: 'VORTEX' }
+  };
+
+  const wallet = {
+    ETH: 4.5000,
+    BTC: 0.25000,
+    SOL: 18.50,
+    USDC: 5000.00,
+    USDT: 2500.00,
+    VORTEX: 250.00
+  };
+
+  let payToken = 'ETH';
+  let receiveToken = 'USDC';
+  let slippage = 0.5; // percent
+  let gasSpeed = 'fast';
+
+  const GAS_FEES = {
+    standard: { gwei: '10 Gwei', usd: 0.95 },
+    fast: { gwei: '15 Gwei', usd: 1.42 },
+    instant: { gwei: '25 Gwei', usd: 2.35 }
+  };
+
+  // DOM elements
+  const payInput = document.getElementById('swapPayAmount');
+  const receiveInput = document.getElementById('swapReceiveAmount');
+  const paySelect = document.getElementById('payTokenSelect');
+  const receiveSelect = document.getElementById('receiveTokenSelect');
+  const payBalanceEl = document.getElementById('payBalance');
+  const receiveBalanceEl = document.getElementById('receiveBalance');
+  const payMaxBtn = document.getElementById('payMaxBtn');
+  const payFiatEl = document.getElementById('payFiatVal');
+  const receiveFiatEl = document.getElementById('receiveFiatVal');
+  const flipBtn = document.getElementById('swapFlipBtn');
+  const rateDisplay = document.getElementById('rateDisplay');
+  const minReceivedDisplay = document.getElementById('minReceivedDisplay');
+  const priceImpactDisplay = document.getElementById('priceImpactDisplay');
+  const gasFeeDisplay = document.getElementById('gasFeeDisplay');
+  const executeBtn = document.getElementById('executeSwapBtn');
+  const swapBtnText = document.getElementById('swapBtnText');
+  const slippagePills = document.querySelectorAll('.slip-btn');
+  const customSlipInput = document.getElementById('customSlipInput');
+  const currentSlipLabel = document.getElementById('currentSlippageLabel');
+  const slippageWarning = document.getElementById('slippageWarning');
+  const settingsBtn = document.getElementById('swapSettingsBtn');
+  const settingsPanel = document.getElementById('swapSettingsPanel');
+  const gasBtns = document.querySelectorAll('.gas-btn');
+  const swapForm = document.getElementById('swapForm');
+  const receiptCard = document.getElementById('swapReceiptCard');
+  const receiptDismissBtn = document.getElementById('receiptDismissBtn');
+
+  function formatUnits(amount, token) {
+    const dec = TOKEN_CONFIG[token] ? TOKEN_CONFIG[token].decimals : 4;
+    return Number(amount).toLocaleString('en-US', {
+      minimumFractionDigits: Math.min(2, dec),
+      maximumFractionDigits: dec
+    });
+  }
+
+  function formatUsd(amount) {
+    return '$' + Number(amount).toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  }
+
+  function updateBalances() {
+    if (payBalanceEl) payBalanceEl.textContent = formatUnits(wallet[payToken] || 0, payToken);
+    if (receiveBalanceEl) receiveBalanceEl.textContent = formatUnits(wallet[receiveToken] || 0, receiveToken);
+  }
+
+  function calculateSwap() {
+    const rawPay = parseFloat(payInput.value);
+    const payPrice = TOKEN_CONFIG[payToken].priceUsd;
+    const receivePrice = TOKEN_CONFIG[receiveToken].priceUsd;
+
+    // Exchange rate
+    const unitRate = payPrice / receivePrice;
+    if (rateDisplay) {
+      rateDisplay.textContent = `1 ${payToken} = ${formatUnits(unitRate, receiveToken)} ${receiveToken}`;
+    }
+
+    // Gas fee display
+    if (gasFeeDisplay) {
+      const g = GAS_FEES[gasSpeed] || GAS_FEES.fast;
+      gasFeeDisplay.textContent = `~${formatUsd(g.usd)} (${g.gwei})`;
+    }
+
+    if (isNaN(rawPay) || rawPay <= 0) {
+      receiveInput.value = '';
+      if (payFiatEl) payFiatEl.textContent = '≈ $0.00 USD';
+      if (receiveFiatEl) receiveFiatEl.textContent = '≈ $0.00 USD';
+      if (minReceivedDisplay) minReceivedDisplay.textContent = '--';
+      if (priceImpactDisplay) priceImpactDisplay.textContent = '< 0.01%';
+      executeBtn.disabled = true;
+      executeBtn.classList.remove('insufficient');
+      swapBtnText.textContent = 'Enter an amount';
+      return;
+    }
+
+    const payUsd = rawPay * payPrice;
+    const grossReceive = payUsd / receivePrice;
+
+    // Price impact curve
+    const impactPct = Math.min(2.5, (payUsd / 250000) * 100);
+    const netReceive = grossReceive * (1 - impactPct / 100);
+
+    const receiveDecimals = TOKEN_CONFIG[receiveToken].decimals;
+    receiveInput.value = netReceive.toFixed(receiveDecimals);
+
+    if (payFiatEl) payFiatEl.textContent = `≈ ${formatUsd(payUsd)} USD`;
+    if (receiveFiatEl) receiveFiatEl.textContent = `≈ ${formatUsd(netReceive * receivePrice)} USD`;
+
+    // Minimum received based on slippage
+    const minReceived = netReceive * (1 - slippage / 100);
+    if (minReceivedDisplay) {
+      minReceivedDisplay.textContent = `${formatUnits(minReceived, receiveToken)} ${receiveToken}`;
+    }
+
+    if (priceImpactDisplay) {
+      priceImpactDisplay.textContent = impactPct < 0.01 ? '< 0.01%' : `${impactPct.toFixed(2)}%`;
+      priceImpactDisplay.className = impactPct > 1.0 ? 'breakdown-val' : 'breakdown-val green';
+    }
+
+    // Balance check
+    const currentBalance = wallet[payToken] || 0;
+    if (rawPay > currentBalance) {
+      executeBtn.disabled = true;
+      executeBtn.classList.add('insufficient');
+      swapBtnText.textContent = `Insufficient ${payToken} balance`;
+    } else {
+      executeBtn.disabled = false;
+      executeBtn.classList.remove('insufficient');
+      swapBtnText.textContent = `Swap ${payToken} for ${receiveToken} ⚡`;
+    }
+  }
+
+  // Token Select Handlers
+  if (paySelect) {
+    paySelect.addEventListener('change', () => {
+      payToken = paySelect.value;
+      if (payToken === receiveToken) {
+        const otherTokens = Object.keys(TOKEN_CONFIG).filter(t => t !== payToken);
+        receiveToken = otherTokens[0] || 'USDC';
+        if (receiveSelect) receiveSelect.value = receiveToken;
+      }
+      updateBalances();
+      calculateSwap();
+    });
+  }
+
+  if (receiveSelect) {
+    receiveSelect.addEventListener('change', () => {
+      receiveToken = receiveSelect.value;
+      if (receiveToken === payToken) {
+        const otherTokens = Object.keys(TOKEN_CONFIG).filter(t => t !== receiveToken);
+        payToken = otherTokens[0] || 'ETH';
+        if (paySelect) paySelect.value = payToken;
+      }
+      updateBalances();
+      calculateSwap();
+    });
+  }
+
+  // Pay Input Handler
+  if (payInput) {
+    payInput.addEventListener('input', calculateSwap);
+  }
+
+  // Max Button Handler
+  if (payMaxBtn) {
+    payMaxBtn.addEventListener('click', () => {
+      const bal = wallet[payToken] || 0;
+      payInput.value = bal;
+      calculateSwap();
+    });
+  }
+
+  // Flip Button Handler
+  if (flipBtn) {
+    flipBtn.addEventListener('click', () => {
+      const tempToken = payToken;
+      payToken = receiveToken;
+      receiveToken = tempToken;
+
+      if (paySelect) paySelect.value = payToken;
+      if (receiveSelect) receiveSelect.value = receiveToken;
+
+      updateBalances();
+      calculateSwap();
+    });
+  }
+
+  // Slippage Pills Handler
+  slippagePills.forEach((pill) => {
+    pill.addEventListener('click', () => {
+      slippagePills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      if (customSlipInput) customSlipInput.value = '';
+      slippage = parseFloat(pill.dataset.slip);
+      if (currentSlipLabel) currentSlipLabel.textContent = `${slippage}%`;
+      if (slippageWarning) slippageWarning.hidden = (slippage <= 2.0);
+      calculateSwap();
+    });
+  });
+
+  // Custom Slippage Input
+  if (customSlipInput) {
+    customSlipInput.addEventListener('input', () => {
+      const val = parseFloat(customSlipInput.value);
+      if (!isNaN(val) && val > 0) {
+        slippagePills.forEach(p => p.classList.remove('active'));
+        slippage = val;
+        if (currentSlipLabel) currentSlipLabel.textContent = `${slippage}%`;
+        if (slippageWarning) slippageWarning.hidden = (slippage <= 2.0);
+        calculateSwap();
+      }
+    });
+  }
+
+  // Settings Panel Toggle
+  if (settingsBtn && settingsPanel) {
+    settingsBtn.addEventListener('click', () => {
+      settingsPanel.hidden = !settingsPanel.hidden;
+    });
+  }
+
+  // Gas Speed Buttons
+  gasBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      gasBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      gasSpeed = btn.dataset.speed;
+      calculateSwap();
+    });
+  });
+
+  // Execute Swap Action
+  if (executeBtn) {
+    executeBtn.addEventListener('click', () => {
+      const payAmt = parseFloat(payInput.value);
+      const recAmt = parseFloat(receiveInput.value);
+
+      if (isNaN(payAmt) || payAmt <= 0 || payAmt > (wallet[payToken] || 0)) return;
+
+      // Update mock balances
+      wallet[payToken] -= payAmt;
+      wallet[receiveToken] = (wallet[receiveToken] || 0) + recAmt;
+
+      // Generate random transaction hash
+      const randHex = Array.from({ length: 4 }, () => Math.random().toString(16).substring(2, 6)).join('');
+      const txHash = `0x7a${randHex}4e92`;
+
+      // Fill in receipt
+      const rcSwapped = document.getElementById('rcSwapped');
+      const rcReceived = document.getElementById('rcReceived');
+      const rcTxHash = document.getElementById('rcTxHash');
+      const rcGas = document.getElementById('rcGas');
+
+      if (rcSwapped) rcSwapped.textContent = `${payAmt} ${payToken}`;
+      if (rcReceived) rcReceived.textContent = `${recAmt} ${receiveToken}`;
+      if (rcTxHash) rcTxHash.textContent = txHash;
+      if (rcGas) rcGas.textContent = formatUsd(GAS_FEES[gasSpeed].usd);
+
+      // Show receipt card
+      if (swapForm) swapForm.hidden = true;
+      if (receiptCard) receiptCard.hidden = false;
+      updateBalances();
+    });
+  }
+
+  // Dismiss Receipt Action
+  if (receiptDismissBtn) {
+    receiptDismissBtn.addEventListener('click', () => {
+      if (receiptCard) receiptCard.hidden = true;
+      if (swapForm) swapForm.hidden = false;
+      if (payInput) payInput.value = '';
+      calculateSwap();
+    });
+  }
+
+  updateBalances();
+  calculateSwap();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initQuickSwap);
+} else {
+  initQuickSwap();
+}
+

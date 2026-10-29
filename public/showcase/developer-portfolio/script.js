@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   console.log('Developer Portfolio initialized');
   initTerminal();
+  initShortcuts();
 });
 
 // Virtual file system: objects are directories, strings are files.
@@ -210,4 +211,214 @@ function initTerminal() {
 
   line('Welcome to the DevCraft virtual shell. Type \'help\' to get started.');
   updatePrompt();
+
+  window.terminalApi = {
+    clear() {
+      commands.clear();
+    },
+    toggleTheme() {
+      const cur = term.getAttribute('data-theme') || 'dark';
+      const nxt = cur === 'dark' ? 'light' : 'dark';
+      term.setAttribute('data-theme', nxt);
+      line('theme toggled to ' + nxt + ' via shortcut');
+      return nxt;
+    },
+    focus() {
+      input.focus();
+    }
+  };
+}
+
+/* ===============================================================
+   Keyboard Shortcuts Cheat-Sheet Modal & Global Listeners (Issue #59)
+   =============================================================== */
+function initShortcuts() {
+  const modal = document.getElementById('shortcutsModal');
+  const overlay = document.getElementById('shortcutsOverlay');
+  const triggerBtn = document.getElementById('shortcutsBtn');
+  const closeBtn = document.getElementById('shortcutsClose');
+  const dismissBtn = document.getElementById('shortcutsDismiss');
+  const liveDisplay = document.getElementById('liveKeyDisplay');
+  const toastEl = document.getElementById('shortcutToast');
+
+  if (!modal || !overlay) return;
+
+  let toastTimer = null;
+
+  function showToast(message) {
+    if (!toastEl) return;
+    toastEl.textContent = message;
+    toastEl.hidden = false;
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+      toastEl.hidden = true;
+    }, 2400);
+  }
+
+  function openShortcutsModal() {
+    modal.hidden = false;
+    overlay.hidden = false;
+    if (dismissBtn) dismissBtn.focus();
+  }
+
+  function closeShortcutsModal() {
+    modal.hidden = true;
+    overlay.hidden = true;
+    if (triggerBtn) triggerBtn.focus();
+  }
+
+  function toggleShortcutsModal() {
+    if (modal.hidden) openShortcutsModal();
+    else closeShortcutsModal();
+  }
+
+  // Trigger button click
+  if (triggerBtn) triggerBtn.addEventListener('click', openShortcutsModal);
+  if (closeBtn) closeBtn.addEventListener('click', closeShortcutsModal);
+  if (dismissBtn) dismissBtn.addEventListener('click', closeShortcutsModal);
+  if (overlay) overlay.addEventListener('click', closeShortcutsModal);
+
+  // Shortcut Action Dispatcher
+  function executeAction(actionKey) {
+    switch (actionKey.toLowerCase()) {
+      case 't': {
+        if (window.terminalApi) {
+          const nextTheme = window.terminalApi.toggleTheme();
+          showToast(`[T] Switched to ${nextTheme.toUpperCase()} theme`);
+        }
+        break;
+      }
+      case 'c': {
+        if (window.terminalApi) {
+          window.terminalApi.clear();
+          showToast('[C] Terminal screen buffer cleared');
+        }
+        break;
+      }
+      case 'ctrl-l': {
+        if (window.terminalApi) {
+          window.terminalApi.clear();
+          showToast('[Ctrl+L] Terminal screen cleared');
+        }
+        break;
+      }
+      case 'h': {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        showToast('[H] Navigated to Home / Header');
+        break;
+      }
+      case 's': {
+        const skills = document.getElementById('skills');
+        if (skills) skills.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        showToast('[S] Navigated to Technical Skills');
+        break;
+      }
+      case 'p': {
+        const projects = document.querySelector('.projects');
+        if (projects) projects.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        showToast('[P] Navigated to Open Source Projects');
+        break;
+      }
+      case 'i': {
+        const term = document.getElementById('vterm');
+        const vInput = document.getElementById('vterm-input');
+        if (term) term.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (vInput) vInput.focus();
+        showToast('[I] Focused Interactive Terminal');
+        break;
+      }
+      case '?':
+      case '/': {
+        toggleShortcutsModal();
+        break;
+      }
+      default:
+        break;
+    }
+  }
+
+  // Bind "Test" buttons inside modal
+  const tryBtns = modal.querySelectorAll('.try-shortcut-btn');
+  tryBtns.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const key = btn.dataset.key;
+      if (key) executeAction(key);
+    });
+  });
+
+  // Global keydown listener
+  window.addEventListener('keydown', (e) => {
+    // Update live key detector badge
+    if (liveDisplay) {
+      const combo = (e.ctrlKey ? 'Ctrl+' : '') + (e.altKey ? 'Alt+' : '') + (e.shiftKey ? 'Shift+' : '') + e.key.toUpperCase();
+      liveDisplay.textContent = `Detected Key: ${combo} (${e.code})`;
+    }
+
+    // Flash matching kbd elements in modal
+    const kbds = modal.querySelectorAll('kbd');
+    kbds.forEach((k) => {
+      if (k.textContent.trim().toLowerCase() === e.key.toLowerCase()) {
+        k.classList.add('key-pressed');
+        setTimeout(() => k.classList.remove('key-pressed'), 300);
+      }
+    });
+
+    const isTyping = e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable);
+
+    // Escape always closes modal or blurs input
+    if (e.key === 'Escape') {
+      if (!modal.hidden) {
+        e.preventDefault();
+        closeShortcutsModal();
+        return;
+      }
+      if (isTyping) {
+        e.target.blur();
+        return;
+      }
+    }
+
+    // Ctrl+L inside input clears terminal
+    if (e.key.toLowerCase() === 'l' && (e.ctrlKey || e.metaKey)) {
+      e.preventDefault();
+      executeAction('ctrl-l');
+      return;
+    }
+
+    // Ctrl+K toggles cheat sheet
+    if (e.key.toLowerCase() === 'k' && (e.ctrlKey || e.metaKey)) {
+      e.preventDefault();
+      toggleShortcutsModal();
+      return;
+    }
+
+    // If currently typing in an input, do not trigger single letter shortcuts
+    if (isTyping) return;
+
+    // Single key global navigation & commands
+    const key = e.key.toLowerCase();
+    if (e.key === '?' || (e.key === '/' && e.shiftKey)) {
+      e.preventDefault();
+      toggleShortcutsModal();
+    } else if (key === 't') {
+      e.preventDefault();
+      executeAction('t');
+    } else if (key === 'c') {
+      e.preventDefault();
+      executeAction('c');
+    } else if (key === 'h') {
+      e.preventDefault();
+      executeAction('h');
+    } else if (key === 's') {
+      e.preventDefault();
+      executeAction('s');
+    } else if (key === 'p') {
+      e.preventDefault();
+      executeAction('p');
+    } else if (key === 'i') {
+      e.preventDefault();
+      executeAction('i');
+    }
+  });
 }
