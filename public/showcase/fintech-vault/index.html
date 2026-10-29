@@ -18,7 +18,9 @@
     </div>
     <div class="nav-actions">
       <a href="#compound-engine" class="nav-link">Growth Engine</a>
-      <span class="balance-badge">Portfolio: $128,450.00</span>
+      <span class="balance-badge">Portfolio: <span id="portfolio-balance">$128,450.00</span>
+        <button type="button" id="balance-visibility" aria-controls="portfolio-balance" aria-pressed="false" aria-label="Hide balance" title="Hide balance"><span aria-hidden="true">◉</span></button>
+      </span>
       <button class="btn-primary" onclick="triggerDeposit()">Deposit Funds</button>
     </div>
   </header>

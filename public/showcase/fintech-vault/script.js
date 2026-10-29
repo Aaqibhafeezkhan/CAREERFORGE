@@ -545,3 +545,22 @@ function confirmDeposit() {
     alert(`Deposit of $${amountInput ? amountInput.value : '5,000'} USDC confirmed to Apex Prime Liquidity Vault.`);
   }, 1200);
 }
+
+// Presentation-only balance masking for this demo; no persistent storage.
+(() => {
+  const amount = document.getElementById('portfolio-balance');
+  const button = document.getElementById('balance-visibility');
+  if (!amount || !button) return;
+  const original = amount.textContent;
+  let hidden = false;
+  button.addEventListener('click', () => {
+    hidden = !hidden;
+    amount.textContent = hidden ? '••••••••' : original;
+    if (hidden) amount.setAttribute('aria-label', 'Balance hidden');
+    else amount.removeAttribute('aria-label');
+    button.setAttribute('aria-pressed', String(hidden));
+    button.setAttribute('aria-label', hidden ? 'Show balance' : 'Hide balance');
+    button.title = hidden ? 'Show balance' : 'Hide balance';
+    button.firstElementChild.textContent = hidden ? '◎' : '◉';
+  });
+})();

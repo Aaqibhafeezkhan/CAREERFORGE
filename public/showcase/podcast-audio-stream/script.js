@@ -3,6 +3,7 @@ const speeds = [1, 1.25, 1.5, 2];
 let currentSpeedIndex = 0;
 
 let isPlaying = false;
+let selectedEpisode = '142';
 let currentTime = 0;
 const DURATION = 2880; // 48:00 in seconds
 let playInterval = null;
@@ -133,6 +134,7 @@ function toggleSpeed() {
 }
 
 function playEpisode(epName) {
+  selectedEpisode = epName.includes('141') ? '141' : '142';
   // Update dock headers
   const dockTag = document.getElementById('dock-ep-tag');
   const dockTitle = document.getElementById('dock-title');
@@ -149,6 +151,7 @@ function playEpisode(epName) {
   }
 
   startPlayback();
+  updatePlayButtonIcon();
 
   // Scroll player dock into view smoothly if not visible
   const dock = document.getElementById('player-dock');
@@ -192,6 +195,13 @@ function togglePlayPause() {
 }
 
 function updatePlayButtonIcon() {
+  document.querySelectorAll('.episodes .card').forEach(card => {
+    const selected = card.id === `card-${selectedEpisode}`;
+    card.classList.toggle('is-playing', selected && isPlaying);
+    card.classList.toggle('active-card', selected);
+    const label = card.querySelector('.ep-num');
+    if (label) label.textContent = `EP ${card.id.slice(5)}${selected ? ' • ACTIVE IN PLAYER' : ''}`;
+  });
   const dockPlayBtn = document.getElementById('dock-play-pause-btn');
   if (dockPlayBtn) {
     dockPlayBtn.textContent = isPlaying ? '⏸' : '▶';

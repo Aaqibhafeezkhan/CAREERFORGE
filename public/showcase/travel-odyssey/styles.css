@@ -617,6 +617,36 @@ body {
 .card h3 { font-size: 1.2rem; margin-bottom: 6px; }
 .card p { color: #94a3b8; font-size: 0.85rem; }
 
+/* Adventure Difficulty Badges */
+.difficulty-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  margin-bottom: 12px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.badge-easy {
+  color: #a7f3d0;
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(52, 211, 153, 0.4);
+}
+
+.badge-moderate {
+  color: #fde68a;
+  background: rgba(245, 158, 11, 0.15);
+  border-color: rgba(251, 191, 36, 0.4);
+}
+
+.badge-extreme {
+  color: #fecdd3;
+  background: rgba(244, 63, 94, 0.15);
+  border-color: rgba(251, 113, 133, 0.4);
+}
+
 /* Responsive adjustments */
 @media (max-width: 640px) {
   .checklist-container {
