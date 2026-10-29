@@ -1217,6 +1217,60 @@ body {
   .compare-pickers { grid-template-columns: 1fr; }
 }
 
+/* ===== Tournament Bracket (Issue #71) ===== */
+.bracket { max-width: 1100px; margin: 0 auto; padding: 56px 24px 24px; }
+.bracket h2 { font-family: 'Orbitron', sans-serif; text-align: center; letter-spacing: 3px; margin-bottom: 8px; }
+.bracket-intro { text-align: center; color: #9ca3af; margin-bottom: 28px; }
+.bracket-rounds { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 48px; align-items: stretch; }
+.br-round { display: flex; flex-direction: column; }
+.br-round-title { font-family: 'Orbitron', sans-serif; font-size: 0.85rem; letter-spacing: 2px; color: #c084fc; text-align: center; margin-bottom: 12px; }
+.br-round-matches { display: flex; flex-direction: column; flex: 1; }
+.br-cell { flex: 1; display: flex; align-items: center; position: relative; padding: 8px 0; }
+.br-match { position: relative; width: 100%; display: flex; flex-direction: column; gap: 2px; padding: 6px; text-align: left; font: inherit; color: #fff; cursor: pointer;
+  background: rgba(18, 16, 29, 0.85); border: 1px solid rgba(6, 182, 212, 0.45); border-radius: 10px; box-shadow: 0 0 12px rgba(6, 182, 212, 0.15); }
+.br-match:hover { border-color: #06b6d4; box-shadow: 0 0 18px rgba(6, 182, 212, 0.4); }
+.br-match:focus-visible, .br-close:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+.br-team { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 6px; color: #9ca3af; }
+.br-team.is-winner { color: #fff; font-weight: 700; background: rgba(168, 85, 247, 0.22); box-shadow: inset 0 0 0 1px rgba(168, 85, 247, 0.7), 0 0 10px rgba(168, 85, 247, 0.35); }
+.br-team-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.br-score { font-family: 'Orbitron', sans-serif; font-size: 0.95rem; }
+.br-logo { flex: none; width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%;
+  background: color-mix(in srgb, var(--logo) 25%, #05040a); border: 2px solid var(--logo); color: #fff; font-family: 'Orbitron', sans-serif; font-size: 0.55rem; font-weight: 700; }
+
+/* connectors: stub right of each match, a vertical join per pair, a stub into the next round */
+.br-round-0 .br-cell::after, .br-round-1 .br-cell::after { content: ""; position: absolute; right: -24px; top: 50%; width: 24px; border-top: 2px solid rgba(6, 182, 212, 0.55); box-shadow: 0 0 6px rgba(6, 182, 212, 0.5); }
+.br-round-0 .br-cell:nth-child(odd)::before, .br-round-1 .br-cell:nth-child(odd)::before { content: ""; position: absolute; right: -24px; top: 50%; bottom: 0; border-right: 2px solid rgba(6, 182, 212, 0.55); }
+.br-round-0 .br-cell:nth-child(even)::before, .br-round-1 .br-cell:nth-child(even)::before { content: ""; position: absolute; right: -24px; top: 0; bottom: 50%; border-right: 2px solid rgba(6, 182, 212, 0.55); }
+.br-round-1 .br-match::before, .br-round-2 .br-match::before { content: ""; position: absolute; left: -26px; top: 50%; width: 24px; border-top: 2px solid rgba(6, 182, 212, 0.55); }
+.br-round-2 .br-match { border-color: var(--fr-gold); box-shadow: 0 0 18px rgba(245, 158, 11, 0.3); }
+
+.bracket-champion { text-align: center; margin-top: 24px; font-family: 'Orbitron', sans-serif; color: #fbbf24; }
+
+.br-modal { margin: auto; width: min(640px, calc(100vw - 32px)); max-height: calc(100vh - 32px); overflow: auto; padding: 20px; color: #fff;
+  background: #12101d; border: 1px solid rgba(168, 85, 247, 0.6); border-radius: 12px; box-shadow: 0 0 40px rgba(168, 85, 247, 0.35); }
+.br-modal::backdrop { background: rgba(0, 0, 0, 0.7); }
+.br-modal-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 12px; }
+.br-modal-head h3 { font-family: 'Orbitron', sans-serif; font-size: 1rem; letter-spacing: 1px; }
+.br-close { width: 40px; height: 40px; font-size: 1.6rem; line-height: 1; color: #fff; background: transparent; border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; cursor: pointer; }
+.br-stat-team { margin-bottom: 16px; }
+.br-stat-team h4 { display: flex; align-items: center; gap: 8px; font-family: 'Orbitron', sans-serif; font-size: 0.9rem; margin-bottom: 6px; color: #d1d5db; }
+.br-stat-team.is-winner h4 { color: #fff; }
+.br-table-wrap { overflow-x: auto; }
+.br-stat-table { width: 100%; border-collapse: collapse; }
+.br-stat-table th, .br-stat-table td { padding: 8px 10px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.br-stat-table thead th { font-size: 0.8rem; letter-spacing: 1px; color: #9ca3af; }
+.br-stat-table tbody th { text-align: left; font-weight: 600; }
+.br-stat-table td { font-family: 'Orbitron', sans-serif; font-size: 0.9rem; }
+.br-modal-note { color: #9ca3af; font-size: 0.85rem; }
+
+@media (max-width: 760px) {
+  .bracket { padding: 40px 16px 16px; }
+  .bracket-rounds { grid-template-columns: minmax(0, 1fr); row-gap: 24px; }
+  .br-round-matches { gap: 12px; }
+  .br-cell { padding: 0; }
+  .br-cell::before, .br-cell::after, .br-match::before { display: none !important; }
+}
+
 /* ==========================================================
    Tournament Matches Section & Status Badges (Issue #31)
    ========================================================== */
@@ -1631,3 +1685,4 @@ body {
     animation: none;
   }
 }
+

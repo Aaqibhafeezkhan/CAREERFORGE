@@ -1,7 +1,183 @@
 document.addEventListener('DOMContentLoaded', () => {
   console.log('Pulse Wave Festival Hub loaded');
+  initFestivalCountdown();
+  initStageFilters();
+  initScheduleTabs();
   initTicketCalculator();
 });
+
+// ---------------------------------------------------------------
+// Live Event Countdown Timer
+// ---------------------------------------------------------------
+function initFestivalCountdown() {
+  const daysEl = document.getElementById('days');
+  const hoursEl = document.getElementById('hours');
+  const minsEl = document.getElementById('mins');
+  const secsEl = document.getElementById('secs');
+
+  if (!daysEl || !hoursEl || !minsEl || !secsEl) return;
+
+  const STORAGE_KEY = 'pulsewave_festival_target_ts';
+  let targetTs = parseInt(sessionStorage.getItem(STORAGE_KEY), 10);
+
+  if (!targetTs || isNaN(targetTs) || targetTs <= Date.now()) {
+    targetTs = Date.now() + (42 * 86400 + 18 * 3600 + 35 * 60 + 20) * 1000;
+    sessionStorage.setItem(STORAGE_KEY, String(targetTs));
+  }
+
+  function updateCountdown() {
+    const now = Date.now();
+    const diff = Math.max(0, targetTs - now);
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+    daysEl.textContent = String(days).padStart(2, '0');
+    hoursEl.textContent = String(hours).padStart(2, '0');
+    minsEl.textContent = String(mins).padStart(2, '0');
+    secsEl.textContent = String(secs).padStart(2, '0');
+  }
+
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+}
+
+// ---------------------------------------------------------------
+// Artist Stage Filter Pills (Issue #28)
+// ---------------------------------------------------------------
+function initStageFilters() {
+  const filterPills = document.querySelectorAll('.stage-pill');
+  const artistCards = document.querySelectorAll('.lineup-grid .artist-card');
+  const statusEl = document.getElementById('lineupStatusBar');
+
+  if (!filterPills.length || !artistCards.length) return;
+
+  const STAGE_NAMES = {
+    'all': 'all festival stages',
+    'main-stage': 'the Main Stage',
+    'neon-arena': 'the Neon Arena',
+    'bass-vault': 'the Bass Vault'
+  };
+
+  filterPills.forEach((pill) => {
+    pill.addEventListener('click', () => {
+      const selectedStage = pill.getAttribute('data-stage');
+
+      // Update active state on pills
+      filterPills.forEach((p) => {
+        const isActive = p === pill;
+        p.classList.toggle('active', isActive);
+        p.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      });
+
+      // Filter cards with smooth entrance
+      let visibleCount = 0;
+      artistCards.forEach((card) => {
+        const cardStage = card.getAttribute('data-stage');
+        const matches = selectedStage === 'all' || cardStage === selectedStage;
+        card.classList.toggle('is-hidden', !matches);
+        if (matches) visibleCount++;
+      });
+
+      // Update status message
+      if (statusEl) {
+        const stageLabel = STAGE_NAMES[selectedStage] || 'selected stage';
+        statusEl.textContent = `Showing ${visibleCount} artist${visibleCount === 1 ? '' : 's'} on ${stageLabel}`;
+      }
+    });
+  });
+}
+
+// ---------------------------------------------------------------
+// Schedule Tabs & Favorite Bookmarking
+// ---------------------------------------------------------------
+function initScheduleTabs() {
+  const lineupTab = document.getElementById('lineup-tab');
+  const scheduleTab = document.getElementById('schedule-tab');
+  const lineupView = document.getElementById('lineup-view');
+  const scheduleView = document.getElementById('schedule-view');
+  const scheduleGrid = document.getElementById('scheduleGrid');
+  const scheduleEmpty = document.getElementById('schedule-empty');
+  const favCountEl = document.getElementById('favorite-count');
+
+  if (!lineupTab || !scheduleTab || !lineupView || !scheduleView) return;
+
+  const favorites = new Set();
+
+  function updateScheduleUI() {
+    if (favCountEl) favCountEl.textContent = String(favorites.size);
+
+    if (scheduleGrid && scheduleEmpty) {
+      scheduleGrid.replaceChildren();
+      if (favorites.size === 0) {
+        scheduleEmpty.hidden = false;
+      } else {
+        scheduleEmpty.hidden = true;
+        favorites.forEach((artistId) => {
+          const original = document.querySelector(`.artist-card[data-artist-id="${artistId}"]`);
+          if (original) {
+            const clone = original.cloneNode(true);
+            const favBtn = clone.querySelector('.favorite-button');
+            if (favBtn) {
+              favBtn.addEventListener('click', () => {
+                toggleFavorite(artistId);
+              });
+            }
+            scheduleGrid.appendChild(clone);
+          }
+        });
+      }
+    }
+  }
+
+  function toggleFavorite(artistId) {
+    if (favorites.has(artistId)) {
+      favorites.delete(artistId);
+    } else {
+      favorites.add(artistId);
+    }
+
+    document.querySelectorAll(`.artist-card[data-artist-id="${artistId}"] .favorite-button`).forEach((btn) => {
+      const isFav = favorites.has(artistId);
+      btn.classList.toggle('is-favorite', isFav);
+      btn.setAttribute('aria-pressed', isFav ? 'true' : 'false');
+      btn.querySelector('span').textContent = isFav ? '♥' : '♡';
+    });
+
+    updateScheduleUI();
+  }
+
+  document.querySelectorAll('.artist-card .favorite-button').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const card = btn.closest('.artist-card');
+      if (card && card.dataset.artistId) {
+        toggleFavorite(card.dataset.artistId);
+      }
+    });
+  });
+
+  lineupTab.addEventListener('click', () => {
+    lineupTab.classList.add('active');
+    lineupTab.setAttribute('aria-selected', 'true');
+    scheduleTab.classList.remove('active');
+    scheduleTab.setAttribute('aria-selected', 'false');
+    lineupView.hidden = false;
+    scheduleView.hidden = true;
+  });
+
+  scheduleTab.addEventListener('click', () => {
+    scheduleTab.classList.add('active');
+    scheduleTab.setAttribute('aria-selected', 'true');
+    lineupTab.classList.remove('active');
+    lineupTab.setAttribute('aria-selected', 'false');
+    scheduleView.hidden = false;
+    lineupView.hidden = true;
+    updateScheduleUI();
+  });
+}
 
 // All money is handled in cents so the totals never pick up float rounding errors.
 const TIERS = {

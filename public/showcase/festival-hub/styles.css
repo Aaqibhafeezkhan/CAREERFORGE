@@ -157,18 +157,151 @@ button {
   font-size: 0.85rem;
 }
 
+.lineup-header-row {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
 .section-title {
   font-family: 'Orbitron', sans-serif;
   text-align: center;
-  font-size: 1.3rem;
+  font-size: 1.45rem;
   letter-spacing: 2px;
-  margin-bottom: 32px;
+  margin-bottom: 8px;
   color: #06b6d4;
+}
+
+.section-sub {
+  color: #94a3b8;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+/* ===============================================================
+   Stage Filter Pills (Issue #28)
+   =============================================================== */
+.stage-filter-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.stage-filter-label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #94a3b8;
+}
+
+.stage-filter-pills {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.stage-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(15, 10, 30, 0.75);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.stage-pill:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(6, 182, 212, 0.5);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.stage-pill.active {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.2) 0%, rgba(236, 72, 153, 0.15) 100%);
+  border-color: #06b6d4;
+  color: #fff;
+  box-shadow: 0 0 16px rgba(6, 182, 212, 0.35);
+}
+
+/* Stage specific active highlights */
+.stage-pill[data-stage="main-stage"].active {
+  border-color: #ec4899;
+  background: rgba(236, 72, 153, 0.18);
+  box-shadow: 0 0 16px rgba(236, 72, 153, 0.45);
+}
+
+.stage-pill[data-stage="neon-arena"].active {
+  border-color: #06b6d4;
+  background: rgba(6, 182, 212, 0.18);
+  box-shadow: 0 0 16px rgba(6, 182, 212, 0.45);
+}
+
+.stage-pill[data-stage="bass-vault"].active {
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.18);
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.45);
+}
+
+.pill-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.pill-dot.all {
+  background: linear-gradient(135deg, #06b6d4, #ec4899);
+}
+
+.pill-dot.main {
+  background: #ec4899;
+  box-shadow: 0 0 8px #ec4899;
+}
+
+.pill-dot.neon {
+  background: #06b6d4;
+  box-shadow: 0 0 8px #06b6d4;
+}
+
+.pill-dot.bass {
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+}
+
+.stage-count {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.72rem;
+  color: #94a3b8;
+  opacity: 0.85;
+}
+
+.stage-pill.active .stage-count {
+  color: #e2e8f0;
+}
+
+.lineup-status-bar {
+  text-align: center;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.9rem;
+  color: #94a3b8;
+  margin-bottom: 24px;
 }
 
 .lineup-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 28px;
 }
 
@@ -177,12 +310,59 @@ button {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 16px;
-  padding: 32px;
+  padding: 28px 20px 22px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   transition:
     transform 0.3s ease,
     border-color 0.3s ease,
-    background-color 0.3s ease;
+    box-shadow 0.3s ease,
+    opacity 0.25s ease;
+}
+
+.artist-card.is-hidden {
+  display: none !important;
+}
+
+.artist-stage-tag {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  margin-bottom: 14px;
+  align-self: flex-start;
+}
+
+.artist-stage-tag.main {
+  background: rgba(236, 72, 153, 0.15);
+  border: 1px solid rgba(236, 72, 153, 0.4);
+  color: #f472b6;
+}
+
+.artist-stage-tag.neon {
+  background: rgba(6, 182, 212, 0.15);
+  border: 1px solid rgba(6, 182, 212, 0.4);
+  color: #38bdf8;
+}
+
+.artist-stage-tag.bass {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #34d399;
+}
+
+.artist-genre {
+  display: inline-block;
+  font-size: 0.78rem;
+  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 6px;
+  padding: 4px 10px;
+  margin-top: 10px;
 }
 
 .artist-card:hover {
