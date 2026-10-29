@@ -266,27 +266,50 @@
       </button>
     </div>
 
-    <p
-      id="destination-filter-status"
-      class="destination-filter-status"
-      role="status"
-    >
-      Showing all 2 voyages.
+    <div class="voyage-toolbar">
+      <p
+        id="destination-filter-status"
+        class="destination-filter-status"
+        role="status"
+      >
+        Showing all 2 voyages.
+      </p>
+
+      <div class="flight-origin-control">
+        <label for="departure-airport">✈️ Flying from</label>
+        <select id="departure-airport" aria-describedby="flight-estimate-note">
+          <option value="JFK">JFK — New York</option>
+          <option value="LHR">LHR — London</option>
+          <option value="DEL">DEL — New Delhi</option>
+        </select>
+      </div>
+    </div>
+
+    <p id="flight-estimate-note" class="flight-estimate-note">
+      Flight durations are estimates. Time differences use current local time-zone offsets.
     </p>
 
     <div class="grid">
-      <div class="card" data-region="europe">
+      <div class="card" data-region="europe" data-destination="reykjavik">
         <div class="card-img">🏔️</div>
         <span class="difficulty-badge badge-moderate">Moderate</span>
         <h3>Reykjavik Aurora Glaciers</h3>
         <p>7 Days • Iceland Heli-Hiking</p>
+        <div class="flight-details" aria-label="Flight information">
+          <span class="flight-badge flight-duration" data-flight-duration></span>
+          <span class="flight-badge flight-time-difference" data-time-difference></span>
+        </div>
       </div>
 
-      <div class="card" data-region="asia">
+      <div class="card" data-region="asia" data-destination="kyoto">
         <div class="card-img">🏯</div>
         <span class="difficulty-badge badge-easy">Easy</span>
         <h3>Kyoto Bamboo Sanctuary</h3>
         <p>10 Days • Private Tea Masters</p>
+        <div class="flight-details" aria-label="Flight information">
+          <span class="flight-badge flight-duration" data-flight-duration></span>
+          <span class="flight-badge flight-time-difference" data-time-difference></span>
+        </div>
       </div>
     </div>
   </main>
