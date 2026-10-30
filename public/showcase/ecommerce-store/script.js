@@ -24,7 +24,7 @@ function loadSavedCoupon() {
   try {
     const saved = normalizeCode(localStorage.getItem(COUPON_KEY));
     if (COUPONS[saved]) appliedCoupon = saved;
-  } catch (e) {
+  } catch {
     appliedCoupon = null;
   }
 }
@@ -33,7 +33,7 @@ function saveCoupon() {
   try {
     if (appliedCoupon) localStorage.setItem(COUPON_KEY, appliedCoupon);
     else localStorage.removeItem(COUPON_KEY);
-  } catch (e) {
+  } catch {
     // storage can be blocked, the promo then only lasts for this page view
   }
 }
@@ -672,3 +672,650 @@ document.addEventListener('keydown', (event) => {
 });
 /* ===== END issue #63 ===== */
 
+
+
+/* ===== BEGIN issue #189: Customer Reviews & Rating Breakdown Analytics Widget ===== */
+const INITIAL_REVIEWS = [
+  {
+    id: 'rev-1',
+    productId: 'p1',
+    productName: 'CyberDeck Pro Mechanical',
+    author: 'Elena Rostova',
+    role: 'Principal Systems Architect',
+    rating: 5,
+    headline: 'Flawless ergonomics and unmatched switch acoustics',
+    comment: 'The split tenting angle saved my wrists during 12-hour distributed system debugging sessions. South-facing LEDs paired with the Gateron Oil Kings produce an incredibly deep, marbly acoustic profile with zero ping. The custom OLED telemetry display tracking active layer states is brilliant.',
+    date: '2 days ago',
+    timestamp: Date.now() - 2 * 86400000,
+    verified: true,
+    helpfulCount: 38,
+    userVoted: false
+  },
+  {
+    id: 'rev-2',
+    productId: 'p3',
+    productName: 'Horizon 32" Curved OLED',
+    author: 'Marcus Vance',
+    role: 'Staff Graphics Engineer',
+    rating: 5,
+    headline: 'True 10-bit color, ink blacks, and zero motion blur',
+    comment: 'Coding in Neovim and dark IDEs with QD-OLED contrast is genuinely transformative. Text fringing is practically non-existent thanks to the updated subpixel matrix. The 240Hz refresh rate makes scrolling through massive repos silky smooth, and the single-cable 90W USB-C dock powers my setup effortlessly.',
+    date: '4 days ago',
+    timestamp: Date.now() - 4 * 86400000,
+    verified: true,
+    helpfulCount: 29,
+    userVoted: false
+  },
+  {
+    id: 'rev-3',
+    productId: 'p2',
+    productName: 'Acoustic Pulse ANC Headset',
+    author: 'Devon K.',
+    role: 'Full-Stack Developer & Podcaster',
+    rating: 5,
+    headline: 'Active noise cancellation that eliminates mechanical clatter',
+    comment: 'The 40dB hybrid ANC isolates noisy open-office chatter and heavy keystrokes completely without introducing ear canal pressure. The cooling-gel pads stay comfortable through full 8-hour sprint cycles. The detachable broadcast mic has crystal-clear voice rejection.',
+    date: '1 week ago',
+    timestamp: Date.now() - 7 * 86400000,
+    verified: true,
+    helpfulCount: 24,
+    userVoted: false
+  },
+  {
+    id: 'rev-4',
+    productId: 'p1',
+    productName: 'CyberDeck Pro Mechanical',
+    author: 'Chloe Chen',
+    role: 'Open-Source Core Maintainer',
+    rating: 5,
+    headline: 'The definitive split keyboard for terminal purists',
+    comment: 'QMK/VIA programming worked immediately out of the box. Flashing keymaps on Linux was effortless with zero driver hurdles. Gasket mount flex is subtle yet absorbs high-speed typing fatigue wonderfully.',
+    date: '1 week ago',
+    timestamp: Date.now() - 8 * 86400000,
+    verified: true,
+    helpfulCount: 19,
+    userVoted: false
+  },
+  {
+    id: 'rev-5',
+    productId: 'p2',
+    productName: 'Acoustic Pulse ANC Headset',
+    author: 'Liam O\'Connor',
+    role: 'Audio Programmer',
+    rating: 4,
+    headline: 'Superb spatial imaging, companion app could be snappier',
+    comment: 'Low-latency lossless 2.4GHz wireless is rock solid across my entire apartment with zero audible dropouts. The beryllium drivers deliver crisp highs and accurate mids. Companion Linux config tool took a moment to setup, but overall hardware quality is exceptional.',
+    date: '2 weeks ago',
+    timestamp: Date.now() - 14 * 86400000,
+    verified: true,
+    helpfulCount: 15,
+    userVoted: false
+  },
+  {
+    id: 'rev-6',
+    productId: 'p3',
+    productName: 'Horizon 32" Curved OLED',
+    author: 'Aria Thorne',
+    role: 'Creative Technologist',
+    rating: 5,
+    headline: 'The 1800R panoramic curve wraps your peripheral vision perfectly',
+    comment: 'The subtle curve prevents neck strain when viewing multiple tiled terminal windows side-by-side. The anti-reflective coating handles glare even in a bright daylight studio.',
+    date: '2 weeks ago',
+    timestamp: Date.now() - 15 * 86400000,
+    verified: true,
+    helpfulCount: 12,
+    userVoted: false
+  },
+  {
+    id: 'rev-7',
+    productId: 'p1',
+    productName: 'CyberDeck Pro Mechanical',
+    author: 'Kaelen Brody',
+    role: 'Hardware Hobbyist',
+    rating: 4,
+    headline: 'Solid CNC chassis, hot-swap sockets are premium quality',
+    comment: 'Tested with both Holy Panda X and Boba U4T switches. The south-facing sockets fit Kailh hot-swap tight with zero pin bending. Battery life holds up to the 200-hour claim with RGB brightness turned to 40%.',
+    date: '3 weeks ago',
+    timestamp: Date.now() - 21 * 86400000,
+    verified: true,
+    helpfulCount: 11,
+    userVoted: false
+  },
+  {
+    id: 'rev-8',
+    productId: 'p2',
+    productName: 'Acoustic Pulse ANC Headset',
+    author: 'Samantha Reed',
+    role: 'DevOps Engineer',
+    rating: 4,
+    headline: 'Great battery longevity and seamless multi-device Bluetooth',
+    comment: 'Switching seamlessly between my work ThinkPad and mobile phone is instant. 55-hour battery life means I only charge it every two weeks.',
+    date: '3 weeks ago',
+    timestamp: Date.now() - 23 * 86400000,
+    verified: true,
+    helpfulCount: 8,
+    userVoted: false
+  },
+  {
+    id: 'rev-9',
+    productId: 'p1',
+    productName: 'CyberDeck Pro Mechanical',
+    author: 'Vikram Joshi',
+    role: 'Mechanical CAD Designer',
+    rating: 3,
+    headline: 'Steep learning curve for split ortho, but excellent hardware',
+    comment: 'The build quality is undisputed. However, if you are moving from a standard 75% stagger layout, expect a 10-day adaptation period for muscle memory. An included wrist rest would have completed the package.',
+    date: '1 month ago',
+    timestamp: Date.now() - 30 * 86400000,
+    verified: false,
+    helpfulCount: 7,
+    userVoted: false
+  },
+  {
+    id: 'rev-10',
+    productId: 'p3',
+    productName: 'Horizon 32" Curved OLED',
+    author: 'Tyler Hayes',
+    role: 'Game Developer',
+    rating: 4,
+    headline: 'Incredible HDR brightness and color calibration',
+    comment: 'HDR highlight peaks are intense and immersive. Desk stand is heavy-duty solid steel, though I opted for the gas-spring arm to reclaim desk real estate.',
+    date: '1 month ago',
+    timestamp: Date.now() - 32 * 86400000,
+    verified: true,
+    helpfulCount: 6,
+    userVoted: false
+  }
+];
+
+const reviewsState = {
+  reviews: [...INITIAL_REVIEWS],
+  selectedProduct: 'all',
+  selectedStar: 'all',
+  verifiedOnly: false,
+  searchTerm: '',
+  sortBy: 'recent',
+  pickerRating: 5
+};
+
+function escapeReviewHtml(str) {
+  return String(str || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function getInitials(name) {
+  const parts = String(name || '').trim().split(/\s+/);
+  if (parts.length === 0 || !parts[0]) return 'N';
+  if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+  return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+}
+
+function renderStarString(rating) {
+  const full = Math.min(5, Math.max(0, Math.round(rating)));
+  return '★'.repeat(full) + '☆'.repeat(5 - full);
+}
+
+function calculateAnalytics(reviewsList) {
+  const total = reviewsList.length;
+  if (total === 0) {
+    return {
+      total: 0,
+      average: 0,
+      counts: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 },
+      percentages: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 },
+      recommendPct: 0
+    };
+  }
+
+  const counts = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+  let sum = 0;
+  let recommendCount = 0;
+
+  reviewsList.forEach((r) => {
+    sum += r.rating;
+    if (counts[r.rating] !== undefined) {
+      counts[r.rating] += 1;
+    }
+    if (r.rating >= 4) {
+      recommendCount += 1;
+    }
+  });
+
+  const average = Number((sum / total).toFixed(1));
+  const percentages = {
+    5: Math.round((counts[5] / total) * 100),
+    4: Math.round((counts[4] / total) * 100),
+    3: Math.round((counts[3] / total) * 100),
+    2: Math.round((counts[2] / total) * 100),
+    1: Math.round((counts[1] / total) * 100)
+  };
+  const recommendPct = Math.round((recommendCount / total) * 100);
+
+  return { total, average, counts, percentages, recommendPct };
+}
+
+function updateAnalyticsCard() {
+  const baseList = reviewsState.selectedProduct === 'all'
+    ? reviewsState.reviews
+    : reviewsState.reviews.filter((r) => r.productId === reviewsState.selectedProduct);
+
+  const analytics = calculateAnalytics(baseList);
+
+  const scoreEl = document.getElementById('overallScoreNumber');
+  if (scoreEl) scoreEl.textContent = analytics.average.toFixed(1);
+
+  const starsEl = document.getElementById('overallStars');
+  if (starsEl) {
+    starsEl.textContent = renderStarString(analytics.average);
+    starsEl.setAttribute('aria-label', `${analytics.average} out of 5 stars`);
+  }
+
+  const countLabelEl = document.getElementById('overallCountLabel');
+  if (countLabelEl) {
+    const prodName = reviewsState.selectedProduct === 'all'
+      ? 'store items'
+      : (PRODUCT_CATALOG[reviewsState.selectedProduct] ? PRODUCT_CATALOG[reviewsState.selectedProduct].name : 'product');
+    countLabelEl.textContent = `Based on ${analytics.total} verified reviews across ${prodName}`;
+  }
+
+  const recEl = document.getElementById('recommendPercent');
+  if (recEl) recEl.textContent = `${analytics.recommendPct}%`;
+
+  // Render breakdown distribution rows (5 down to 1)
+  const breakdownContainer = document.getElementById('breakdownRows');
+  if (breakdownContainer) {
+    breakdownContainer.innerHTML = '';
+    [5, 4, 3, 2, 1].forEach((star) => {
+      const cnt = analytics.counts[star] || 0;
+      const pct = analytics.percentages[star] || 0;
+      const isActive = reviewsState.selectedStar === star;
+
+      const row = document.createElement('div');
+      row.className = `breakdown-row ${isActive ? 'active' : ''}`;
+      row.setAttribute('role', 'button');
+      row.setAttribute('tabindex', '0');
+      row.setAttribute('aria-label', `Filter by ${star} star reviews, currently ${cnt} reviews (${pct}%)`);
+      row.innerHTML = `
+        <span class="breakdown-star-label">${star} <span class="star-icon">★</span></span>
+        <div class="breakdown-track">
+          <div class="breakdown-fill" style="width: ${pct}%"></div>
+        </div>
+        <span class="breakdown-count">${cnt}</span>
+        <span class="breakdown-percent">${pct}%</span>
+      `;
+      row.addEventListener('click', () => {
+        if (reviewsState.selectedStar === star) {
+          setStarFilter('all');
+        } else {
+          setStarFilter(star);
+        }
+      });
+      breakdownContainer.appendChild(row);
+    });
+  }
+
+  // Update count labels on filter buttons
+  const countAll = document.getElementById('countStarAll');
+  if (countAll) countAll.textContent = analytics.total;
+  [5, 4, 3, 2, 1].forEach((star) => {
+    const el = document.getElementById(`countStar${star}`);
+    if (el) el.textContent = analytics.counts[star] || 0;
+  });
+}
+
+function renderReviewsFeed() {
+  let list = [...reviewsState.reviews];
+
+  // 1. Filter by product
+  if (reviewsState.selectedProduct !== 'all') {
+    list = list.filter((r) => r.productId === reviewsState.selectedProduct);
+  }
+
+  // 2. Filter by star rating
+  if (reviewsState.selectedStar !== 'all') {
+    list = list.filter((r) => r.rating === reviewsState.selectedStar);
+  }
+
+  // 3. Filter by verified only
+  if (reviewsState.verifiedOnly) {
+    list = list.filter((r) => r.verified === true);
+  }
+
+  // 4. Search query
+  if (reviewsState.searchTerm.trim() !== '') {
+    const query = reviewsState.searchTerm.toLowerCase().trim();
+    list = list.filter((r) =>
+      r.headline.toLowerCase().includes(query) ||
+      r.comment.toLowerCase().includes(query) ||
+      r.author.toLowerCase().includes(query) ||
+      r.productName.toLowerCase().includes(query)
+    );
+  }
+
+  // 5. Sort list
+  list.sort((a, b) => {
+    if (reviewsState.sortBy === 'highest') {
+      return b.rating - a.rating || b.timestamp - a.timestamp;
+    }
+    if (reviewsState.sortBy === 'lowest') {
+      return a.rating - b.rating || b.timestamp - a.timestamp;
+    }
+    if (reviewsState.sortBy === 'helpful') {
+      return b.helpfulCount - a.helpfulCount || b.timestamp - a.timestamp;
+    }
+    return b.timestamp - a.timestamp; // default: recent
+  });
+
+  // Update active filter banner
+  const banner = document.getElementById('activeFilterBanner');
+  const bannerText = document.getElementById('filterBannerText');
+  const isFiltered = reviewsState.selectedProduct !== 'all' ||
+    reviewsState.selectedStar !== 'all' ||
+    reviewsState.verifiedOnly ||
+    reviewsState.searchTerm.trim() !== '';
+
+  if (banner && bannerText) {
+    if (isFiltered) {
+      const filtersDesc = [];
+      if (reviewsState.selectedProduct !== 'all') {
+        const pName = PRODUCT_CATALOG[reviewsState.selectedProduct] ? PRODUCT_CATALOG[reviewsState.selectedProduct].name : 'Product';
+        filtersDesc.push(`Gear: ${pName}`);
+      }
+      if (reviewsState.selectedStar !== 'all') {
+        filtersDesc.push(`${reviewsState.selectedStar}-Star reviews`);
+      }
+      if (reviewsState.verifiedOnly) {
+        filtersDesc.push('Verified Buyers');
+      }
+      if (reviewsState.searchTerm.trim() !== '') {
+        filtersDesc.push(`Keyword "${reviewsState.searchTerm}"`);
+      }
+      bannerText.textContent = `Filtering by: ${filtersDesc.join(' · ')} (${list.length} results)`;
+      banner.hidden = false;
+    } else {
+      banner.hidden = true;
+    }
+  }
+
+  // Render cards
+  const feed = document.getElementById('reviewsFeed');
+  if (!feed) return;
+
+  if (list.length === 0) {
+    feed.innerHTML = `
+      <div class="empty-reviews-state">
+        <h4>No matching reviews found</h4>
+        <p>Try clearing filters or search keywords to view all customer telemetry.</p>
+        <button type="button" class="clear-filter-btn" style="margin-top: 12px; font-weight: 600;" onclick="clearAllFilters()">Reset All Filters</button>
+      </div>
+    `;
+    return;
+  }
+
+  feed.innerHTML = list
+    .map((rev) => {
+      const safeAuthor = escapeReviewHtml(rev.author);
+      const safeRole = escapeReviewHtml(rev.role);
+      const safeHeadline = escapeReviewHtml(rev.headline);
+      const safeComment = escapeReviewHtml(rev.comment);
+      const safeProduct = escapeReviewHtml(rev.productName);
+      const initials = getInitials(rev.author);
+      const starString = renderStarString(rev.rating);
+
+      return `
+        <article class="review-card" data-id="${rev.id}">
+          <header class="review-card-header">
+            <div class="reviewer-info">
+              <div class="reviewer-avatar" aria-hidden="true">${initials}</div>
+              <div class="reviewer-meta">
+                <div class="reviewer-name-row">
+                  <span class="reviewer-name">${safeAuthor}</span>
+                  ${rev.verified ? '<span class="verified-badge"><span aria-hidden="true">✓</span> Verified Buyer</span>' : ''}
+                </div>
+                ${safeRole ? `<span class="reviewer-role">${safeRole}</span>` : ''}
+              </div>
+            </div>
+            <div class="review-meta-right">
+              <span class="review-product-tag">${safeProduct}</span>
+              <time class="review-date">${rev.date}</time>
+            </div>
+          </header>
+          <div class="review-rating-stars" aria-label="${rev.rating} out of 5 stars">${starString}</div>
+          <h4 class="review-headline">${safeHeadline}</h4>
+          <p class="review-comment">${safeComment}</p>
+          <footer class="review-card-footer">
+            <span>Was this telemetry helpful to you?</span>
+            <button type="button" class="helpful-btn ${rev.userVoted ? 'voted' : ''}" onclick="voteReviewHelpful('${rev.id}')" aria-label="Mark review as helpful, currently ${rev.helpfulCount}">
+              <span>👍 Helpful</span>
+              <span class="helpful-count">(${rev.helpfulCount})</span>
+            </button>
+          </footer>
+        </article>
+      `;
+    })
+    .join('');
+}
+
+function handleProductFilterChange(productId) {
+  reviewsState.selectedProduct = productId;
+  updateAnalyticsCard();
+  renderReviewsFeed();
+}
+
+function filterReviewsForProduct(productId) {
+  reviewsState.selectedProduct = productId;
+  const selectEl = document.getElementById('reviewProductSelect');
+  if (selectEl) selectEl.value = productId;
+
+  updateAnalyticsCard();
+  renderReviewsFeed();
+
+  const section = document.getElementById('reviewsSection');
+  if (section) {
+    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+function setStarFilter(star) {
+  reviewsState.selectedStar = star;
+  const buttons = document.querySelectorAll('.star-filter-btn');
+  buttons.forEach((btn) => {
+    const btnStar = btn.getAttribute('data-star');
+    const isAct = (star === 'all' && btnStar === 'all') || (String(star) === btnStar);
+    btn.classList.toggle('active', isAct);
+  });
+
+  updateAnalyticsCard();
+  renderReviewsFeed();
+}
+
+function toggleVerifiedOnly(checked) {
+  reviewsState.verifiedOnly = Boolean(checked);
+  renderReviewsFeed();
+}
+
+function handleReviewSearch(query) {
+  reviewsState.searchTerm = query || '';
+  renderReviewsFeed();
+}
+
+function setReviewSort(sortVal) {
+  reviewsState.sortBy = sortVal;
+  renderReviewsFeed();
+}
+
+function clearAllFilters() {
+  reviewsState.selectedProduct = 'all';
+  reviewsState.selectedStar = 'all';
+  reviewsState.verifiedOnly = false;
+  reviewsState.searchTerm = '';
+
+  const prodSelect = document.getElementById('reviewProductSelect');
+  if (prodSelect) prodSelect.value = 'all';
+
+  const check = document.getElementById('verifiedOnlyCheckbox');
+  if (check) check.checked = false;
+
+  const searchInp = document.getElementById('reviewSearchInput');
+  if (searchInp) searchInp.value = '';
+
+  const buttons = document.querySelectorAll('.star-filter-btn');
+  buttons.forEach((btn) => {
+    btn.classList.toggle('active', btn.getAttribute('data-star') === 'all');
+  });
+
+  updateAnalyticsCard();
+  renderReviewsFeed();
+}
+
+function voteReviewHelpful(reviewId) {
+  const rev = reviewsState.reviews.find((r) => r.id === reviewId);
+  if (!rev) return;
+
+  if (rev.userVoted) {
+    rev.helpfulCount -= 1;
+    rev.userVoted = false;
+    showToast('Removed helpful vote.');
+  } else {
+    rev.helpfulCount += 1;
+    rev.userVoted = true;
+    showToast('Marked as helpful feedback!');
+  }
+
+  renderReviewsFeed();
+}
+
+/* Modal Form Logic */
+function openWriteReviewModal() {
+  const modal = document.getElementById('writeReviewModal');
+  const backdrop = document.getElementById('writeReviewBackdrop');
+  if (modal && backdrop) {
+    // If a product is currently selected in reviews section, default form to it
+    const formProductSelect = document.getElementById('formProductSelect');
+    if (formProductSelect && reviewsState.selectedProduct !== 'all') {
+      formProductSelect.value = reviewsState.selectedProduct;
+    }
+    setPickerRating(5);
+    modal.hidden = false;
+    modal.classList.add('open');
+    backdrop.classList.add('open');
+    const firstInp = document.getElementById('reviewerName');
+    if (firstInp) firstInp.focus();
+  }
+}
+
+function closeWriteReviewModal() {
+  const modal = document.getElementById('writeReviewModal');
+  const backdrop = document.getElementById('writeReviewBackdrop');
+  if (modal && backdrop) {
+    modal.classList.remove('open');
+    backdrop.classList.remove('open');
+    setTimeout(() => {
+      modal.hidden = true;
+    }, 250);
+  }
+}
+
+const RATING_DESCRIPTIONS = {
+  1: '1 / 5 — Poor (Needs Improvement)',
+  2: '2 / 5 — Fair (Below Expectation)',
+  3: '3 / 5 — Average (Adequate)',
+  4: '4 / 5 — Very Good (Recommended)',
+  5: '5 / 5 — Exceptional (Highly Recommended)'
+};
+
+function setPickerRating(val) {
+  reviewsState.pickerRating = val;
+  const btns = document.querySelectorAll('.star-pick-btn');
+  btns.forEach((btn) => {
+    const starVal = Number(btn.getAttribute('data-val'));
+    btn.classList.toggle('active', starVal <= val);
+  });
+  const label = document.getElementById('pickerRatingLabel');
+  if (label) label.textContent = RATING_DESCRIPTIONS[val] || `${val} / 5`;
+}
+
+function handleReviewSubmit(e) {
+  e.preventDefault();
+
+  const prodId = document.getElementById('formProductSelect').value;
+  const name = document.getElementById('reviewerName').value.trim();
+  const role = document.getElementById('reviewerRole').value.trim();
+  const headline = document.getElementById('reviewHeadline').value.trim();
+  const comment = document.getElementById('reviewComment').value.trim();
+  const verified = document.getElementById('formVerifiedCheck').checked;
+
+  if (!name || !headline || !comment) {
+    showToast('Please fill in all required review fields.');
+    return;
+  }
+
+  const pCatalog = PRODUCT_CATALOG[prodId];
+  const prodName = pCatalog ? pCatalog.name : 'Developer Gear';
+
+  const newRev = {
+    id: `rev-${Date.now()}`,
+    productId: prodId,
+    productName: prodName,
+    author: name,
+    role: role || 'Verified Customer',
+    rating: reviewsState.pickerRating,
+    headline,
+    comment,
+    date: 'Just now',
+    timestamp: Date.now(),
+    verified,
+    helpfulCount: 0,
+    userVoted: false
+  };
+
+  reviewsState.reviews.unshift(newRev);
+
+  // Reset form
+  const form = document.getElementById('writeReviewForm');
+  if (form) form.reset();
+
+  closeWriteReviewModal();
+  updateAnalyticsCard();
+  renderReviewsFeed();
+  showToast('Thank you! Your verified review has been published.');
+}
+
+// Escape key listener for write review modal
+document.addEventListener('keydown', (event) => {
+  const modal = document.getElementById('writeReviewModal');
+  if (event.key === 'Escape' && modal && !modal.hidden) {
+    closeWriteReviewModal();
+  }
+});
+
+// Initialize reviews analytics and feed on load
+updateAnalyticsCard();
+renderReviewsFeed();
+/* ===== END issue #189 ===== */
+
+
+// Global window bindings for inline HTML event handlers
+window.addToCart = addToCart;
+window.updateQuantity = updateQuantity;
+window.checkout = checkout;
+window.openQuickView = openQuickView;
+window.adjustQuickViewQty = adjustQuickViewQty;
+window.addQuickViewToCart = addQuickViewToCart;
+window.openCartFromQuickView = openCartFromQuickView;
+window.handleProductFilterChange = handleProductFilterChange;
+window.filterReviewsForProduct = filterReviewsForProduct;
+window.setStarFilter = setStarFilter;
+window.toggleVerifiedOnly = toggleVerifiedOnly;
+window.handleReviewSearch = handleReviewSearch;
+window.setReviewSort = setReviewSort;
+window.clearAllFilters = clearAllFilters;
+window.voteReviewHelpful = voteReviewHelpful;
+window.openWriteReviewModal = openWriteReviewModal;
+window.closeWriteReviewModal = closeWriteReviewModal;
+window.setPickerRating = setPickerRating;
+window.handleReviewSubmit = handleReviewSubmit;
