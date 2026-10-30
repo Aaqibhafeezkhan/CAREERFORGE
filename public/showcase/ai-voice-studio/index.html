@@ -243,6 +243,77 @@
       <div class="tuner-feedback" id="tunerFeedback" role="status" aria-live="polite">
         Ready. Adjust sliders or select an emotion preset to customize acoustic parameters.
       </div>
+
+      <!-- Multi-Track Audio Waveform Generator (Issue #175) -->
+      <div class="waveform-visualizer-container" id="waveformContainer" aria-label="Interactive Multi-Track Waveform Visualizer">
+        <div class="waveform-header">
+          <div class="waveform-title-row">
+            <div class="waveform-badge">
+              <span class="live-dot" aria-hidden="true"></span>
+              <span>MULTI-TRACK DSP WAVEFORM GENERATOR</span>
+            </div>
+            <div class="waveform-track-selector" role="tablist" aria-label="Audio Tracks">
+              <button type="button" class="track-tab active" data-track="voice" role="tab" aria-selected="true">
+                <span class="track-indicator voice"></span>
+                <span>Track 1: Neural Voice</span>
+              </button>
+              <button type="button" class="track-tab" data-track="harmony" role="tab" aria-selected="false">
+                <span class="track-indicator harmony"></span>
+                <span>Track 2: Ambient Harmony</span>
+              </button>
+              <button type="button" class="track-tab" data-track="master" role="tab" aria-selected="false">
+                <span class="track-indicator master"></span>
+                <span>Track 3: Master Output</span>
+              </button>
+            </div>
+          </div>
+          <div class="waveform-meta-chips">
+            <span class="meta-chip" id="wfSampleRate">48.0 kHz</span>
+            <span class="meta-chip" id="wfBands">64 Bands</span>
+            <span class="meta-chip highlight" id="wfFps">60 FPS</span>
+          </div>
+        </div>
+
+        <!-- Canvas Visualizer Frame -->
+        <div class="canvas-viewport">
+          <canvas id="voiceWaveform" width="900" height="190" aria-label="Real-time multi-track audio waveform visualizer" role="img"></canvas>
+          <div class="canvas-overlay-grid" aria-hidden="true"></div>
+          <div class="canvas-timecode" id="wfTimecode">00:00.00 / 00:05.00</div>
+          <div class="canvas-db-scale" aria-hidden="true">
+            <span>+6 dB</span>
+            <span>0 dB</span>
+            <span>-6 dB</span>
+            <span>-18 dB</span>
+            <span>-∞ dB</span>
+          </div>
+        </div>
+
+        <!-- Waveform Toolbar Controls -->
+        <div class="waveform-toolbar">
+          <div class="toolbar-left">
+            <button type="button" class="wf-ctl-btn primary" id="wfPlayBtn" aria-label="Play/Pause Waveform Simulation">
+              <span class="wf-btn-icon" id="wfPlayIcon">▶</span>
+              <span id="wfPlayLabel">Start Real-Time Stream</span>
+            </button>
+            <div class="style-toggle-group" role="group" aria-label="Visualizer Display Modes">
+              <button type="button" class="style-btn active" data-style="bars" title="Frequency Spectrum Bars">Spectrum Bars</button>
+              <button type="button" class="style-btn" data-style="wave" title="Continuous Oscilloscope Wave">Oscilloscope</button>
+              <button type="button" class="style-btn" data-style="particles" title="Floating Frequency Particles">Particles</button>
+            </div>
+          </div>
+
+          <div class="toolbar-right">
+            <div class="density-slider-wrap">
+              <label for="wfGainSlider">Gain:</label>
+              <input type="range" id="wfGainSlider" min="0.5" max="2.0" step="0.1" value="1.0" aria-label="Visualizer Sensitivity Gain" />
+              <span id="wfGainVal">1.0x</span>
+            </div>
+            <button type="button" class="wf-ctl-btn ghost" id="wfFreezeBtn" title="Freeze frame snapshot">
+              <span>❄️ Freeze</span>
+            </button>
+          </div>
+        </div>
+      </div>
     </section>
   </header>
 
