@@ -171,14 +171,27 @@
       <div class="matches-tag">// CHAMPIONSHIP FIXTURES</div>
       <h2 id="matches-title">TOURNAMENT MATCHUPS</h2>
       <p class="matches-desc">Real-time schedule, live stage status, and upcoming fixtures for Vortex Global Season 4</p>
+      <div class="match-filter-tabs" role="tablist" aria-label="Filter tournament matches by status">
+        <button type="button" class="match-filter-tab active" data-filter="all" role="tab" aria-selected="true" aria-controls="tournament-matches">
+          ALL FIXTURES <span class="filter-count">(4)</span>
+        </button>
+        <button type="button" class="match-filter-tab filter-live" data-filter="live" role="tab" aria-selected="false" aria-controls="tournament-matches">
+          <span class="pulse-dot small" aria-hidden="true"></span>
+          LIVE NOW <span class="filter-count">(1)</span>
+        </button>
+        <button type="button" class="match-filter-tab filter-upcoming" data-filter="upcoming" role="tab" aria-selected="false" aria-controls="tournament-matches">
+          <span class="clock-icon" aria-hidden="true">⏱</span>
+          UPCOMING <span class="filter-count">(3)</span>
+        </button>
+      </div>
     </div>
 
     <div class="matches-grid">
       <!-- Match Card 1: LIVE NOW -->
-      <article class="match-card is-live" aria-label="Live Match: Team Cyber vs Phantom Squad">
+      <article class="match-card is-live" data-status="live" aria-label="Live Match: Team Cyber vs Phantom Squad">
         <div class="match-card-top">
           <span class="match-tier-pill">GRAND FINALS • BO5</span>
-          <span class="badge-status badge-live" aria-label="Status: Live Now">
+          <span class="badge-status badge-live" aria-label="Status: Live Now" title="Live Broadcast in Progress • Round 25 Active">
             <span class="pulse-dot" aria-hidden="true"></span>
             LIVE NOW
           </span>
@@ -226,10 +239,10 @@
       </article>
 
       <!-- Match Card 2: UPCOMING TODAY -->
-      <article class="match-card is-upcoming" aria-label="Upcoming Match: Neon Riders vs Apex Titans">
+      <article class="match-card is-upcoming" data-status="upcoming" aria-label="Upcoming Match: Neon Riders vs Apex Titans">
         <div class="match-card-top">
           <span class="match-tier-pill">UPPER BRACKET FINAL • BO3</span>
-          <span class="badge-status badge-upcoming" aria-label="Status: Upcoming">
+          <span class="badge-status badge-upcoming" aria-label="Status: Upcoming" title="Scheduled Tournament Fixture">
             <span class="clock-icon" aria-hidden="true">⏱</span>
             UPCOMING
           </span>
@@ -272,10 +285,10 @@
       </article>
 
       <!-- Match Card 3: UPCOMING TOMORROW -->
-      <article class="match-card is-upcoming" aria-label="Upcoming Match: Vortex Prime vs Phantom Squad">
+      <article class="match-card is-upcoming" data-status="upcoming" aria-label="Upcoming Match: Vortex Prime vs Phantom Squad">
         <div class="match-card-top">
           <span class="match-tier-pill">LOWER BRACKET SEMIS • BO3</span>
-          <span class="badge-status badge-upcoming" aria-label="Status: Upcoming">
+          <span class="badge-status badge-upcoming" aria-label="Status: Upcoming" title="Scheduled Tournament Fixture">
             <span class="clock-icon" aria-hidden="true">⏱</span>
             UPCOMING
           </span>
@@ -318,10 +331,10 @@
       </article>
 
       <!-- Match Card 4: UPCOMING FINALS -->
-      <article class="match-card is-upcoming" aria-label="Upcoming Match: Apex Titans vs Neon Riders">
+      <article class="match-card is-upcoming" data-status="upcoming" aria-label="Upcoming Match: Apex Titans vs Neon Riders">
         <div class="match-card-top">
           <span class="match-tier-pill">CONSOLATION FINAL • BO3</span>
-          <span class="badge-status badge-upcoming" aria-label="Status: Upcoming">
+          <span class="badge-status badge-upcoming" aria-label="Status: Upcoming" title="Scheduled Tournament Fixture">
             <span class="clock-icon" aria-hidden="true">⏱</span>
             UPCOMING
           </span>
