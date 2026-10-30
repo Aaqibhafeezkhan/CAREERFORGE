@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log('Developer Portfolio initialized');
   initTerminal();
   initShortcuts();
+  initProjectFilters();
 });
 
 // Virtual file system: objects are directories, strings are files.
@@ -421,4 +422,36 @@ function initShortcuts() {
       executeAction('i');
     }
   });
+}
+
+// Each project can belong to more than one category; keep its existing DOM node.
+function initProjectFilters() {
+  const section = document.querySelector('.projects');
+  if (!section) return;
+  const toolbar = section.querySelector('.project-toolbar');
+  const buttons = section.querySelectorAll('[data-project-filter]');
+  const cards = section.querySelectorAll('[data-project-categories]');
+  const count = section.querySelector('.project-count');
+  const empty = section.querySelector('.project-empty');
+  if (!toolbar || !count || !empty || !buttons.length) return;
+
+  function selectCategory(category) {
+    let visible = 0;
+    cards.forEach((card) => {
+      const categories = card.dataset.projectCategories.split(/\s+/);
+      card.hidden = category !== 'all' && !categories.includes(category);
+      if (!card.hidden) visible++;
+    });
+    buttons.forEach((button) => {
+      button.setAttribute('aria-pressed', String(button.dataset.projectFilter === category));
+    });
+    count.textContent = visible + (visible === 1 ? ' project' : ' projects');
+    empty.hidden = visible > 0;
+  }
+
+  buttons.forEach((button) => {
+    button.addEventListener('click', () => selectCategory(button.dataset.projectFilter));
+  });
+  selectCategory('all');
+  toolbar.hidden = false;
 }

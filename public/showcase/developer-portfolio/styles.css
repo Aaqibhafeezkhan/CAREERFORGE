@@ -495,3 +495,17 @@ kbd.key-pressed {
   .shortcuts-grid { grid-template-columns: 1fr; }
   .shortcuts-trigger-btn span { display: none; }
 }
+
+/* Project filters stay scoped to the portfolio grid. */
+.project-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 20px; }
+.project-filters { display: flex; flex-wrap: wrap; gap: 8px; }
+.project-filters button { font: inherit; color: #c9d1d9; background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 10px 14px; min-height: 44px; cursor: pointer; }
+.project-filters button[aria-pressed="true"] { background: var(--accent); color: #0d1117; border-color: var(--accent); font-weight: 700; }
+.project-filters button:focus-visible { outline: 2px solid #58a6ff; outline-offset: 3px; }
+.project-count { color: #c9d1d9; border: 1px solid var(--border); border-radius: 20px; padding: 6px 12px; }
+.project-empty { color: #c9d1d9; padding: 16px 0; }
+.projects .grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 350px), 1fr)); }
+.projects .card { min-width: 0; overflow-wrap: anywhere; animation: project-reveal 160ms ease-out; }
+.projects [hidden] { display: none !important; }
+@keyframes project-reveal { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .projects .card { animation: none; } }
