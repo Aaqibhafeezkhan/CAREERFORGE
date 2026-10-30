@@ -14,19 +14,48 @@
     <div className="brand">AURA REALMS</div>
     <h1>Exclusive Private Island Charters &amp; Aviation</h1>
     <p>Tailored ultra-high-net-worth concierge experiences across Seychelles, St. Barts, and the Swiss Alps.</p>
-    <button className="book-btn" onclick="inquireConcierge()">Private Inquiry ↗</button>
+    <button type="button" class="book-btn" onclick="inquireConcierge()">Request Briefing ↗</button>
   </header>
 
-  <main className="destinations">
-    <div className="card">
-      <div className="icon">🏝️</div>
+  <main class="destinations" aria-label="Featured luxury stays and experiences">
+    <article class="card">
+      <div class="icon" aria-hidden="true">🏝️</div>
       <h3>The Azure Atoll Sanctuary</h3>
       <p>Private Island • Maldives • Max 12 Guests</p>
-    </div>
-    <div className="card">
-      <div className="icon">🛩️</div>
+      <ul class="amenity-badges" aria-label="Island amenities">
+        <li class="amenity-badge">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 20h18M6 20V9l6-5 6 5v11M9 20v-6h6v6M4 9h16"/></svg>
+          <span>Helipad</span>
+        </li>
+        <li class="amenity-badge">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 17h18l-2 3H6l-3-3ZM5 14l7-8 7 8M12 6V3M8 14h8"/></svg>
+          <span>Private Dock</span>
+        </li>
+        <li class="amenity-badge">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 20h16M6 20v-7h12v7M8 13V7h8v6M10 7V4h4v3M9 10h6"/></svg>
+          <span>Michelin Chef</span>
+        </li>
+        <li class="amenity-badge">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 8h18l-2 11H5L3 8ZM7 8V5h10v3M8 12h8M10 15h4"/></svg>
+          <span>Infinity Pool</span>
+        </li>
+        <li class="amenity-badge">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 3h8v4l-2 2v4l3 3v5H7v-5l3-3V9L8 7V3ZM8 17h8M10 6h4"/></svg>
+          <span>Wine Cellar</span>
+        </li>
+      </ul>
+    </article>
+    <article class="card">
+      <div class="icon" aria-hidden="true">🛩️</div>
       <h3>Global Express 7500 Jet</h3>
       <p>Intercontinental Flight • Custom Interiors</p>
+      <ul class="amenity-badges" aria-label="Private jet amenities">
+        <li class="amenity-badge"><span class="amenity-glyph" aria-hidden="true">✦</span><span>Private Hangar</span></li>
+        <li class="amenity-badge"><span class="amenity-glyph" aria-hidden="true">♨</span><span>Onboard Chef</span></li>
+        <li class="amenity-badge"><span class="amenity-glyph" aria-hidden="true">◇</span><span>Executive Suite</span></li>
+        <li class="amenity-badge"><span class="amenity-glyph" aria-hidden="true">⌁</span><span>Premium Wi-Fi</span></li>
+      </ul>
+    </article>
   </main>
 
   <!-- ===== BEGIN issue #103: Private Aviation Fleet Explorer & Cabin Interior Walkthrough ===== -->
@@ -37,13 +66,30 @@
       <p>Explore our bespoke global charter fleet across Heavy, Super-Midsize, and Light jets. Inspect transcontinental flight range arcs, speed specifications, and embark on high-resolution cabin interior walkthroughs.</p>
     </div>
 
-    <!-- Fleet Filter Controls & Hub Picker -->
-    <div class="fleet-controls" role="region" aria-label="Fleet filters">
+    <!-- Fleet Filter Controls, Hub Picker & Currency Format Toggle -->
+    <div class="fleet-controls" role="region" aria-label="Fleet filters and currency">
       <div class="fleet-filter-group" role="tablist" aria-label="Aircraft category">
         <button type="button" class="fleet-tab active" data-category="all" role="tab" aria-selected="true">All Fleet (4)</button>
         <button type="button" class="fleet-tab" data-category="heavy" role="tab" aria-selected="false">Heavy &amp; Ultra-Long (2)</button>
         <button type="button" class="fleet-tab" data-category="midsize" role="tab" aria-selected="false">Super-Midsize (1)</button>
         <button type="button" class="fleet-tab" data-category="light" role="tab" aria-selected="false">Light Jet (1)</button>
+      </div>
+
+      <div class="fleet-pricing-controls">
+        <!-- Currency Format Toggle (USD, EUR, GBP, AED) -->
+        <div class="fleet-currency-group" role="radiogroup" aria-label="Currency format selector">
+          <span class="currency-group-label">CURRENCY:</span>
+          <button type="button" class="currency-pill active" data-currency="USD" role="radio" aria-checked="true" id="currUSD">$ USD</button>
+          <button type="button" class="currency-pill" data-currency="EUR" role="radio" aria-checked="false" id="currEUR">€ EUR</button>
+          <button type="button" class="currency-pill" data-currency="GBP" role="radio" aria-checked="false" id="currGBP">£ GBP</button>
+          <button type="button" class="currency-pill" data-currency="AED" role="radio" aria-checked="false" id="currAED">AED</button>
+        </div>
+
+        <!-- Rate Period Toggle (Hourly vs Daily) -->
+        <div class="fleet-period-group" role="group" aria-label="Rate frequency">
+          <button type="button" class="period-pill active" data-period="hour" id="periodHour">Hourly</button>
+          <button type="button" class="period-pill" data-period="day" id="periodDay">Daily (8h Block)</button>
+        </div>
       </div>
 
       <div class="fleet-hub-selector">
@@ -226,6 +272,27 @@
     </div>
   </section>
   <!-- ===== END issue #76 ===== -->
+
+  <div class="concierge-overlay" id="conciergeModal" role="dialog" aria-modal="true" aria-labelledby="conciergeTitle" hidden>
+    <section class="concierge-card">
+      <button type="button" class="concierge-close" aria-label="Close inquiry" onclick="closeConcierge()">&times;</button>
+      <p class="concierge-kicker">AURA REALMS · PRIVATE DESK</p>
+      <h2 id="conciergeTitle">Request a Private Briefing</h2>
+      <p class="concierge-intro">Choose your preferred channel and our concierge will arrange a discreet callback.</p>
+      <form id="conciergeForm" class="concierge-form">
+        <fieldset>
+          <legend>Preferred contact method</legend>
+          <label><input type="radio" name="conciergeMethod" value="Signal" checked> Signal</label>
+          <label><input type="radio" name="conciergeMethod" value="WhatsApp VIP"> WhatsApp VIP</label>
+          <label><input type="radio" name="conciergeMethod" value="Private Phone"> Private Phone</label>
+        </fieldset>
+        <label for="conciergeContact">Contact details</label>
+        <input id="conciergeContact" name="contact" type="text" autocomplete="off" required maxlength="120" placeholder="Phone number or account name">
+        <button class="concierge-submit" type="submit">Arrange my briefing</button>
+      </form>
+      <div class="concierge-confirmation" id="conciergeConfirmation" role="status" hidden></div>
+    </section>
+  </div>
 
   <script src="script.js"></script>
 </body>

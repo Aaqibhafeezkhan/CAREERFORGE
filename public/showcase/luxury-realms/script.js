@@ -1,6 +1,29 @@
 function inquireConcierge() {
-  alert('Aura Realms VIP Concierge Booking desk notified!');
+  var modal = document.getElementById('conciergeModal');
+  if (!modal) return;
+  modal.hidden = false;
+  var contact = document.getElementById('conciergeContact');
+  if (contact) contact.focus();
 }
+
+function closeConcierge() {
+  var modal = document.getElementById('conciergeModal');
+  if (modal) modal.hidden = true;
+}
+
+(function () {
+  var form = document.getElementById('conciergeForm');
+  if (!form) return;
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
+    if (!form.reportValidity()) return;
+    var data = new FormData(form);
+    var confirmation = document.getElementById('conciergeConfirmation');
+    confirmation.textContent = 'Your ' + data.get('conciergeMethod') + ' briefing request is confirmed. Our private desk will be in touch shortly.';
+    confirmation.hidden = false;
+    form.hidden = true;
+  });
+})();
 
 /* ===== BEGIN issue #76: travel curator and printable itinerary ===== */
 (function () {
@@ -553,10 +576,24 @@ function inquireConcierge() {
     hub: 'london',
     activeAircraft: FLEET_DATA[0],
     activePhotoIdx: 0,
-    activeTab: 'photo' // 'photo' or 'range'
+    activeTab: 'photo', // 'photo' or 'range'
+    currency: 'USD',
+    period: 'hour' // 'hour' or 'day'
   };
 
-  var usd = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+  var CURRENCIES = {
+    USD: { code: 'USD', symbol: '$', rate: 1.0, locale: 'en-US' },
+    EUR: { code: 'EUR', symbol: '€', rate: 0.92, locale: 'de-DE' },
+    GBP: { code: 'GBP', symbol: '£', rate: 0.79, locale: 'en-GB' },
+    AED: { code: 'AED', symbol: 'AED ', rate: 3.67, locale: 'en-AE' }
+  };
+
+  function formatCharterPrice(usdAmount) {
+    var c = CURRENCIES[state.currency] || CURRENCIES.USD;
+    var converted = Math.round(usdAmount * c.rate);
+    return c.symbol + converted.toLocaleString(c.locale);
+  }
+
 
   // DOM Elements
   var hubSelect = document.getElementById('departureHubSelect');
@@ -706,7 +743,53 @@ function inquireConcierge() {
       footer.className = 'fleet-card-footer';
       var rateBox = document.createElement('div');
       rateBox.className = 'fleet-rate-box';
-      rateBox.innerHTML = '<span>Charter from</span><strong>' + usd.format(ac.rateHour) + '</strong><small>/ flight hr</small>';
+
+      var currentRate = state.period === 'day' ? ac.rateHour * 8 : ac.rateHour;
+      var unitText = state.period === 'day' ? '/ 8h day block' : '/ flight hr';
+      var basePortion = currentRate * 0.85;
+      var incPortion = currentRate * 0.15;
+
+      rateBox.innerHTML = '' +
+        '<div class="rate-header-row">' +
+        '  <span>Charter from</span>' +
+        '  <button type="button" class="price-info-trigger" aria-label="View pricing inclusions and breakdown for ' + ac.name + '" aria-expanded="false" title="Click or hover for price breakdown">' +
+        '    <span class="info-icon" aria-hidden="true">ⓘ</span>' +
+        '    <span class="info-label">Inclusions</span>' +
+        '  </button>' +
+        '</div>' +
+        '<div class="rate-amount-row">' +
+        '  <strong>' + formatCharterPrice(currentRate) + '</strong>' +
+        '  <small>' + unitText + '</small>' +
+        '</div>' +
+        '<div class="price-breakdown-tooltip" role="tooltip" aria-hidden="true">' +
+        '  <div class="tooltip-gold-bar"></div>' +
+        '  <div class="tooltip-header">' +
+        '    <span class="tooltip-kicker">ALL-INCLUSIVE CHARTER PRICING</span>' +
+        '    <h4 class="tooltip-title">' + ac.name + '</h4>' +
+        '  </div>' +
+        '  <div class="tooltip-inclusions-list">' +
+        '    <div class="inc-item"><span class="inc-icon">👨‍✈️</span><div class="inc-desc"><strong>Two Type-Rated Captains &amp; VIP Cabin Attendant</strong><span>Professional flight crew &amp; white-glove service</span></div><span class="inc-tag">Included</span></div>' +
+        '    <div class="inc-item"><span class="inc-icon">⛽</span><div class="inc-desc"><strong>Jet A-1 Fuel &amp; Reserve Tankage</strong><span>Maximum cruise range with zero hidden surcharges</span></div><span class="inc-tag">Included</span></div>' +
+        '    <div class="inc-item"><span class="inc-icon">🥂</span><div class="inc-desc"><strong>Michelin-Caliber Gourmet Dining &amp; Cellar</strong><span>Custom hot dining menu &amp; vintage champagne</span></div><span class="inc-tag">Included</span></div>' +
+        '    <div class="inc-item"><span class="inc-icon">🛫</span><div class="inc-desc"><strong>Private VIP FBO Terminal &amp; Landing Permits</strong><span>Dedicated executive lounge, de-icing &amp; handling</span></div><span class="inc-tag">Included</span></div>' +
+        '    <div class="inc-item"><span class="inc-icon">🛜</span><div class="inc-desc"><strong>Ka-Band Ultra Satellite Connectivity</strong><span>Global uninterrupted Wi-Fi &amp; video calling</span></div><span class="inc-tag">Included</span></div>' +
+        '  </div>' +
+        '  <div class="tooltip-pricing-summary">' +
+        '    <div class="tooltip-row"><span>Base Aircraft Rate:</span><strong>' + formatCharterPrice(basePortion) + '</strong></div>' +
+        '    <div class="tooltip-row gold"><span>VIP Concierge Inclusions (15%):</span><strong>' + formatCharterPrice(incPortion) + '</strong></div>' +
+        '    <div class="tooltip-row total"><span>Total Charter Rate:</span><strong>' + formatCharterPrice(currentRate) + ' ' + unitText + '</strong></div>' +
+        '  </div>' +
+        '  <div class="tooltip-hub-note">No repositioning fees from London, NY, Dubai, or Geneva.</div>' +
+        '</div>';
+
+      var infoTrigger = rateBox.querySelector('.price-info-trigger');
+      if (infoTrigger) {
+        infoTrigger.addEventListener('click', function (e) {
+          e.stopPropagation();
+          var isActive = infoTrigger.classList.toggle('is-active');
+          infoTrigger.setAttribute('aria-expanded', String(isActive));
+        });
+      }
 
       var tourBtn = document.createElement('button');
       tourBtn.type = 'button';
@@ -820,7 +903,9 @@ function inquireConcierge() {
     modalPax.textContent = ac.pax + ' Passengers (Sleeps ' + ac.paxSleep + ')';
     modalAltitude.textContent = ac.cabinAlt;
     modalBaggage.textContent = ac.baggage;
-    modalCharterRate.innerHTML = usd.format(ac.rateHour) + ' <small>/ flight hour</small>';
+    var modalRate = state.period === 'day' ? ac.rateHour * 8 : ac.rateHour;
+    var modalUnit = state.period === 'day' ? '/ 8h day block' : '/ flight hour';
+    modalCharterRate.innerHTML = formatCharterPrice(modalRate) + ' <small>' + modalUnit + '</small>';
 
     // Build Amenities list
     modalAmenitiesList.textContent = '';
@@ -949,6 +1034,56 @@ function inquireConcierge() {
     var ac = state.activeAircraft;
     charterInquiryToast.textContent = '✓ VIP Flight Desk holds allocation ' + ac.callsign.split(' ')[1] + '. Our concierge will contact you in under 15 minutes.';
     charterInquiryToast.hidden = false;
+  });
+
+  // Currency & Rate Period Toggle Listeners
+  var currencyPills = document.querySelectorAll('.currency-pill');
+  var periodPills = document.querySelectorAll('.period-pill');
+
+  currencyPills.forEach(function (pill) {
+    pill.addEventListener('click', function () {
+      var curr = pill.dataset.currency;
+      if (!CURRENCIES[curr]) return;
+      state.currency = curr;
+      currencyPills.forEach(function (p) {
+        var isMatch = p === pill;
+        p.classList.toggle('active', isMatch);
+        p.setAttribute('aria-checked', String(isMatch));
+      });
+      renderFleetGrid();
+      if (!modalOverlay.hidden && state.activeAircraft) {
+        var modalRate = state.period === 'day' ? state.activeAircraft.rateHour * 8 : state.activeAircraft.rateHour;
+        var modalUnit = state.period === 'day' ? '/ 8h day block' : '/ flight hour';
+        modalCharterRate.innerHTML = formatCharterPrice(modalRate) + ' <small>' + modalUnit + '</small>';
+      }
+    });
+  });
+
+  periodPills.forEach(function (pill) {
+    pill.addEventListener('click', function () {
+      var period = pill.dataset.period;
+      if (period !== 'hour' && period !== 'day') return;
+      state.period = period;
+      periodPills.forEach(function (p) {
+        p.classList.toggle('active', p === pill);
+      });
+      renderFleetGrid();
+      if (!modalOverlay.hidden && state.activeAircraft) {
+        var modalRate = state.period === 'day' ? state.activeAircraft.rateHour * 8 : state.activeAircraft.rateHour;
+        var modalUnit = state.period === 'day' ? '/ 8h day block' : '/ flight hour';
+        modalCharterRate.innerHTML = formatCharterPrice(modalRate) + ' <small>' + modalUnit + '</small>';
+      }
+    });
+  });
+
+  // Global click to dismiss active tooltips
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest('.price-info-trigger') && !e.target.closest('.price-breakdown-tooltip')) {
+      document.querySelectorAll('.price-info-trigger.is-active').forEach(function (t) {
+        t.classList.remove('is-active');
+        t.setAttribute('aria-expanded', 'false');
+      });
+    }
   });
 
   // Initial render

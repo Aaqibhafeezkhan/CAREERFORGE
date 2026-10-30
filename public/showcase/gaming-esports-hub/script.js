@@ -1088,4 +1088,38 @@ function initComparator() {
   selB.addEventListener('change', render);
   render();
 }
+
+// ===== Tournament Match Status Filter Tabs (Issue #31) =====
+function initMatchFilters() {
+  var tabs = document.querySelectorAll('.match-filter-tab');
+  var cards = document.querySelectorAll('.match-card');
+  if (!tabs.length || !cards.length) return;
+
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      var filter = tab.getAttribute('data-filter');
+
+      tabs.forEach(function (t) {
+        var isCurrent = (t === tab);
+        t.classList.toggle('active', isCurrent);
+        t.setAttribute('aria-selected', isCurrent ? 'true' : 'false');
+      });
+
+      cards.forEach(function (card) {
+        var status = card.getAttribute('data-status');
+        if (filter === 'all' || status === filter) {
+          card.classList.remove('is-hidden');
+        } else {
+          card.classList.add('is-hidden');
+        }
+      });
+    });
+  });
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initMatchFilters);
+} else {
+  initMatchFilters();
+}
 })();
