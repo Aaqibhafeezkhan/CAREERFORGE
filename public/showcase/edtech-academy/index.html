@@ -335,6 +335,152 @@
     </div>
   </section>
 
+  <!-- ===== BEGIN Issue #191: Interactive Code Challenge Sandbox Editor & Live Syntax Test Runner ===== -->
+  <section class="code-sandbox-section" id="codeSandbox" aria-labelledby="sandboxHeading">
+    <div class="sandbox-header">
+      <div class="tag">// HANDS-ON SYSTEMS CODING SANDBOX</div>
+      <h2 id="sandboxHeading">INTERACTIVE CODE CHALLENGE &amp; TEST RUNNER</h2>
+      <p class="sandbox-subtitle">Write, test, and benchmark real-world systems algorithms with an in-browser sandbox and immediate test telemetry.</p>
+    </div>
+
+    <!-- Challenge Selector Tabs -->
+    <div class="sandbox-challenge-tabs" role="tablist" aria-label="Select Coding Challenge">
+      <button type="button" class="challenge-tab active" data-challenge-id="two-sum" onclick="selectSandboxChallenge('two-sum')" role="tab" aria-selected="true">
+        <span class="tab-badge easy">EASY</span>
+        <span class="tab-title">01: Two-Sum Memory Cache</span>
+      </button>
+      <button type="button" class="challenge-tab" data-challenge-id="valid-brackets" onclick="selectSandboxChallenge('valid-brackets')" role="tab" aria-selected="false">
+        <span class="tab-badge medium">MEDIUM</span>
+        <span class="tab-title">02: Syntax Bracket Validator</span>
+      </button>
+      <button type="button" class="challenge-tab" data-challenge-id="flatten-tensor" onclick="selectSandboxChallenge('flatten-tensor')" role="tab" aria-selected="false">
+        <span class="tab-badge hard">HARD</span>
+        <span class="tab-title">03: Flatten Tensor Matrix</span>
+      </button>
+    </div>
+
+    <div class="sandbox-workspace-grid">
+      <!-- Left Column: Problem Brief & Instructions -->
+      <div class="sandbox-brief-panel">
+        <div class="brief-header">
+          <div class="brief-meta">
+            <span class="brief-category" id="challengeCategory">SYSTEMS MEMORY MANAGEMENT</span>
+            <span class="brief-level-badge easy" id="challengeDifficulty">EASY • 5 PTS</span>
+          </div>
+          <h3 class="brief-title" id="challengeTitle">Two-Sum Memory Cache Lookup</h3>
+        </div>
+
+        <div class="brief-body">
+          <div class="brief-section-title">Problem Statement</div>
+          <p class="brief-desc" id="challengeDesc">
+            Given an array of allocated memory chunk sizes <code>nums</code> and a target buffer chunk <code>target</code>, return the indices of the two memory blocks such that they add up to exactly <code>target</code>.
+          </p>
+
+          <div class="brief-section-title">Example Test Case</div>
+          <div class="example-box">
+            <div class="example-row"><span class="ex-lbl">Input:</span> <code id="challengeExampleInput">nums = [2, 7, 11, 15], target = 9</code></div>
+            <div class="example-row"><span class="ex-lbl">Output:</span> <code id="challengeExampleOutput">[0, 1]</code></div>
+            <div class="example-row"><span class="ex-lbl">Explanation:</span> <span id="challengeExampleExplanation">nums[0] + nums[1] == 2 + 7 == 9, so we return [0, 1].</span></div>
+          </div>
+
+          <div class="brief-section-title">Constraints &amp; Rules</div>
+          <ul class="brief-constraints-list" id="challengeConstraints">
+            <li>Each input has exactly one valid solution.</li>
+            <li>You may not use the same element twice.</li>
+            <li>Target linear time complexity: <code>O(n)</code> using a Hash Map.</li>
+          </ul>
+
+          <!-- Hint Accordion -->
+          <div class="sandbox-hint-wrap">
+            <button type="button" class="btn-hint-toggle" id="btnHintToggle" onclick="toggleSandboxHint()">
+              <span>💡 Need an algorithmic hint?</span>
+              <span class="hint-chevron" id="hintChevron">▼</span>
+            </button>
+            <div class="sandbox-hint-content" id="sandboxHintContent" hidden>
+              <p id="challengeHintText">Store each visited element in a Map <code>(value =&gt; index)</code>. For each new element, check if <code>target - current</code> already exists in the map.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Code Editor & Live Test Console -->
+      <div class="sandbox-editor-panel">
+        <div class="editor-top-bar">
+          <div class="editor-file-info">
+            <span class="editor-file-icon">⚡</span>
+            <span class="editor-file-name" id="editorFileName">solution.js</span>
+            <span class="editor-env-pill">JavaScript (ES6+)</span>
+          </div>
+          <div class="editor-actions">
+            <button type="button" class="btn-editor-action" onclick="resetSandboxCode()" title="Reset to initial starter code">
+              <span>↺ Reset</span>
+            </button>
+            <button type="button" class="btn-editor-action" onclick="copySandboxCode()" title="Copy code to clipboard">
+              <span>📋 Copy</span>
+            </button>
+            <button type="button" class="btn-run-tests" id="btnRunTests" onclick="runSandboxTests()">
+              <span class="btn-icon">▶</span>
+              <span>Run Tests</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Editor Container with dynamic line numbers -->
+        <div class="editor-textarea-container" id="editorTextareaContainer">
+          <div class="editor-gutter" id="editorGutter" aria-hidden="true">1</div>
+          <textarea
+            id="codeEditorTextarea"
+            class="code-editor-textarea"
+            spellcheck="false"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            aria-label="Code Editor"
+          ></textarea>
+        </div>
+
+        <!-- Bottom: Test Results & Execution Console -->
+        <div class="sandbox-console-panel" id="sandboxConsolePanel">
+          <div class="console-nav-bar">
+            <div class="console-tabs" role="tablist">
+              <button type="button" class="console-tab active" id="tabTestCases" onclick="switchConsoleTab('tests')">
+                <span>Test Cases</span>
+                <span class="console-count-pill" id="consoleTestCount">4/4</span>
+              </button>
+              <button type="button" class="console-tab" id="tabStdout" onclick="switchConsoleTab('stdout')">
+                <span>Console Output</span>
+                <span class="console-dot" id="consoleStdoutDot"></span>
+              </button>
+            </div>
+
+            <div class="console-telemetry-meta">
+              <span class="telemetry-runtime" id="telemetryRuntime">⏱ Ready</span>
+              <span class="telemetry-status-badge ready" id="telemetryStatusBadge">IDLE</span>
+            </div>
+          </div>
+
+          <!-- Tab Content: Test Case Results -->
+          <div class="console-tab-view" id="consoleTestsView">
+            <div class="test-results-list" id="testResultsList">
+              <div class="test-idle-placeholder">
+                <span class="placeholder-icon">🚀</span>
+                <p>Click <strong>Run Tests</strong> above to validate your solution against automated unit tests and benchmark execution time.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab Content: Stdout / Console.log stream -->
+          <div class="console-tab-view" id="consoleStdoutView" hidden>
+            <div class="stdout-console" id="stdoutConsole">
+              <span class="stdout-empty">// Standard console.log output will appear here when tests execute...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- ===== END Issue #191 ===== -->
+
   <section class="flashcards" id="flashcards" aria-labelledby="fcTitle">
     <h2 id="fcTitle">CODING FLASHCARDS</h2>
     <p class="fc-lead">Spaced repetition: cards you miss come back sooner, cards you know come back later. Progress is saved in this browser only.</p>
