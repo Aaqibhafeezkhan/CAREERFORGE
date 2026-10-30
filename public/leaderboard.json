@@ -1,13 +1,13 @@
 {
-  "last_updated": "2026-10-30T02:30:33.959Z",
-  "total_merged_prs": 76,
+  "last_updated": "2026-10-30T17:54:26.021Z",
+  "total_merged_prs": 83,
   "contributors": [
     {
       "rank": 1,
       "username": "souravranjanmirdha-sudo",
       "avatar_url": "https://avatars.githubusercontent.com/u/239816041?v=4",
       "profile_url": "https://github.com/souravranjanmirdha-sudo",
-      "merged_prs": 21
+      "merged_prs": 27
     },
     {
       "rank": 2,
@@ -21,7 +21,7 @@
       "username": "aush5895",
       "avatar_url": "https://avatars.githubusercontent.com/u/229103100?v=4",
       "profile_url": "https://github.com/aush5895",
-      "merged_prs": 10
+      "merged_prs": 11
     },
     {
       "rank": 4,
@@ -82,6 +82,11 @@
   ],
   "_cache": {
     "processed_pr_numbers": [
+      223,
+      222,
+      221,
+      220,
+      219,
       218,
       217,
       216,
@@ -90,8 +95,10 @@
       213,
       212,
       171,
+      170,
       169,
       168,
+      167,
       166,
       165,
       164,
@@ -159,6 +166,6 @@
       87,
       4
     ],
-    "cached_at": "2026-10-30T02:30:33.959Z"
+    "cached_at": "2026-10-30T17:54:26.021Z"
   }
 }
