@@ -16,12 +16,32 @@
       <div class="event-date">OCTOBER 24-26 • TOKYO CYBER DOME</div>
       <h1 class="glitch-title">PULSE WAVE 2026</h1>
       <p class="subtitle">The premier 3-day immersive audio-visual synthesizer festival.</p>
-  <div class="countdown" id="timer">
-    <div class="time-unit"><span id="days">42</span><label>DAYS</label></div>
-    <div class="time-unit"><span id="hours">18</span><label>HOURS</label></div>
-    <div class="time-unit"><span id="mins">35</span><label>MINS</label></div>
-  </div>
-</div>
+
+      <div class="countdown-wrapper">
+        <div class="countdown-status" aria-live="polite">
+          <span class="live-dot" aria-hidden="true"></span>
+          <span>LIVE EVENT COUNTDOWN // GATES OPEN IN</span>
+        </div>
+        <div class="countdown" id="timer" role="timer" aria-label="Festival start countdown">
+          <div class="time-unit">
+            <span class="time-value" id="days">42</span>
+            <label class="time-label">DAYS</label>
+          </div>
+          <div class="time-unit">
+            <span class="time-value" id="hours">18</span>
+            <label class="time-label">HOURS</label>
+          </div>
+          <div class="time-unit">
+            <span class="time-value" id="mins">35</span>
+            <label class="time-label">MINUTES</label>
+          </div>
+          <div class="time-unit seconds-unit">
+            <span class="time-value" id="secs">59</span>
+            <label class="time-label">SECONDS</label>
+          </div>
+        </div>
+      </div>
+    </div>
   </header>
   <main class="lineup-container">
     <h2>YOUR FESTIVAL EXPERIENCE</h2>

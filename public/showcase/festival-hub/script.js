@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ---------------------------------------------------------------
-// Live Event Countdown Timer
+// Live Event Countdown Timer (Issue #27)
 // ---------------------------------------------------------------
 function initFestivalCountdown() {
   const daysEl = document.getElementById('days');
@@ -17,10 +17,12 @@ function initFestivalCountdown() {
 
   if (!daysEl || !hoursEl || !minsEl || !secsEl) return;
 
+  // Compute festival target timestamp (stored in session to keep ticking consistently)
   const STORAGE_KEY = 'pulsewave_festival_target_ts';
   let targetTs = parseInt(sessionStorage.getItem(STORAGE_KEY), 10);
 
   if (!targetTs || isNaN(targetTs) || targetTs <= Date.now()) {
+    // 42 days, 18 hours, 35 minutes, 20 seconds from first load
     targetTs = Date.now() + (42 * 86400 + 18 * 3600 + 35 * 60 + 20) * 1000;
     sessionStorage.setItem(STORAGE_KEY, String(targetTs));
   }
