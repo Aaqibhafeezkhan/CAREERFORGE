@@ -181,10 +181,20 @@
       <p class="skills-empty" hidden>No skills found in this category.</p>
     </section>
 
-    <section class="projects">
-      <h2>Open Source Projects</h2>
-      <div class="grid">
-        <div class="card">
+    <section class="projects" aria-labelledby="projects-title">
+      <h2 id="projects-title">Open Source Projects</h2>
+      <div class="project-toolbar" hidden>
+        <div class="project-filters" role="group" aria-label="Filter projects by category">
+          <button type="button" data-project-filter="all" aria-pressed="true" aria-controls="project-grid">All</button>
+          <button type="button" data-project-filter="web" aria-pressed="false" aria-controls="project-grid">Web Apps</button>
+          <button type="button" data-project-filter="cli" aria-pressed="false" aria-controls="project-grid">CLI Tools</button>
+          <button type="button" data-project-filter="open-source" aria-pressed="false" aria-controls="project-grid">Open Source</button>
+          <button type="button" data-project-filter="ai" aria-pressed="false" aria-controls="project-grid">AI</button>
+        </div>
+        <p class="project-count" role="status" aria-live="polite" aria-atomic="true">2 projects</p>
+      </div>
+      <div class="grid" id="project-grid">
+        <div class="card" data-project-categories="open-source">
           <h3>⚡ hyper-mesh-router</h3>
           <p>Zero-allocation HTTP/3 load balancer compiled to eBPF byte-code.</p>
           <div class="card-footer">
@@ -192,7 +202,7 @@
             <span class="lang">Rust</span>
           </div>
         </div>
-        <div class="card">
+        <div class="card" data-project-categories="cli open-source">
           <h3>📦 wasm-container-daemon</h3>
           <p>Ultra-lightweight OCI compliant container runtime running WASM binaries in < 5ms.</p>
           <div class="card-footer">
@@ -201,6 +211,7 @@
           </div>
         </div>
       </div>
+      <p class="project-empty" hidden>No projects in this category yet. Choose All to see every project.</p>
     </section>
 
     <section class="shell" aria-labelledby="shell-title">
