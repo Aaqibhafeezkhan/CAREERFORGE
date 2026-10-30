@@ -82,6 +82,7 @@ window.playVoiceSample = function playVoiceSample() {
 document.addEventListener('DOMContentLoaded', () => {
   initVoiceStudioTuner();
   initTtsStudio();
+  initMultiTrackWaveform();
 });
 
 // ---------- Voice Studio Tuner Engine ----------
@@ -614,4 +615,419 @@ function initTtsStudio() {
 
   window.addEventListener('pagehide', () => synth.cancel());
   setState('idle');
+}
+
+
+// ===============================================================
+// Interactive Multi-Track Audio Waveform Generator (Issue #175)
+// ===============================================================
+function initMultiTrackWaveform() {
+  const canvas = document.getElementById('voiceWaveform');
+  if (!canvas) return;
+
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  const playBtn = document.getElementById('wfPlayBtn');
+  const playLabel = document.getElementById('wfPlayLabel');
+  const playIcon = document.getElementById('wfPlayIcon');
+  const freezeBtn = document.getElementById('wfFreezeBtn');
+  const gainSlider = document.getElementById('wfGainSlider');
+  const gainValEl = document.getElementById('wfGainVal');
+  const timecodeEl = document.getElementById('wfTimecode');
+  const trackTabs = document.querySelectorAll('.track-tab');
+  const styleBtns = document.querySelectorAll('.style-btn');
+
+  // Waveform State
+  let isPlaying = false;
+  let isFrozen = false;
+  let activeTrack = 'voice'; // 'voice', 'harmony', 'master'
+  let visualStyle = 'bars';  // 'bars', 'wave', 'particles'
+  let sensitivityGain = 1.0;
+  let _animationFrameId = null;
+  let elapsedSec = 0;
+  let lastTimestamp = performance.now();
+
+  const BANDS = 64;
+  const currentLevels = new Float32Array(BANDS);
+  const targetLevels = new Float32Array(BANDS);
+  const peakLevels = new Float32Array(BANDS);
+  const particles = [];
+
+  // Generate initial frequency seeds
+  for (let i = 0; i < BANDS; i++) {
+    currentLevels[i] = 0.08 + Math.random() * 0.12;
+    targetLevels[i] = currentLevels[i];
+    peakLevels[i] = currentLevels[i];
+  }
+
+  // Pre-seed floating particles
+  for (let p = 0; p < 45; p++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 1.5,
+      vy: -0.3 - Math.random() * 1.2,
+      radius: 1.5 + Math.random() * 2.5,
+      alpha: 0.2 + Math.random() * 0.7,
+      bandIdx: Math.floor(Math.random() * BANDS)
+    });
+  }
+
+  // Track Profiles Configuration
+  const TRACK_PROFILES = {
+    voice: {
+      name: 'Neural Voice',
+      colorStart: '#06b6d4',
+      colorMid: '#38bdf8',
+      colorEnd: '#0284c7',
+      glow: 'rgba(6, 182, 212, 0.4)',
+      accent: '#38bdf8',
+      freqFactor: 1.0,
+      baseCenter: 24
+    },
+    harmony: {
+      name: 'Ambient Harmony',
+      colorStart: '#c084fc',
+      colorMid: '#a855f7',
+      colorEnd: '#7e22ce',
+      glow: 'rgba(168, 85, 247, 0.4)',
+      accent: '#c084fc',
+      freqFactor: 0.7,
+      baseCenter: 14
+    },
+    master: {
+      name: 'Master Output',
+      colorStart: '#ec4899',
+      colorMid: '#f43f5e',
+      colorEnd: '#be185d',
+      glow: 'rgba(236, 72, 153, 0.4)',
+      accent: '#f472b6',
+      freqFactor: 1.2,
+      baseCenter: 32
+    }
+  };
+
+  // Helper: Retrieve active tuner parameters (pitch & speed)
+  function getTunerModulation() {
+    const pitchSlider = document.getElementById('tunerPitch');
+    const speedSlider = document.getElementById('tunerSpeed');
+    const pitch = pitchSlider ? parseFloat(pitchSlider.value) : 1.0;
+    const speed = speedSlider ? parseFloat(speedSlider.value) : 1.0;
+    return { pitch: Math.max(0.5, pitch), speed: Math.max(0.5, speed) };
+  }
+
+  // Simulation physics step
+  function updatePhysics(dt) {
+    if (isFrozen) return;
+
+    const { pitch, speed } = getTunerModulation();
+    const profile = TRACK_PROFILES[activeTrack] || TRACK_PROFILES.voice;
+
+    if (isPlaying) {
+      elapsedSec += dt * speed;
+      if (elapsedSec > 3600) elapsedSec = 0;
+    }
+
+    const time = elapsedSec * 3.5 * profile.freqFactor;
+
+    for (let i = 0; i < BANDS; i++) {
+      if (isPlaying) {
+        // Multi-frequency sinusoidal synthesis with harmonic resonance
+        const distFromCenter = Math.abs(i - profile.baseCenter) / BANDS;
+
+        // Formant envelope
+        const formant = Math.exp(-distFromCenter * 3.5);
+
+        // Sinusoidal rhythm waves
+        const wave1 = Math.sin(time * 2.2 + i * 0.28 * pitch);
+        const wave2 = Math.cos(time * 1.5 - i * 0.18);
+        const wave3 = Math.sin(time * 4.8 + i * 0.45);
+        const noise = (Math.random() - 0.5) * 0.15;
+
+        let composite = (wave1 * 0.45 + wave2 * 0.35 + wave3 * 0.2 + noise) * formant;
+        composite = Math.max(0.04, (composite + 0.4) * 0.85);
+
+        targetLevels[i] = composite * sensitivityGain;
+      } else {
+        // Subtle ambient idle breathing
+        const idleWave = Math.sin(performance.now() * 0.002 + i * 0.2);
+        targetLevels[i] = (0.06 + Math.abs(idleWave) * 0.08) * sensitivityGain;
+      }
+
+      // Smooth lerp to target
+      currentLevels[i] += (targetLevels[i] - currentLevels[i]) * 0.22;
+
+      // Peak decay
+      if (currentLevels[i] > peakLevels[i]) {
+        peakLevels[i] = currentLevels[i];
+      } else {
+        peakLevels[i] -= 0.015;
+      }
+      if (peakLevels[i] < 0.05) peakLevels[i] = 0.05;
+    }
+
+    // Format timecode (MM:SS.ms)
+    const mins = Math.floor(elapsedSec / 60);
+    const secs = Math.floor(elapsedSec % 60);
+    const centis = Math.floor((elapsedSec * 100) % 100);
+    if (timecodeEl) {
+      timecodeEl.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}.${String(centis).padStart(2, '0')} / 05:00.00`;
+    }
+  }
+
+  // Render loop
+  function draw() {
+    const w = canvas.width;
+    const h = canvas.height;
+    const profile = TRACK_PROFILES[activeTrack] || TRACK_PROFILES.voice;
+
+    ctx.clearRect(0, 0, w, h);
+
+    // Baseline axis
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, h * 0.88);
+    ctx.lineTo(w, h * 0.88);
+    ctx.stroke();
+
+    if (visualStyle === 'bars') {
+      renderSpectrumBars(w, h, profile);
+    } else if (visualStyle === 'wave') {
+      renderOscilloscopeWave(w, h, profile);
+    } else if (visualStyle === 'particles') {
+      renderFrequencyParticles(w, h, profile);
+    }
+
+    // Interactive connection to header sample play buttons:
+    // If a sample is playing in Voice Models, sync active visualizer state!
+    const anySamplePlaying = document.querySelector('.sample-play-btn.is-playing');
+    if (anySamplePlaying && !isPlaying) {
+      setVisualizerPlaying(true);
+    }
+  }
+
+  // 1. Spectrum Bars Render
+  function renderSpectrumBars(w, h, profile) {
+    const barSpacing = 3;
+    const totalSpacing = (BANDS - 1) * barSpacing;
+    const barWidth = Math.max(3, (w - totalSpacing) / BANDS);
+    const maxBarHeight = h * 0.76;
+    const baseY = h * 0.88;
+
+    for (let i = 0; i < BANDS; i++) {
+      const x = i * (barWidth + barSpacing);
+      const level = Math.min(1.0, currentLevels[i]);
+      const barH = Math.max(4, level * maxBarHeight);
+      const y = baseY - barH;
+
+      // Vertical Bar Gradient
+      const barGrad = ctx.createLinearGradient(x, baseY, x, y);
+      barGrad.addColorStop(0, profile.colorEnd);
+      barGrad.addColorStop(0.6, profile.colorMid);
+      barGrad.addColorStop(1, profile.colorStart);
+
+      ctx.fillStyle = barGrad;
+      ctx.shadowColor = profile.glow;
+      ctx.shadowBlur = level > 0.5 ? 12 : 4;
+
+      // Rounded top bar
+      ctx.beginPath();
+      const r = Math.min(barWidth / 2, 4);
+      if (ctx.roundRect) {
+        ctx.roundRect(x, y, barWidth, barH, [r, r, 0, 0]);
+      } else {
+        ctx.rect(x, y, barWidth, barH);
+      }
+      ctx.fill();
+
+      // Peak hold indicator caps
+      const peakY = baseY - Math.min(1.0, peakLevels[i]) * maxBarHeight - 3;
+      ctx.fillStyle = profile.accent;
+      ctx.shadowColor = profile.accent;
+      ctx.shadowBlur = 8;
+      ctx.fillRect(x, Math.max(6, peakY), barWidth, 2);
+
+      // Subtle reflection under baseline
+      ctx.fillStyle = profile.colorEnd;
+      ctx.globalAlpha = 0.22;
+      ctx.fillRect(x, baseY + 2, barWidth, barH * 0.25);
+      ctx.globalAlpha = 1.0;
+    }
+    ctx.shadowBlur = 0;
+  }
+
+  // 2. Continuous Oscilloscope Wave
+  function renderOscilloscopeWave(w, h, profile) {
+    const centerY = h * 0.52;
+    const maxAmp = h * 0.42;
+
+    ctx.beginPath();
+    ctx.moveTo(0, centerY);
+
+    for (let i = 0; i < BANDS; i++) {
+      const x = (i / (BANDS - 1)) * w;
+      const level = currentLevels[i];
+      const sign = (i % 2 === 0 ? 1 : -1);
+      const y = centerY + sign * level * maxAmp;
+      if (i === 0) ctx.moveTo(x, y);
+      else {
+        const prevX = ((i - 1) / (BANDS - 1)) * w;
+        const prevY = centerY + (i % 2 !== 0 ? 1 : -1) * currentLevels[i - 1] * maxAmp;
+        const midX = (prevX + x) / 2;
+        ctx.quadraticCurveTo(prevX, prevY, midX, (prevY + y) / 2);
+      }
+    }
+
+    ctx.strokeStyle = profile.colorStart;
+    ctx.lineWidth = 3;
+    ctx.shadowColor = profile.glow;
+    ctx.shadowBlur = 18;
+    ctx.stroke();
+
+    // Mirror harmonic shadow wave
+    ctx.beginPath();
+    ctx.moveTo(0, centerY);
+    for (let i = 0; i < BANDS; i++) {
+      const x = (i / (BANDS - 1)) * w;
+      const level = currentLevels[i] * 0.5;
+      const sign = (i % 2 === 0 ? -1 : 1);
+      const y = centerY + sign * level * maxAmp;
+      ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = profile.colorEnd;
+    ctx.lineWidth = 1.5;
+    ctx.shadowBlur = 8;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+  }
+
+  // 3. Floating Frequency Particles
+  function renderFrequencyParticles(w, h, profile) {
+    renderSpectrumBars(w, h, profile); // background bars with lowered opacity
+
+    particles.forEach((pt) => {
+      if (!isFrozen && isPlaying) {
+        pt.x += pt.vx;
+        pt.y += pt.vy * (1 + currentLevels[pt.bandIdx] * 2);
+
+        if (pt.y < 0) {
+          pt.y = h * 0.88;
+          pt.x = Math.random() * w;
+        }
+        if (pt.x < 0) pt.x = w;
+        if (pt.x > w) pt.x = 0;
+      }
+
+      const bandEnergy = currentLevels[pt.bandIdx];
+      const radius = pt.radius * (1 + bandEnergy * 1.5);
+
+      ctx.beginPath();
+      ctx.arc(pt.x, pt.y, radius, 0, Math.PI * 2);
+      ctx.fillStyle = profile.colorStart;
+      ctx.globalAlpha = Math.min(1.0, pt.alpha + bandEnergy * 0.5);
+      ctx.shadowColor = profile.glow;
+      ctx.shadowBlur = 10;
+      ctx.fill();
+    });
+    ctx.globalAlpha = 1.0;
+    ctx.shadowBlur = 0;
+  }
+
+  // Animation Loop
+  function loop(now) {
+    const dt = Math.min(0.1, (now - lastTimestamp) / 1000);
+    lastTimestamp = now;
+
+    updatePhysics(dt);
+    draw();
+
+    _animationFrameId = requestAnimationFrame(loop);
+  }
+
+  // Controller Functions
+  function setVisualizerPlaying(state) {
+    isPlaying = state;
+    if (playBtn) {
+      playBtn.classList.toggle('is-playing', isPlaying);
+      if (playLabel) playLabel.textContent = isPlaying ? 'Pause Real-Time Stream' : 'Start Real-Time Stream';
+      if (playIcon) playIcon.textContent = isPlaying ? '⏸' : '▶';
+    }
+  }
+
+  // Event Listeners
+  if (playBtn) {
+    playBtn.addEventListener('click', () => {
+      setVisualizerPlaying(!isPlaying);
+      if (isFrozen) {
+        isFrozen = false;
+        if (freezeBtn) freezeBtn.classList.remove('is-frozen');
+      }
+    });
+  }
+
+  if (freezeBtn) {
+    freezeBtn.addEventListener('click', () => {
+      isFrozen = !isFrozen;
+      freezeBtn.classList.toggle('is-frozen', isFrozen);
+      freezeBtn.querySelector('span').textContent = isFrozen ? '▶ Unfreeze' : '❄️ Freeze';
+    });
+  }
+
+  if (gainSlider) {
+    gainSlider.addEventListener('input', (e) => {
+      sensitivityGain = parseFloat(e.target.value);
+      if (gainValEl) gainValEl.textContent = `${sensitivityGain.toFixed(1)}x`;
+    });
+  }
+
+  trackTabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      trackTabs.forEach((t) => {
+        const isCurrent = (t === tab);
+        t.classList.toggle('active', isCurrent);
+        t.setAttribute('aria-selected', isCurrent ? 'true' : 'false');
+      });
+      activeTrack = tab.getAttribute('data-track') || 'voice';
+    });
+  });
+
+  styleBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      styleBtns.forEach((b) => b.classList.toggle('active', b === btn));
+      visualStyle = btn.getAttribute('data-style') || 'bars';
+    });
+  });
+
+  // Responsive Canvas Resize Observer
+  const resizeObserver = new ResizeObserver((entries) => {
+    for (const entry of entries) {
+      const rect = entry.contentRect;
+      if (rect.width > 0) {
+        canvas.width = Math.floor(rect.width * window.devicePixelRatio || 1);
+        canvas.height = Math.floor(rect.height * window.devicePixelRatio || 1);
+        ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+      }
+    }
+  });
+  if (canvas.parentElement) {
+    resizeObserver.observe(canvas.parentElement);
+  }
+
+  // Start animated frame loop
+  _animationFrameId = requestAnimationFrame(loop);
+
+  // Hook into tuner preview button to automatically trigger audio visualization
+  const tunerPreviewBtn = document.getElementById('btnPreviewTunedVoice');
+  if (tunerPreviewBtn) {
+    tunerPreviewBtn.addEventListener('click', () => {
+      setVisualizerPlaying(true);
+      setTimeout(() => {
+        if (!document.querySelector('.sample-play-btn.is-playing')) {
+          // let it run or settle
+        }
+      }, 3500);
+    });
+  }
 }
