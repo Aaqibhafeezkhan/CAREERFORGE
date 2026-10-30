@@ -1174,3 +1174,480 @@ function showCertificate(name) {
     animateMiniCardProgress();
   }
 })();
+
+
+/* ===== BEGIN Issue #191: Interactive Code Challenge Sandbox Editor & Live Syntax Test Runner ===== */
+(function initCodeSandbox() {
+  'use strict';
+
+  const CHALLENGES = {
+    'two-sum': {
+      id: 'two-sum',
+      category: 'SYSTEMS MEMORY MANAGEMENT',
+      title: 'Two-Sum Memory Cache Lookup',
+      difficulty: 'EASY • 5 PTS',
+      difficultyClass: 'easy',
+      desc: 'Given an array of allocated memory chunk sizes <code>nums</code> and a target buffer chunk <code>target</code>, return the indices of the two memory blocks such that they add up to exactly <code>target</code>.',
+      exampleInput: 'nums = [2, 7, 11, 15], target = 9',
+      exampleOutput: '[0, 1]',
+      exampleExplanation: 'nums[0] + nums[1] == 2 + 7 == 9, so we return [0, 1].',
+      constraints: [
+        'Each input has exactly one valid solution.',
+        'You may not use the same element twice.',
+        'Target linear time complexity: O(n) using a Hash Map.'
+      ],
+      hint: 'Store each visited element in a Map (value => index). For each new element, check if (target - current) already exists in the map.',
+      functionName: 'twoSum',
+      starterCode: `/**\n * @param {number[]} nums - Memory block allocations\n * @param {number} target - Target chunk size\n * @return {number[]} Indices of the two memory blocks\n */\nfunction twoSum(nums, target) {\n  const map = new Map();\n  for (let i = 0; i < nums.length; i++) {\n    const complement = target - nums[i];\n    if (map.has(complement)) {\n      return [map.get(complement), i];\n    }\n    map.set(nums[i], i);\n  }\n  return [];\n}`,
+      testCases: [
+        { name: 'Standard contiguous array lookup', args: [[2, 7, 11, 15], 9], expected: [0, 1] },
+        { name: 'Non-zero start index pair', args: [[3, 2, 4], 6], expected: [1, 2] },
+        { name: 'Duplicate values in memory', args: [[3, 3], 6], expected: [0, 1] },
+        { name: 'Larger memory addresses', args: [[1, 5, 8, 12, 14], 22], expected: [2, 4] }
+      ]
+    },
+    'valid-brackets': {
+      id: 'valid-brackets',
+      category: 'COMPILER TOKEN PARSER',
+      title: 'Syntax Bracket Validator',
+      difficulty: 'MEDIUM • 10 PTS',
+      difficultyClass: 'medium',
+      desc: 'Given a source code snippet <code>code</code>, determine if all parentheses <code>()</code>, square brackets <code>[]</code>, and curly braces <code>{}</code> are properly nested, matched, and closed.',
+      exampleInput: 'code = "function add(a, b) { return (a + b); }"',
+      exampleOutput: 'true',
+      exampleExplanation: 'All opening delimiters are closed in the exact inverse order of opening.',
+      constraints: [
+        'Input contains alphanumeric code characters plus (), [], {}.',
+        'Open brackets must be closed by the same type of brackets.',
+        'Open brackets must be closed in the correct order.'
+      ],
+      hint: 'Use a stack data structure (array with push/pop). When encountering an open bracket, push it; when encountering a close bracket, verify it matches the popped element.',
+      functionName: 'isValidBrackets',
+      starterCode: `/**\n * Validate that all brackets '()', '[]', '{}' in code are properly closed and nested.\n * @param {string} code - Source code snippet\n * @return {boolean} True if all brackets are properly balanced\n */\nfunction isValidBrackets(code) {\n  const stack = [];\n  const map = { ')': '(', ']': '[', '}': '{' };\n  for (const char of code) {\n    if (char === '(' || char === '[' || char === '{') {\n      stack.push(char);\n    } else if (char === ')' || char === ']' || char === '}') {\n      if (stack.pop() !== map[char]) {\n        return false;\n      }\n    }\n  }\n  return stack.length === 0;\n}`,
+      testCases: [
+        { name: 'Properly closed function block', args: ['function add(a, b) { return (a + b); }'], expected: true },
+        { name: 'Nested array & object literal', args: ['const arr = [1, (2 + 3), { x: 4 }];'], expected: true },
+        { name: 'Unclosed parenthesis syntax error', args: ['if (x > 0) { arr[0] = (val; }'], expected: false },
+        { name: 'Interleaved mismatched brackets', args: ['([)]'], expected: false }
+      ]
+    },
+    'flatten-tensor': {
+      id: 'flatten-tensor',
+      category: 'TENSOR MEMORY CONTIGUITY',
+      title: 'Flatten Tensor Matrix',
+      difficulty: 'HARD • 15 PTS',
+      difficultyClass: 'hard',
+      desc: 'Flatten an arbitrarily nested array representing a multi-dimensional tensor matrix into a single contiguous 1D vector. Note: Do NOT use the built-in <code>Array.prototype.flat()</code>.',
+      exampleInput: 'arr = [1, [2, 3], [4, [5, 6]]]',
+      exampleOutput: '[1, 2, 3, 4, 5, 6]',
+      exampleExplanation: 'All nested levels are unwrapped into a flat 1D sequence.',
+      constraints: [
+        'Depth of nested dimensions can range from 1 to 10+ levels.',
+        'Do not use Array.prototype.flat() or flatMap().',
+        'Must preserve original scalar element ordering.'
+      ],
+      hint: 'Implement a recursive traversal helper or use an iterative stack queue that inspects Array.isArray(item).',
+      functionName: 'flattenTensor',
+      starterCode: `/**\n * Flattens an arbitrarily nested array of tensor dimensions into a 1D vector.\n * Note: Do NOT use Array.prototype.flat()\n * @param {any[]} arr - Multi-dimensional tensor array\n * @return {any[]} 1D flattened vector\n */\nfunction flattenTensor(arr) {\n  const result = [];\n  function recurse(items) {\n    for (const item of items) {\n      if (Array.isArray(item)) {\n        recurse(item);\n      } else {\n        result.push(item);\n      }\n    }\n  }\n  recurse(arr);\n  return result;\n}`,
+      testCases: [
+        { name: 'Mixed 2-level and 3-level nesting', args: [[1, [2, 3], [4, [5, 6]]]], expected: [1, 2, 3, 4, 5, 6] },
+        { name: 'Deeply wrapped single scalars', args: [[[[1]], [[2]], [[[3]]]]], expected: [1, 2, 3] },
+        { name: 'Single element 1D array', args: [[42]], expected: [42] },
+        { name: 'Asymmetric nested chain', args: [[1, [2, [3, [4, [5]]]]]], expected: [1, 2, 3, 4, 5] }
+      ]
+    }
+  };
+
+  let activeChallengeId = 'two-sum';
+  const userCodeStore = {};
+
+  function updateLineNumbers() {
+    const textarea = document.getElementById('codeEditorTextarea');
+    const gutter = document.getElementById('editorGutter');
+    if (!textarea || !gutter) return;
+
+    const lines = textarea.value.split('\n').length;
+    let lineNumsStr = '';
+    for (let i = 1; i <= Math.max(1, lines); i++) {
+      lineNumsStr += i + '\n';
+    }
+    gutter.textContent = lineNumsStr.trimEnd();
+  }
+
+  function renderChallenge(challengeId) {
+    const ch = CHALLENGES[challengeId];
+    if (!ch) return;
+
+    activeChallengeId = challengeId;
+
+    // Update Tab UI
+    document.querySelectorAll('.challenge-tab').forEach((tab) => {
+      const isAct = tab.getAttribute('data-challenge-id') === challengeId;
+      tab.classList.toggle('active', isAct);
+      tab.setAttribute('aria-selected', String(isAct));
+    });
+
+    // Update Brief Panel
+    const catEl = document.getElementById('challengeCategory');
+    if (catEl) catEl.textContent = ch.category;
+
+    const diffEl = document.getElementById('challengeDifficulty');
+    if (diffEl) {
+      diffEl.textContent = ch.difficulty;
+      diffEl.className = `brief-level-badge ${ch.difficultyClass}`;
+    }
+
+    const titleEl = document.getElementById('challengeTitle');
+    if (titleEl) titleEl.textContent = ch.title;
+
+    const descEl = document.getElementById('challengeDesc');
+    if (descEl) descEl.innerHTML = ch.desc;
+
+    const inEl = document.getElementById('challengeExampleInput');
+    if (inEl) inEl.textContent = ch.exampleInput;
+
+    const outEl = document.getElementById('challengeExampleOutput');
+    if (outEl) outEl.textContent = ch.exampleOutput;
+
+    const expEl = document.getElementById('challengeExampleExplanation');
+    if (expEl) expEl.textContent = ch.exampleExplanation;
+
+    const constrList = document.getElementById('challengeConstraints');
+    if (constrList) {
+      constrList.innerHTML = ch.constraints.map((c) => `<li>${c}</li>`).join('');
+    }
+
+    const hintText = document.getElementById('challengeHintText');
+    if (hintText) hintText.textContent = ch.hint;
+
+    // Reset hint toggle
+    const hintContent = document.getElementById('sandboxHintContent');
+    const hintChevron = document.getElementById('hintChevron');
+    if (hintContent) hintContent.hidden = true;
+    if (hintChevron) hintChevron.classList.remove('open');
+
+    // Update Code Editor
+    const textarea = document.getElementById('codeEditorTextarea');
+    if (textarea) {
+      textarea.value = userCodeStore[challengeId] || ch.starterCode;
+      updateLineNumbers();
+    }
+
+    // Reset Test Results Panel to Idle
+    const resultsContainer = document.getElementById('testResultsList');
+    if (resultsContainer) {
+      resultsContainer.innerHTML = `
+        <div class="test-idle-placeholder">
+          <span class="placeholder-icon">🚀</span>
+          <p>Click <strong>Run Tests</strong> above to validate your solution against automated unit tests and benchmark execution time.</p>
+        </div>
+      `;
+    }
+
+    const statusBadge = document.getElementById('telemetryStatusBadge');
+    if (statusBadge) {
+      statusBadge.textContent = 'IDLE';
+      statusBadge.className = 'telemetry-status-badge ready';
+    }
+
+    const runtimeEl = document.getElementById('telemetryRuntime');
+    if (runtimeEl) runtimeEl.textContent = '⏱ Ready';
+
+    const countPill = document.getElementById('consoleTestCount');
+    if (countPill) countPill.textContent = `${ch.testCases.length}/${ch.testCases.length}`;
+
+    const stdoutConsole = document.getElementById('stdoutConsole');
+    if (stdoutConsole) {
+      stdoutConsole.innerHTML = '<span class="stdout-empty">// Standard console.log output will appear here when tests execute...</span>';
+    }
+  }
+
+  function selectSandboxChallenge(id) {
+    // Save current code
+    const textarea = document.getElementById('codeEditorTextarea');
+    if (textarea) {
+      userCodeStore[activeChallengeId] = textarea.value;
+    }
+    renderChallenge(id);
+  }
+
+  function resetSandboxCode() {
+    const ch = CHALLENGES[activeChallengeId];
+    if (!ch) return;
+    const textarea = document.getElementById('codeEditorTextarea');
+    if (textarea) {
+      textarea.value = ch.starterCode;
+      userCodeStore[activeChallengeId] = ch.starterCode;
+      updateLineNumbers();
+      showToastNotification(`Reset to starter template for ${ch.title}`);
+    }
+  }
+
+  function copySandboxCode() {
+    const textarea = document.getElementById('codeEditorTextarea');
+    if (!textarea) return;
+    navigator.clipboard.writeText(textarea.value).then(() => {
+      showToastNotification('Code copied to clipboard! 📋');
+    }).catch(() => {
+      showToastNotification('Code ready in editor.');
+    });
+  }
+
+  function toggleSandboxHint() {
+    const hintContent = document.getElementById('sandboxHintContent');
+    const hintChevron = document.getElementById('hintChevron');
+    if (hintContent && hintChevron) {
+      const isHidden = hintContent.hidden;
+      hintContent.hidden = !isHidden;
+      hintChevron.classList.toggle('open', isHidden);
+    }
+  }
+
+  function switchConsoleTab(tab) {
+    const tabTests = document.getElementById('tabTestCases');
+    const tabStdout = document.getElementById('tabStdout');
+    const viewTests = document.getElementById('consoleTestsView');
+    const viewStdout = document.getElementById('consoleStdoutView');
+
+    if (tab === 'tests') {
+      if (tabTests) tabTests.classList.add('active');
+      if (tabStdout) tabStdout.classList.remove('active');
+      if (viewTests) viewTests.hidden = false;
+      if (viewStdout) viewStdout.hidden = true;
+    } else {
+      if (tabTests) tabTests.classList.remove('active');
+      if (tabStdout) tabStdout.classList.add('active');
+      if (viewTests) viewTests.hidden = true;
+      if (viewStdout) viewStdout.hidden = false;
+    }
+  }
+
+  function deepEqual(a, b) {
+    return JSON.stringify(a) === JSON.stringify(b);
+  }
+
+  function runSandboxTests() {
+    const ch = CHALLENGES[activeChallengeId];
+    if (!ch) return;
+
+    const textarea = document.getElementById('codeEditorTextarea');
+    if (!textarea) return;
+    const code = textarea.value;
+
+    const statusBadge = document.getElementById('telemetryStatusBadge');
+    const runtimeEl = document.getElementById('telemetryRuntime');
+    const resultsContainer = document.getElementById('testResultsList');
+    const stdoutConsole = document.getElementById('stdoutConsole');
+
+    if (statusBadge) {
+      statusBadge.textContent = 'RUNNING...';
+      statusBadge.className = 'telemetry-status-badge ready';
+    }
+
+    const capturedLogs = [];
+    const mockConsole = {
+      log: (...args) => {
+        capturedLogs.push(args.map((a) => (typeof a === 'object' ? JSON.stringify(a) : String(a))).join(' '));
+      },
+      error: (...args) => {
+        capturedLogs.push('[ERROR] ' + args.join(' '));
+      },
+      warn: (...args) => {
+        capturedLogs.push('[WARN] ' + args.join(' '));
+      }
+    };
+
+    let userFunc = null;
+    const compileStart = performance.now();
+
+    try {
+      // Evaluate user code in isolated function scope
+      const wrappedCode = `
+        ${code}
+        if (typeof ${ch.functionName} !== 'function') {
+          throw new Error("Function '${ch.functionName}' was not defined in your code.");
+        }
+        return ${ch.functionName};
+      `;
+      const factory = new Function('console', wrappedCode);
+      userFunc = factory(mockConsole);
+    } catch (err) {
+      if (statusBadge) {
+        statusBadge.textContent = 'SYNTAX ERROR';
+        statusBadge.className = 'telemetry-status-badge error';
+      }
+      if (runtimeEl) runtimeEl.textContent = '⏱ 0.00 ms';
+      if (resultsContainer) {
+        resultsContainer.innerHTML = `
+          <div class="test-result-item fail">
+            <div class="test-item-left">
+              <span class="test-status-pill fail">ERROR</span>
+              <span class="test-title-text">Compilation / Syntax Failure</span>
+              <span class="test-io-details">${err.message}</span>
+            </div>
+          </div>
+        `;
+      }
+      if (stdoutConsole) {
+        stdoutConsole.textContent = `Error: ${err.message}`;
+      }
+      return;
+    }
+
+    // Run each unit test case
+    let passedCount = 0;
+    const testResults = [];
+    const totalStart = performance.now();
+
+    for (let i = 0; i < ch.testCases.length; i++) {
+      const tc = ch.testCases[i];
+      let actual = undefined;
+      let pass = false;
+      let errorMsg = null;
+      const tcStart = performance.now();
+
+      try {
+        // Deep copy arguments to avoid mutation by reference
+        const argsClone = JSON.parse(JSON.stringify(tc.args));
+        actual = userFunc(...argsClone);
+        pass = deepEqual(actual, tc.expected);
+      } catch (e) {
+        pass = false;
+        errorMsg = e.message;
+      }
+
+      const tcEnd = performance.now();
+      const tcDuration = (tcEnd - tcStart).toFixed(3);
+
+      if (pass) passedCount += 1;
+      testResults.push({
+        index: i + 1,
+        name: tc.name,
+        pass,
+        duration: tcDuration,
+        expected: tc.expected,
+        actual: errorMsg ? `Exception: ${errorMsg}` : actual
+      });
+    }
+
+    const totalEnd = performance.now();
+    const totalRuntime = ((totalEnd - totalStart) + (totalStart - compileStart)).toFixed(2);
+
+    // Update Telemetry Header
+    if (runtimeEl) {
+      runtimeEl.textContent = `⏱ ${totalRuntime} ms`;
+    }
+
+    const countPill = document.getElementById('consoleTestCount');
+    if (countPill) {
+      countPill.textContent = `${passedCount}/${ch.testCases.length}`;
+    }
+
+    if (passedCount === ch.testCases.length) {
+      if (statusBadge) {
+        statusBadge.textContent = `PASSED (${passedCount}/${ch.testCases.length})`;
+        statusBadge.className = 'telemetry-status-badge passed';
+      }
+      showToastNotification(`🎉 All ${passedCount} tests passed in ${totalRuntime}ms!`);
+    } else {
+      if (statusBadge) {
+        statusBadge.textContent = `FAILED (${passedCount}/${ch.testCases.length})`;
+        statusBadge.className = 'telemetry-status-badge failed';
+      }
+    }
+
+    // Render Test Case Cards
+    if (resultsContainer) {
+      resultsContainer.innerHTML = testResults.map((r) => `
+        <div class="test-result-item ${r.pass ? 'pass' : 'fail'}">
+          <div class="test-item-left">
+            <span class="test-status-pill ${r.pass ? 'pass' : 'fail'}">${r.pass ? 'PASS' : 'FAIL'}</span>
+            <span class="test-title-text">Test ${r.index}: ${r.name}</span>
+            <span class="test-io-details">Expected: ${JSON.stringify(r.expected)} | Got: ${JSON.stringify(r.actual)}</span>
+          </div>
+          <div class="test-item-right">
+            <span class="test-item-time">${r.duration} ms</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Render Captured Stdout
+    if (stdoutConsole) {
+      if (capturedLogs.length > 0) {
+        stdoutConsole.textContent = capturedLogs.join('\n');
+      } else {
+        stdoutConsole.innerHTML = '<span class="stdout-empty">// Program executed without console.log output.</span>';
+      }
+    }
+  }
+
+  function showToastNotification(msg) {
+    const container = document.getElementById('edtechToastContainer');
+    if (!container) return;
+
+    const toast = document.createElement('div');
+    toast.className = 'edtech-toast';
+    toast.textContent = msg;
+    toast.style.cssText = `
+      background: #1e1b4b;
+      border: 1px solid #818cf8;
+      color: #e0e7ff;
+      padding: 12px 20px;
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      margin-top: 10px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      animation: fadeIn 0.3s ease;
+    `;
+    container.appendChild(toast);
+
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transition = 'opacity 0.4s';
+      setTimeout(() => toast.remove(), 400);
+    }, 2800);
+  }
+
+  // Setup Textarea listeners
+  function setupEditorListeners() {
+    const textarea = document.getElementById('codeEditorTextarea');
+    const gutter = document.getElementById('editorGutter');
+    if (!textarea || !gutter) return;
+
+    textarea.addEventListener('input', () => {
+      updateLineNumbers();
+      userCodeStore[activeChallengeId] = textarea.value;
+    });
+
+    textarea.addEventListener('scroll', () => {
+      gutter.scrollTop = textarea.scrollTop;
+    });
+
+    // Handle Tab key indentation
+    textarea.addEventListener('keydown', (e) => {
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        textarea.value = textarea.value.substring(0, start) + '  ' + textarea.value.substring(end);
+        textarea.selectionStart = textarea.selectionEnd = start + 2;
+        updateLineNumbers();
+      }
+    });
+  }
+
+  // Bind to global window for HTML event handlers
+  window.selectSandboxChallenge = selectSandboxChallenge;
+  window.resetSandboxCode = resetSandboxCode;
+  window.copySandboxCode = copySandboxCode;
+  window.toggleSandboxHint = toggleSandboxHint;
+  window.switchConsoleTab = switchConsoleTab;
+  window.runSandboxTests = runSandboxTests;
+
+  // Initialize on DOM load
+  setupEditorListeners();
+  renderChallenge('two-sum');
+})();
+/* ===== END Issue #191 ===== */

@@ -91,12 +91,12 @@ var FlashcardSRS = (function () {
   var KEY = 'synapse-flashcards-v1';
   var S = FlashcardSRS;
   var state = S.newState();
-  try { state = S.sanitize(JSON.parse(localStorage.getItem(KEY))); } catch (e) { state = S.newState(); }
+  try { state = S.sanitize(JSON.parse(localStorage.getItem(KEY))); } catch { state = S.newState(); }
   var queue = [];
   var flipped = false;
 
   function $(id) { return document.getElementById(id); }
-  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* storage unavailable: progress lasts for this visit only */ } }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch { /* storage unavailable: progress lasts for this visit only */ } }
   function byId(id) { return S.CARDS.filter(function (c) { return c.id === id; })[0]; }
 
   function renderStats() {
