@@ -15,12 +15,157 @@
     <h1>APEX ZERO HYPERCAR</h1>
     <p>0 to 60 MPH in 1.74s • Carbon Monocoque Chassis • Solid-State Battery</p>
     <nav class="section-links" aria-label="Explore hypercar">
+      <a href="#launch-control">Launch Simulator</a>
       <a href="#comparator">Specifications</a>
       <a href="#wind-tunnel">Aerodynamics</a>
       <a href="#configurator">Configure your order</a>
     </nav>
     <button class="reserve-btn" onclick="reserveHypercar()">Reserve Allocation ↗</button>
   </header>
+
+  <!-- ===== Launch Control 0-60 Simulation & Live G-Meter (Issue #177) START ===== -->
+  <section class="launch-sim-section" id="launch-control" aria-labelledby="lc-heading">
+    <div class="lc-container">
+      <div class="lc-badge">DYNAMIC TELEMETRY // LAUNCH CONTROL SYSTEM</div>
+      <h2 id="lc-heading">0–60 MPH ACCELERATION SIMULATOR &amp; LIVE G-METER</h2>
+      <p class="lc-intro">Experience the brutal acoustic and kinetic thrust of the Apex Zero. Engage launch control to simulate 0–60 mph acceleration in 1.74 seconds with active twin-axial G-force telemetry.</p>
+
+      <!-- Launch Control Staging Lights (Tree) -->
+      <div class="lc-staging-lights" id="lcStagingLights" aria-label="Launch Staging Tree" role="region">
+        <div class="staging-col"><span class="staging-light stage-amber" id="stageAmber1"></span><span class="light-label">PRE-STAGE</span></div>
+        <div class="staging-col"><span class="staging-light stage-amber" id="stageAmber2"></span><span class="light-label">STAGED</span></div>
+        <div class="staging-col"><span class="staging-light stage-amber" id="stageAmber3"></span><span class="light-label">BOOST</span></div>
+        <div class="staging-col"><span class="staging-light stage-green" id="stageGreen"></span><span class="light-label">LAUNCH</span></div>
+      </div>
+
+      <!-- Main Cockpit HUD Cluster -->
+      <div class="lc-cockpit-grid">
+        <!-- 1. Digital Speedometer & Redline Gauge -->
+        <div class="lc-hud-card lc-speedo-card">
+          <div class="hud-card-header">
+            <span class="hud-card-tag">DIGITAL TACH &amp; VELOCITY</span>
+            <span class="hud-status-chip" id="lcDriveMode">ALL-WHEEL VECTOR • TRACK</span>
+          </div>
+
+          <div class="speedo-gauge-wrap">
+            <svg class="speedo-arc-svg" viewBox="0 0 320 200" aria-hidden="true">
+              <!-- Background Arc -->
+              <path class="speedo-bg-track" d="M 40 170 A 120 120 0 1 1 280 170" />
+              <!-- Active Speed Arc (dynamically updated) -->
+              <path class="speedo-active-arc" id="speedoActiveArc" d="M 40 170 A 120 120 0 1 1 280 170" />
+              <!-- Redline Zone Marker -->
+              <path class="speedo-redline-arc" d="M 235 75 A 120 120 0 0 1 280 170" />
+            </svg>
+
+            <div class="speedo-center-readout">
+              <div class="speed-number" id="lcCurrentSpeed">0</div>
+              <div class="speed-unit">MPH</div>
+              <div class="rpm-readout" id="lcRpmReadout">0 RPM • 1ST GEAR</div>
+            </div>
+          </div>
+
+          <div class="speedo-footer-bar">
+            <div class="speedo-stat"><span class="lbl">POWER OUTPUT</span><span class="val highlight" id="lcKwOutput">0 kW (0 HP)</span></div>
+            <div class="speedo-stat"><span class="lbl">PEAK ACCEL</span><span class="val" id="lcPeakMph">0.0 MPH</span></div>
+            <div class="speedo-stat"><span class="lbl">SURFACE GRIP</span><span class="val" id="lcSurfaceGrip">99.8% OPTIMAL</span></div>
+          </div>
+        </div>
+
+        <!-- 2. Circular G-Force Dial Meter -->
+        <div class="lc-hud-card lc-gmeter-card">
+          <div class="hud-card-header">
+            <span class="hud-card-tag">DUAL-AXIS KINETIC G-METER</span>
+            <span class="hud-status-chip chip-g" id="lcGStatus">IDLE (0.00 G)</span>
+          </div>
+
+          <div class="gmeter-dial-wrap">
+            <svg class="gmeter-svg" viewBox="0 0 240 240" aria-label="Circular G-force Dial" role="img">
+              <!-- Radial rings -->
+              <circle cx="120" cy="120" r="100" class="g-ring-outer" />
+              <circle cx="120" cy="120" r="70" class="g-ring-mid" />
+              <circle cx="120" cy="120" r="35" class="g-ring-inner" />
+              <!-- Crosshair axes -->
+              <line x1="20" y1="120" x2="220" y2="120" class="g-axis" />
+              <line x1="120" y1="20" x2="120" y2="220" class="g-axis" />
+              <!-- Axis labels -->
+              <text x="120" y="15" class="g-axis-lbl" text-anchor="middle">+ACCEL</text>
+              <text x="120" y="235" class="g-axis-lbl" text-anchor="middle">-BRAKE</text>
+              <text x="12" y="124" class="g-axis-lbl" text-anchor="start">LAT L</text>
+              <text x="228" y="124" class="g-axis-lbl" text-anchor="end">LAT R</text>
+              <text x="120" y="82" class="g-ring-lbl" text-anchor="middle">1.0G</text>
+              <text x="120" y="48" class="g-ring-lbl" text-anchor="middle">2.0G</text>
+              <!-- Animated G-Force Indicator Puck -->
+              <circle cx="120" cy="120" r="8" class="g-puck" id="lcGPuck" />
+              <!-- Glow trail pulse -->
+              <circle cx="120" cy="120" r="14" class="g-puck-trail" id="lcGPuckTrail" />
+            </svg>
+
+            <div class="gmeter-numerical-readout">
+              <span class="g-primary-val" id="lcPrimaryG">0.00 G</span>
+              <span class="g-sub-lbl">LONGITUDINAL FORCE</span>
+            </div>
+          </div>
+
+          <div class="gmeter-footer-bar">
+            <div class="g-stat"><span class="lbl">LATERAL G</span><span class="val" id="lcLatG">0.00 G</span></div>
+            <div class="g-stat"><span class="lbl">MAX OBSERVED</span><span class="val peak" id="lcMaxG">0.00 G</span></div>
+            <div class="g-stat"><span class="lbl">AERODOWN</span><span class="val" id="lcAeroDown">+480 kg</span></div>
+          </div>
+        </div>
+
+        <!-- 3. Telemetry Stopwatch & Split Timeline -->
+        <div class="lc-hud-card lc-splits-card">
+          <div class="hud-card-header">
+            <span class="hud-card-tag">PRECISION TELEMETRY STOPWATCH</span>
+            <span class="hud-status-chip chip-timer" id="lcTimerStatus">STANDBY</span>
+          </div>
+
+          <div class="stopwatch-display">
+            <div class="stopwatch-digits" id="lcStopwatchDigits">0.000<span class="stopwatch-sec">s</span></div>
+            <div class="stopwatch-target">BENCHMARK TARGET: <strong>1.740s</strong></div>
+          </div>
+
+          <div class="splits-progress-track">
+            <div class="splits-progress-bar" id="lcSplitsProgressBar"></div>
+          </div>
+
+          <div class="splits-milestones">
+            <div class="milestone-item" id="ms0to30">
+              <span class="m-dot"></span>
+              <span class="m-lbl">0–30 MPH</span>
+              <span class="m-val" id="msVal0to30">-- s</span>
+            </div>
+            <div class="milestone-item" id="ms0to60">
+              <span class="m-dot"></span>
+              <span class="m-lbl">0–60 MPH</span>
+              <span class="m-val" id="msVal0to60">-- s</span>
+            </div>
+            <div class="milestone-item" id="ms0to100">
+              <span class="m-dot"></span>
+              <span class="m-lbl">0–100 MPH</span>
+              <span class="m-val" id="msVal0to100">-- s</span>
+            </div>
+          </div>
+
+          <div class="lc-actions-bar">
+            <button type="button" class="lc-launch-btn" id="lcLaunchBtn">
+              <span class="btn-icon">⚡</span>
+              <span class="btn-text">LAUNCH HYPERCAR</span>
+            </button>
+            <button type="button" class="lc-btn-ghost" id="lcResetBtn">
+              <span>↺ Reset</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Telemetry Status Readout Bar -->
+      <div class="lc-console-feedback" id="lcConsoleFeedback" role="status" aria-live="polite">
+        [LAUNCH CONTROL ARMED]: Hold Launch button to engage twin dual-inverter pre-stage spooling.
+      </div>
+    </div>
+  </section>
+  <!-- ===== Launch Control 0-60 Simulation & Live G-Meter (Issue #177) END ===== -->
 
   <!-- ===== Performance Comparator (issue #52) START ===== -->
   <section class="cmp" id="comparator" aria-labelledby="cmp-title">

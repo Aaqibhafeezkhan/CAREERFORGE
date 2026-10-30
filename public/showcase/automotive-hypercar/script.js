@@ -1287,3 +1287,282 @@ window.reserveHypercar = function reserveHypercar() {
   document.addEventListener('DOMContentLoaded', init);
 })();
 /* ===== 360° Vehicle Colorway & Wheel Configurator (issue #51) END ===== */
+
+
+/* ===== Launch Control 0-60 Acceleration Simulation & Live G-Meter (Issue #177) START ===== */
+(function () {
+  'use strict';
+
+  function initLaunchControl() {
+    var section = document.getElementById('launch-control');
+    if (!section) return;
+
+    // DOM Elements
+    var launchBtn = document.getElementById('lcLaunchBtn');
+    var resetBtn = document.getElementById('lcResetBtn');
+    var speedEl = document.getElementById('lcCurrentSpeed');
+    var rpmEl = document.getElementById('lcRpmReadout');
+    var speedArc = document.getElementById('speedoActiveArc');
+    var kwOutputEl = document.getElementById('lcKwOutput');
+    var peakMphEl = document.getElementById('lcPeakMph');
+    var gPuck = document.getElementById('lcGPuck');
+    var gPuckTrail = document.getElementById('lcGPuckTrail');
+    var primaryGEl = document.getElementById('lcPrimaryG');
+    var latGEl = document.getElementById('lcLatG');
+    var maxGEl = document.getElementById('lcMaxG');
+    var aeroDownEl = document.getElementById('lcAeroDown');
+    var timerDigits = document.getElementById('lcStopwatchDigits');
+    var splitsBar = document.getElementById('lcSplitsProgressBar');
+    var consoleFeedback = document.getElementById('lcConsoleFeedback');
+    var stageLights = {
+      amber1: document.getElementById('stageAmber1'),
+      amber2: document.getElementById('stageAmber2'),
+      amber3: document.getElementById('stageAmber3'),
+      green: document.getElementById('stageGreen')
+    };
+    var msItems = {
+      ms30: { el: document.getElementById('ms0to30'), valEl: document.getElementById('msVal0to30'), targetMph: 30, recorded: false },
+      ms60: { el: document.getElementById('ms0to60'), valEl: document.getElementById('msVal0to60'), targetMph: 60, recorded: false },
+      ms100: { el: document.getElementById('ms0to100'), valEl: document.getElementById('msVal0to100'), targetMph: 100, recorded: false }
+    };
+
+    // Physics parameters for 1,900 HP Apex Zero All-Wheel-Drive Hypercar
+    var TARGET_TIME_60 = 1.74; // seconds to reach 60 mph
+    var MAX_SPEED = 120.0;     // simulation run top speed
+    var ARC_CIRCUMFERENCE = 430; // stroke-dasharray
+
+    var state = {
+      phase: 'standby', // 'standby', 'staging', 'launching', 'completed'
+      startTime: 0,
+      elapsed: 0,
+      currentSpeed: 0,
+      peakSpeed: 0,
+      currentG: 0,
+      maxG: 0,
+      currentLatG: 0,
+      animId: null
+    };
+
+    function setConsole(msg) {
+      if (consoleFeedback) consoleFeedback.textContent = msg;
+    }
+
+    function resetSimulation() {
+      if (state.animId) cancelAnimationFrame(state.animId);
+      state.phase = 'standby';
+      state.elapsed = 0;
+      state.currentSpeed = 0;
+      state.peakSpeed = 0;
+      state.currentG = 0;
+      state.maxG = 0;
+      state.currentLatG = 0;
+
+      // Reset DOM displays
+      if (speedEl) speedEl.textContent = '0';
+      if (rpmEl) rpmEl.textContent = '0 RPM • 1ST GEAR';
+      if (speedArc) speedArc.style.strokeDashoffset = ARC_CIRCUMFERENCE;
+      if (kwOutputEl) kwOutputEl.textContent = '0 kW (0 HP)';
+      if (peakMphEl) peakMphEl.textContent = '0.0 MPH';
+      if (primaryGEl) primaryGEl.textContent = '0.00 G';
+      if (latGEl) latGEl.textContent = '0.00 G';
+      if (maxGEl) maxGEl.textContent = '0.00 G';
+      if (aeroDownEl) aeroDownEl.textContent = '+480 kg';
+      if (timerDigits) timerDigits.innerHTML = '0.000<span class="stopwatch-sec">s</span>';
+      if (splitsBar) splitsBar.style.width = '0%';
+
+      // Reset G-puck position to origin (120, 120)
+      if (gPuck) { gPuck.setAttribute('cx', '120'); gPuck.setAttribute('cy', '120'); }
+      if (gPuckTrail) { gPuckTrail.setAttribute('cx', '120'); gPuckTrail.setAttribute('cy', '120'); }
+
+      // Reset staging lights
+      Object.keys(stageLights).forEach(function (k) {
+        if (stageLights[k]) stageLights[k].classList.remove('active');
+      });
+
+      // Reset milestones
+      Object.keys(msItems).forEach(function (k) {
+        msItems[k].recorded = false;
+        if (msItems[k].el) msItems[k].el.classList.remove('achieved');
+        if (msItems[k].valEl) msItems[k].valEl.textContent = '-- s';
+      });
+
+      if (launchBtn) {
+        launchBtn.classList.remove('is-active');
+        launchBtn.innerHTML = '<span class="btn-icon">⚡</span><span class="btn-text">LAUNCH HYPERCAR</span>';
+      }
+
+      setConsole('[LAUNCH CONTROL ARMED]: Press Launch Hypercar to initiate staging sequence.');
+    }
+
+    function startLaunchSequence() {
+      if (state.phase !== 'standby') return;
+      state.phase = 'staging';
+
+      if (launchBtn) {
+        launchBtn.innerHTML = '<span class="btn-icon">⏳</span><span class="btn-text">STAGING BOOST...</span>';
+      }
+
+      setConsole('[STAGING TREE]: Pre-stage armed. Inverter capacitance charging...');
+      if (stageLights.amber1) stageLights.amber1.classList.add('active');
+
+      setTimeout(function () {
+        if (state.phase !== 'staging') return;
+        setConsole('[STAGING TREE]: Full Stage lock. Quad-rotor motor pre-torque 1,400 Nm.');
+        if (stageLights.amber2) stageLights.amber2.classList.add('active');
+      }, 350);
+
+      setTimeout(function () {
+        if (state.phase !== 'staging') return;
+        setConsole('[STAGING TREE]: Maximum inverter voltage primed. 1,900 HP boost ready!');
+        if (stageLights.amber3) stageLights.amber3.classList.add('active');
+      }, 700);
+
+      setTimeout(function () {
+        if (state.phase !== 'staging') return;
+        if (stageLights.green) stageLights.green.classList.add('active');
+        setConsole('[LAUNCH INITIATED]: MAXIMUM ACCELERATION! ALL-WHEEL VECTOR ACTIVE.');
+        if (launchBtn) {
+          launchBtn.classList.add('is-active');
+          launchBtn.innerHTML = '<span class="btn-icon">🚀</span><span class="btn-text">ACCELERATING...</span>';
+        }
+        beginAccelerationPhysics();
+      }, 1050);
+    }
+
+    function beginAccelerationPhysics() {
+      state.phase = 'launching';
+      state.startTime = performance.now();
+
+      function frame(now) {
+        var elapsed = (now - state.startTime) / 1000;
+        state.elapsed = elapsed;
+
+        // Acceleration curve:
+        // Apex Zero hits 60 mph in 1.74s (v(t) = 60 * (t/1.74)^0.82)
+        var speed = 0;
+        if (elapsed <= TARGET_TIME_60) {
+          speed = 60.0 * Math.pow(elapsed / TARGET_TIME_60, 0.82);
+        } else {
+          // Continues pulling to ~105 mph up to ~3.2 seconds
+          var postT = elapsed - TARGET_TIME_60;
+          speed = 60.0 + 45.0 * (1 - Math.exp(-postT / 1.1));
+        }
+
+        if (speed > MAX_SPEED) speed = MAX_SPEED;
+        state.currentSpeed = speed;
+        if (speed > state.peakSpeed) state.peakSpeed = speed;
+
+        // Longitudinal G-force:
+        // Derivative of velocity: peak of ~1.82 G at launch tapering to 1.15 G at 60 mph
+        var gForce = 0;
+        if (elapsed < 0.25) {
+          gForce = 0.5 + (elapsed / 0.25) * 1.32; // rapid bite
+        } else if (elapsed <= TARGET_TIME_60) {
+          gForce = 1.82 - (elapsed / TARGET_TIME_60) * 0.65;
+        } else {
+          gForce = Math.max(0.4, 1.17 - (elapsed - TARGET_TIME_60) * 0.45);
+        }
+
+        // Slight micro dynamic lateral ripple simulating quad-motor vectoring
+        var latG = (Math.sin(elapsed * 18.0) * 0.08) * (speed / 60.0);
+        state.currentG = gForce;
+        if (gForce > state.maxG) state.maxG = gForce;
+        state.currentLatG = latG;
+
+        // Update DOM
+        if (speedEl) speedEl.textContent = Math.floor(speed);
+
+        // RPM calculation (Direct drive electric trans, ~0-18,000 RPM)
+        var rpm = Math.floor((speed / MAX_SPEED) * 18500);
+        if (rpmEl) rpmEl.textContent = rpm.toLocaleString() + ' RPM • ' + (speed > 55 ? 'DIRECT DRIVE' : '1ST GEAR');
+
+        // Speedometer SVG arc
+        var fraction = Math.min(1.0, speed / 120.0);
+        if (speedArc) speedArc.style.strokeDashoffset = ARC_CIRCUMFERENCE * (1 - fraction);
+
+        // Power output calculation (up to 1,417 kW / 1,900 HP)
+        var kw = Math.floor(fraction * 1417);
+        var hp = Math.floor(kw * 1.341);
+        if (kwOutputEl) kwOutputEl.textContent = kw + ' kW (' + hp + ' HP)';
+        if (peakMphEl) peakMphEl.textContent = state.peakSpeed.toFixed(1) + ' MPH';
+
+        // G-Meter SVG Puck Position
+        // Center is (120, 120). 1.0G = 35px offset. Accel pushes puck UP (decrease Y)
+        var puckY = Math.max(25, 120 - gForce * 42);
+        var puckX = Math.min(215, Math.max(25, 120 + latG * 120));
+        if (gPuck) {
+          gPuck.setAttribute('cx', puckX.toFixed(1));
+          gPuck.setAttribute('cy', puckY.toFixed(1));
+        }
+        if (gPuckTrail) {
+          gPuckTrail.setAttribute('cx', puckX.toFixed(1));
+          gPuckTrail.setAttribute('cy', puckY.toFixed(1));
+        }
+
+        if (primaryGEl) primaryGEl.textContent = gForce.toFixed(2) + ' G';
+        if (latGEl) latGEl.textContent = (latG >= 0 ? '+' : '') + latG.toFixed(2) + ' G';
+        if (maxGEl) maxGEl.textContent = state.maxG.toFixed(2) + ' G';
+
+        // Downforce increases with square of speed
+        var downforce = Math.floor(480 + Math.pow(speed / 60, 2) * 320);
+        if (aeroDownEl) aeroDownEl.textContent = '+' + downforce + ' kg';
+
+        // Stopwatch digits
+        if (timerDigits) {
+          timerDigits.innerHTML = elapsed.toFixed(3) + '<span class="stopwatch-sec">s</span>';
+        }
+
+        // Progress bar (scaled relative to 60 mph target)
+        var pFraction = Math.min(100, (speed / 60.0) * 100);
+        if (splitsBar) splitsBar.style.width = pFraction.toFixed(1) + '%';
+
+        // Milestone triggers
+        Object.keys(msItems).forEach(function (k) {
+          var item = msItems[k];
+          if (!item.recorded && speed >= item.targetMph) {
+            item.recorded = true;
+            if (item.el) item.el.classList.add('achieved');
+            if (item.valEl) item.valEl.textContent = elapsed.toFixed(3) + ' s';
+          }
+        });
+
+        // Completion condition (~3.0 seconds after 100+ mph run)
+        if (elapsed >= 3.0) {
+          state.phase = 'completed';
+          setConsole('🏆 [SIMULATION COMPLETED]: 0–60 MPH officially clocked in ' + (msItems.ms60.valEl ? msItems.ms60.valEl.textContent : '1.74s') + ' with peak ' + state.maxG.toFixed(2) + ' G!');
+          if (launchBtn) {
+            launchBtn.classList.remove('is-active');
+            launchBtn.innerHTML = '<span class="btn-icon">⚡</span><span class="btn-text">RE-LAUNCH HYPERCAR</span>';
+          }
+          return;
+        }
+
+        state.animId = requestAnimationFrame(frame);
+      }
+
+      state.animId = requestAnimationFrame(frame);
+    }
+
+    if (launchBtn) {
+      launchBtn.addEventListener('click', function () {
+        if (state.phase === 'standby') {
+          startLaunchSequence();
+        } else if (state.phase === 'completed') {
+          resetSimulation();
+          setTimeout(startLaunchSequence, 100);
+        }
+      });
+    }
+
+    if (resetBtn) {
+      resetBtn.addEventListener('click', function () {
+        resetSimulation();
+      });
+    }
+
+    resetSimulation();
+  }
+
+  document.addEventListener('DOMContentLoaded', initLaunchControl);
+})();
+/* ===== Launch Control 0-60 Acceleration Simulation & Live G-Meter (Issue #177) END ===== */
