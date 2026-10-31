@@ -1000,3 +1000,363 @@ function initExpeditionTimeline() {
 
   renderTimeline();
 }
+
+/* ===== BEGIN Issue #211: Expedition Budget Planner with Currency Converter ===== */
+(function initExpeditionBudgetPlanner() {
+  'use strict';
+
+  const CURRENCIES = {
+    USD: { symbol: '$', rate: 1.0, code: 'USD' },
+    EUR: { symbol: '€', rate: 0.92, code: 'EUR' },
+    GBP: { symbol: '£', rate: 0.79, code: 'GBP' },
+    AUD: { symbol: 'A$', rate: 1.54, code: 'AUD' }
+  };
+
+  const ACCOMMODATION_RATES_USD = {
+    standard: 95,
+    premium: 220,
+    luxury: 390
+  };
+
+  const GEAR_RATES_USD = {
+    none: 0,
+    essential: 180,
+    technical: 340,
+    cinema: 520
+  };
+
+  const ADDONS_CONFIG_USD = {
+    heli: { cost: 450, perPerson: true, name: 'Heli-Rescue Cover' },
+    guide: { cost: 850, perPerson: false, name: 'Mountain Master Guide' },
+    photo: { cost: 220, perPerson: true, name: 'Aurora Masterclass' },
+    gourmet: { cost: 380, perPerson: true, name: 'Wilderness Gourmet Dining' }
+  };
+
+  const plannerState = {
+    currency: 'USD',
+    travelers: 2,
+    duration: 10,
+    expeditionId: 'antarctic',
+    tier: 'premium',
+    gearPackage: 'essential',
+    addons: {
+      heli: true,
+      guide: true,
+      photo: false,
+      gourmet: false
+    }
+  };
+
+  function formatCurrency(amountUSD) {
+    const curr = CURRENCIES[plannerState.currency] || CURRENCIES.USD;
+    const converted = Math.round(amountUSD * curr.rate);
+    return `${curr.symbol}${converted.toLocaleString()}`;
+  }
+
+  function getActiveTierRateUSD() {
+    return ACCOMMODATION_RATES_USD[plannerState.tier] || ACCOMMODATION_RATES_USD.premium;
+  }
+
+  function getBaseLogisticsUSD() {
+    const routeSelect = document.getElementById('planner-expedition-select');
+    if (!routeSelect) return 3200;
+    const selectedOpt = routeSelect.options[routeSelect.selectedIndex];
+    const base = Number(selectedOpt.getAttribute('data-base')) || 3200;
+    const defaultDays = Number(selectedOpt.getAttribute('data-days')) || 10;
+    return Math.round(base * (plannerState.duration / defaultDays));
+  }
+
+  function recalculateBudget() {
+    const travelers = plannerState.travelers;
+    const duration = plannerState.duration;
+
+    // 1. Logistics & Permits
+    const logisticsUSD = getBaseLogisticsUSD();
+
+    // 2. Accommodation
+    const tierRateUSD = getActiveTierRateUSD();
+    const accommodationUSD = tierRateUSD * duration * travelers;
+
+    // 3. Gear Packages
+    const gearRateUSD = GEAR_RATES_USD[plannerState.gearPackage] || 0;
+    const gearUSD = gearRateUSD * travelers;
+
+    // 4. Addons
+    let addonsUSD = 0;
+    Object.keys(ADDONS_CONFIG_USD).forEach((key) => {
+      if (plannerState.addons[key]) {
+        const item = ADDONS_CONFIG_USD[key];
+        addonsUSD += item.perPerson ? item.cost * travelers : item.cost;
+      }
+    });
+
+    // 5. Environmental Offset Fee (2.5%)
+    const subtotalUSD = logisticsUSD + accommodationUSD + gearUSD + addonsUSD;
+    const ecoFeeUSD = Math.round(subtotalUSD * 0.025);
+    const totalUSD = subtotalUSD + ecoFeeUSD;
+    const perPersonUSD = Math.round(totalUSD / travelers);
+
+    // Update DOM Display
+    const curr = CURRENCIES[plannerState.currency] || CURRENCIES.USD;
+
+    const symbolEl = document.getElementById('summary-currency-symbol');
+    if (symbolEl) symbolEl.textContent = curr.symbol;
+
+    const totalValEl = document.getElementById('summary-total-budget');
+    if (totalValEl) {
+      const convertedTotal = Math.round(totalUSD * curr.rate);
+      totalValEl.textContent = convertedTotal.toLocaleString();
+    }
+
+    const codeEl = document.getElementById('summary-currency-code');
+    if (codeEl) codeEl.textContent = curr.code;
+
+    const perPersonEl = document.getElementById('summary-per-person');
+    if (perPersonEl) perPersonEl.textContent = formatCurrency(perPersonUSD);
+
+    // Update Itemized Receipt
+    const recBase = document.getElementById('receipt-base');
+    if (recBase) recBase.textContent = formatCurrency(logisticsUSD);
+
+    const recAccLabel = document.getElementById('receipt-acc-label');
+    if (recAccLabel) {
+      const tierName = plannerState.tier.charAt(0).toUpperCase() + plannerState.tier.slice(1);
+      recAccLabel.textContent = `${tierName} Accommodation (${duration} nights × ${travelers} guests)`;
+    }
+
+    const recAcc = document.getElementById('receipt-accommodation');
+    if (recAcc) recAcc.textContent = formatCurrency(accommodationUSD);
+
+    const recGearLabel = document.getElementById('receipt-gear-label');
+    if (recGearLabel) {
+      const gearSelect = document.getElementById('gear-package-select');
+      const gearName = gearSelect ? gearSelect.options[gearSelect.selectedIndex].text.split('(')[0].trim() : 'Gear Package';
+      recGearLabel.textContent = `${gearName} (${travelers}x)`;
+    }
+
+    const recGear = document.getElementById('receipt-gear');
+    if (recGear) recGear.textContent = formatCurrency(gearUSD);
+
+    const recServices = document.getElementById('receipt-services');
+    if (recServices) recServices.textContent = formatCurrency(addonsUSD);
+
+    const recEco = document.getElementById('receipt-eco');
+    if (recEco) recEco.textContent = formatCurrency(ecoFeeUSD);
+
+    // Update Stacked Bar Allocation
+    const pctAcc = Math.max(5, Math.round((accommodationUSD / totalUSD) * 100));
+    const pctLog = Math.max(5, Math.round((logisticsUSD / totalUSD) * 100));
+    const pctGear = Math.max(3, Math.round((gearUSD / totalUSD) * 100));
+    const pctServ = Math.max(5, 100 - (pctAcc + pctLog + pctGear));
+
+    const segAcc = document.getElementById('bar-seg-accommodation');
+    if (segAcc) segAcc.style.width = `${pctAcc}%`;
+
+    const segLog = document.getElementById('bar-seg-logistics');
+    if (segLog) segLog.style.width = `${pctLog}%`;
+
+    const segGear = document.getElementById('bar-seg-gear');
+    if (segGear) segGear.style.width = `${pctGear}%`;
+
+    const segServ = document.getElementById('bar-seg-services');
+    if (segServ) segServ.style.width = `${pctServ}%`;
+
+    const lblAcc = document.getElementById('pct-accommodation');
+    if (lblAcc) lblAcc.textContent = `${pctAcc}%`;
+
+    const lblLog = document.getElementById('pct-logistics');
+    if (lblLog) lblLog.textContent = `${pctLog}%`;
+
+    const lblGear = document.getElementById('pct-gear');
+    if (lblGear) lblGear.textContent = `${pctGear}%`;
+
+    const lblServ = document.getElementById('pct-services');
+    if (lblServ) lblServ.textContent = `${pctServ}%`;
+
+    // Update Tier Rate Labels in converted currency
+    const rateStd = document.getElementById('tier-rate-standard');
+    if (rateStd) rateStd.textContent = `${formatCurrency(ACCOMMODATION_RATES_USD.standard)} / night`;
+
+    const ratePrem = document.getElementById('tier-rate-premium');
+    if (ratePrem) ratePrem.textContent = `${formatCurrency(ACCOMMODATION_RATES_USD.premium)} / night`;
+
+    const rateLux = document.getElementById('tier-rate-luxury');
+    if (rateLux) rateLux.textContent = `${formatCurrency(ACCOMMODATION_RATES_USD.luxury)} / night`;
+
+    // Update Addon Price Labels in converted currency
+    Object.keys(ADDONS_CONFIG_USD).forEach((k) => {
+      const el = document.getElementById(`addon-cost-${k}`);
+      if (el) {
+        const item = ADDONS_CONFIG_USD[k];
+        el.textContent = `+${formatCurrency(item.cost)} / ${item.perPerson ? 'person' : 'expedition'}`;
+      }
+    });
+  }
+
+  function handlePlannerConfigChange() {
+    // Read route
+    const routeSelect = document.getElementById('planner-expedition-select');
+    if (routeSelect) {
+      plannerState.expeditionId = routeSelect.value;
+    }
+
+    // Read tier
+    const selectedTier = document.querySelector('input[name="accommodation-tier"]:checked');
+    if (selectedTier) {
+      plannerState.tier = selectedTier.value;
+      document.querySelectorAll('.tier-card').forEach((card) => {
+        const input = card.querySelector('input');
+        card.classList.toggle('active', input && input.checked);
+      });
+    }
+
+    // Read gear
+    const gearSelect = document.getElementById('gear-package-select');
+    if (gearSelect) {
+      plannerState.gearPackage = gearSelect.value;
+    }
+
+    // Read addons
+    Object.keys(ADDONS_CONFIG_USD).forEach((key) => {
+      const cb = document.getElementById(`addon-${key}`);
+      if (cb) {
+        plannerState.addons[key] = cb.checked;
+        const parentCard = cb.closest('.addon-checkbox-card');
+        if (parentCard) parentCard.classList.toggle('active', cb.checked);
+      }
+    });
+
+    recalculateBudget();
+  }
+
+  function handleCurrencyChange(curr) {
+    if (CURRENCIES[curr]) {
+      plannerState.currency = curr;
+      recalculateBudget();
+    }
+  }
+
+  function adjustTravelers(delta) {
+    plannerState.travelers = Math.max(1, Math.min(10, plannerState.travelers + delta));
+    const countEl = document.getElementById('travelers-count');
+    if (countEl) countEl.textContent = plannerState.travelers;
+    recalculateBudget();
+  }
+
+  function handleDurationChange(val) {
+    const days = Number(val) || 10;
+    plannerState.duration = days;
+    const dispEl = document.getElementById('duration-display');
+    if (dispEl) dispEl.textContent = `${days} Days`;
+    recalculateBudget();
+  }
+
+  function saveExpeditionEstimate() {
+    try {
+      localStorage.setItem('odyssey_saved_budget_estimate', JSON.stringify(plannerState));
+      const statusEl = document.getElementById('saved-estimate-status');
+      const textEl = document.getElementById('saved-estimate-text');
+      if (statusEl && textEl) {
+        statusEl.hidden = false;
+        textEl.textContent = `Expedition estimate (${formatCurrency(getBaseLogisticsUSD() + 3000)}) saved successfully to session!`;
+        setTimeout(() => {
+          statusEl.hidden = true;
+        }, 3500);
+      }
+    } catch {
+      // Storage unavailable fallback
+    }
+  }
+
+  function resetExpeditionBudget() {
+    plannerState.currency = 'USD';
+    plannerState.travelers = 2;
+    plannerState.duration = 10;
+    plannerState.expeditionId = 'antarctic';
+    plannerState.tier = 'premium';
+    plannerState.gearPackage = 'essential';
+    plannerState.addons = { heli: true, guide: true, photo: false, gourmet: false };
+
+    const routeSelect = document.getElementById('planner-expedition-select');
+    if (routeSelect) routeSelect.value = 'antarctic';
+
+    const currSelect = document.getElementById('currency-select');
+    if (currSelect) currSelect.value = 'USD';
+
+    const countEl = document.getElementById('travelers-count');
+    if (countEl) countEl.textContent = '2';
+
+    const range = document.getElementById('expedition-duration-range');
+    if (range) range.value = '10';
+
+    const dispEl = document.getElementById('duration-display');
+    if (dispEl) dispEl.textContent = '10 Days';
+
+    const premRadio = document.getElementById('tier-premium');
+    if (premRadio) premRadio.checked = true;
+
+    const gearSelect = document.getElementById('gear-package-select');
+    if (gearSelect) gearSelect.value = 'essential';
+
+    const cbHeli = document.getElementById('addon-heli');
+    if (cbHeli) cbHeli.checked = true;
+
+    const cbGuide = document.getElementById('addon-guide');
+    if (cbGuide) cbGuide.checked = true;
+
+    const cbPhoto = document.getElementById('addon-photo');
+    if (cbPhoto) cbPhoto.checked = false;
+
+    const cbGourmet = document.getElementById('addon-gourmet');
+    if (cbGourmet) cbGourmet.checked = false;
+
+    handlePlannerConfigChange();
+  }
+
+  // Load saved estimate if available
+  try {
+    const saved = localStorage.getItem('odyssey_saved_budget_estimate');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (parsed && parsed.duration) {
+        Object.assign(plannerState, parsed);
+        const currSelect = document.getElementById('currency-select');
+        if (currSelect) currSelect.value = plannerState.currency;
+
+        const countEl = document.getElementById('travelers-count');
+        if (countEl) countEl.textContent = plannerState.travelers;
+
+        const range = document.getElementById('expedition-duration-range');
+        if (range) range.value = String(plannerState.duration);
+
+        const dispEl = document.getElementById('duration-display');
+        if (dispEl) dispEl.textContent = `${plannerState.duration} Days`;
+
+        const tierRadio = document.getElementById(`tier-${plannerState.tier}`);
+        if (tierRadio) tierRadio.checked = true;
+
+        const gearSelect = document.getElementById('gear-package-select');
+        if (gearSelect) gearSelect.value = plannerState.gearPackage;
+
+        Object.keys(ADDONS_CONFIG_USD).forEach((k) => {
+          const cb = document.getElementById(`addon-${k}`);
+          if (cb) cb.checked = Boolean(plannerState.addons[k]);
+        });
+      }
+    }
+  } catch {
+    // Use defaults
+  }
+
+  // Bind handlers to global window for inline HTML attributes
+  window.handlePlannerConfigChange = handlePlannerConfigChange;
+  window.handleCurrencyChange = handleCurrencyChange;
+  window.adjustTravelers = adjustTravelers;
+  window.handleDurationChange = handleDurationChange;
+  window.saveExpeditionEstimate = saveExpeditionEstimate;
+  window.resetExpeditionBudget = resetExpeditionBudget;
+
+  // Initial calculation
+  handlePlannerConfigChange();
+})();
+/* ===== END Issue #211 ===== */
